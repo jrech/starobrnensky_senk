@@ -227,7 +227,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .specialty-copy strong { color: var(--honey-300); font-size: clamp(18px, 1.5vw, 24px); }
 .future-link { margin: var(--space-6) 0 0; color: rgba(251,247,239,.62); font-size: 13px; text-align: right; }
 
-.contact { color: var(--cream-50); background: var(--brown-900); }
+.contact { color: var(--cream-50); background: var(--forest-950); }
 .contact-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(64px, 10vw, 160px); align-items: stretch; }
 .contact-copy { display: flex; flex-direction: column; }
 .contact-copy .display { margin-bottom: var(--space-8); font-size: clamp(64px, 7.6vw, 128px); }
