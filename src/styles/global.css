@@ -329,7 +329,7 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .rum-heading { grid-template-columns: 1fr 2fr; }
   .rum-heading .eyebrow { grid-column: 1 / -1; }
   .rum-lead { margin-left: auto; }
-  .rum-progress { position: sticky; right: auto; bottom: auto; left: 0; z-index: 2; width: var(--shell); margin-inline: auto; background: var(--cream-50); }
+  .rum-progress { position: sticky; right: auto; bottom: auto; left: 0; z-index: 2; width: var(--shell); margin: var(--space-3) auto 0; background: var(--cream-50); }
   .about-grid { grid-template-columns: .5fr 1.5fr; gap: var(--space-6); }
   .contact-grid { gap: var(--space-8); }
 }
