@@ -33,7 +33,6 @@ export type SiteContent = {
 };
 
 const fallback: SiteContent = {
-  notice: "Ukázkový obsah — aktuální nabídku doplní obsluha v Sanity CMS.",
   lunchUpdated: "Ukázkové menu · 3.–7. srpna 2026",
   lunchDays: [
     {
@@ -194,7 +193,6 @@ export async function getSiteContent(): Promise<SiteContent> {
     const lunchDays = hasLunchMenu ? normalizeLunchMenu(data.lunchMenu!, dates) : fallback.lunchDays;
     return {
       ...fallback,
-      notice: hasLunchMenu ? undefined : fallback.notice,
       lunchUpdated: currentLunchLabel,
       lunchDays,
       operatingStatus: data.operatingStatus ?? fallback.operatingStatus,
