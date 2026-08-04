@@ -231,7 +231,7 @@ const splitDayLabel = (label: string) => {
           <div class="reservation-head"><p class="eyebrow">Rezervace</p><h3>Chcete si rezervovat stůl?</h3><p>Rezervace platí až po potvrzení obsluhou. Pro dnešní stůl je nejrychlejší zavolat.</p></div>
           <form data-reservation-form action="/api/reservation" method="post">
             <div class="form-row"><label>Jméno<input type="text" name="name" autocomplete="name" required /></label><label>Telefon<input type="tel" name="phone" autocomplete="tel" required /></label></div>
-            <div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" required /></label></div>
+            <div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" step="900" required /></label></div>
             <label>Počet osob<input type="number" name="guests" min="1" max="30" value="2" required /></label>
             <label>Poznámka<textarea name="message" rows="3" placeholder="Kočárek, oslava nebo jiné přání?"></textarea></label>
             <label class="honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
