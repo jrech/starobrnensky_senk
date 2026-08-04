@@ -136,6 +136,12 @@ rumViewport?.addEventListener("keydown", (event) => {
 const reservationForm = document.querySelector<HTMLFormElement>("[data-reservation-form]");
 const formStatus = document.querySelector<HTMLElement>("[data-form-status]");
 const dateInput = reservationForm?.querySelector<HTMLInputElement>('input[type="date"]');
+reservationForm?.querySelectorAll<HTMLInputElement>('input[type="time"]').forEach((input) => {
+  input.step = "900";
+});
+reservationForm?.querySelectorAll<HTMLTextAreaElement>('textarea[name="message"], textarea[name="note"]').forEach((textarea) => {
+  textarea.removeAttribute("placeholder");
+});
 if (dateInput) dateInput.min = today;
 
 reservationForm?.addEventListener("submit", async (event) => {
