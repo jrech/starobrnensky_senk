@@ -263,7 +263,29 @@ const reservationForm = document.querySelector<HTMLFormElement>("[data-reservati
 const formStatus = document.querySelector<HTMLElement>("[data-form-status]");
 const dateInput = reservationForm?.querySelector<HTMLInputElement>('input[type="date"]');
 reservationForm?.querySelectorAll<HTMLInputElement>('input[type="time"]').forEach((input) => {
-  input.step = "900";
+  const select = document.createElement("select");
+  select.name = input.name;
+  select.required = input.required;
+  select.className = input.className;
+  if (input.id) select.id = input.id;
+  if (input.disabled) select.disabled = true;
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Vyberte čas";
+  placeholder.selected = true;
+  select.append(placeholder);
+
+  for (let minutes = 11 * 60; minutes <= 23 * 60 + 45; minutes += 15) {
+    const option = document.createElement("option");
+    const hour = String(Math.floor(minutes / 60)).padStart(2, "0");
+    const minute = String(minutes % 60).padStart(2, "0");
+    option.value = `${hour}:${minute}`;
+    option.textContent = option.value;
+    select.append(option);
+  }
+
+  input.replaceWith(select);
 });
 reservationForm?.querySelectorAll<HTMLTextAreaElement>('textarea[name="message"], textarea[name="note"]').forEach((textarea) => {
   textarea.removeAttribute("placeholder");
