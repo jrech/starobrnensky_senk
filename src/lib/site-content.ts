@@ -165,6 +165,10 @@ function normalizeLunchMenu(menu: SanityLunchMenu, dates: string[]): LunchDay[] 
   });
 }
 
+function hasLunchMenuContent(menu: SanityLunchMenu): boolean {
+  return Object.values(menu).some((day) => Object.values(day || {}).some((value) => typeof value === "string" && value.trim().length > 0));
+}
+
 export async function getSiteContent(): Promise<SiteContent> {
   if (!projectId) return fallback;
 
@@ -184,11 +188,12 @@ export async function getSiteContent(): Promise<SiteContent> {
 
     if (!data) return fallback;
     const dates = getCurrentWeekDates();
-    const lunchDays = data.lunchMenu ? normalizeLunchMenu(data.lunchMenu, dates) : fallback.lunchDays;
+    const hasLunchMenu = Boolean(data.lunchMenu && hasLunchMenuContent(data.lunchMenu));
+    const lunchDays = hasLunchMenu ? normalizeLunchMenu(data.lunchMenu!, dates) : fallback.lunchDays;
     return {
       ...fallback,
-      notice: data.lunchMenu ? undefined : fallback.notice,
-      lunchUpdated: data.lunchMenu ? formatLunchWeek(dates) : fallback.lunchUpdated,
+      notice: hasLunchMenu ? undefined : fallback.notice,
+      lunchUpdated: hasLunchMenu ? formatLunchWeek(dates) : fallback.lunchUpdated,
       lunchDays,
       operatingStatus: data.operatingStatus ?? fallback.operatingStatus,
     };
