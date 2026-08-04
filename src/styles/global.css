@@ -241,7 +241,7 @@ address a .icon { transition: transform .6s var(--ease-out); }
 address a:hover .icon, address a:focus-visible .icon { transform: translateX(2px); }
 .contact-phone, address .icon-link { font-family: var(--font-display); font-size: clamp(24px, 2.6vw, 40px); line-height: 1.08; }
 .reservation input[type="date"], .reservation input[type="time"] { color-scheme: dark; }
-.reservation input[type="date"]::-webkit-calendar-picker-indicator, .reservation input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .85; }
+.reservation input[type="date"]::-webkit-calendar-picker-indicator, .reservation input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(82%) sepia(38%) saturate(690%) hue-rotate(350deg) brightness(104%) contrast(101%); opacity: 1; }
 .hours { max-width: 400px; margin-bottom: var(--space-6); padding-top: var(--space-3); border-top: 1px solid rgba(251,247,239,.25); }
 .hours h3 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
 .hours p { display: flex; justify-content: space-between; align-items: baseline; margin: 0; padding: 12px 0; color: rgba(251,247,239,.7); font-size: 18px; }
