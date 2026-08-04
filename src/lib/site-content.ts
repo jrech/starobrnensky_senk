@@ -4,6 +4,15 @@ import { drinkMenu as fallbackDrinkMenu, foodMenu as fallbackFoodMenu, type Menu
 
 export type Dish = { name: string; detail?: string; price: string; allergens?: string };
 export type LunchDay = { date: string; label: string; shortLabel: string; dishes: Dish[] };
+type SanityLunchDay = {
+  soupName?: string;
+  soupAllergens?: string;
+  dishAName?: string;
+  dishAAllergens?: string;
+  dishBName?: string;
+  dishBAllergens?: string;
+};
+type SanityLunchMenu = Partial<Record<"monday" | "tuesday" | "wednesday" | "thursday" | "friday", SanityLunchDay>>;
 export type Rum = { name: string; origin: string; note: string; abv: string; image?: string };
 export type Specialty = { name: string; note: string; price?: string; image?: string };
 export type SiteContent = {
@@ -108,6 +117,54 @@ const fallback: SiteContent = {
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET || "production";
 
+const lunchWeekdays = [
+  { key: "monday", label: "Pondělí", shortLabel: "Po" },
+  { key: "tuesday", label: "Úterý", shortLabel: "Út" },
+  { key: "wednesday", label: "Středa", shortLabel: "St" },
+  { key: "thursday", label: "Čtvrtek", shortLabel: "Čt" },
+  { key: "friday", label: "Pátek", shortLabel: "Pá" },
+] as const;
+
+function getCurrentWeekDates(now = new Date()): string[] {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
+  const weekday = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 }[value("weekday") as "Mon"] ?? 1;
+  const monday = new Date(Date.UTC(Number(value("year")), Number(value("month")) - 1, Number(value("day")) - ((weekday + 6) % 7), 12));
+  return lunchWeekdays.map((_, index) => {
+    const date = new Date(monday);
+    date.setUTCDate(monday.getUTCDate() + index);
+    return date.toISOString().slice(0, 10);
+  });
+}
+
+function formatLunchWeek(dates: string[]): string {
+  const first = new Date(`${dates[0]}T12:00:00Z`);
+  const last = new Date(`${dates[dates.length - 1]}T12:00:00Z`);
+  return `Obědové menu · ${first.getUTCDate()}.–${last.getUTCDate()}. ${last.getUTCMonth() + 1}. ${last.getUTCFullYear()}`;
+}
+
+function normalizeLunchMenu(menu: SanityLunchMenu, dates: string[]): LunchDay[] {
+  return lunchWeekdays.map((weekday, index) => {
+    const day = menu[weekday.key] || {};
+    return {
+      date: dates[index],
+      label: `${weekday.label} ${Number(dates[index].slice(8, 10))}. ${Number(dates[index].slice(5, 7))}.`,
+      shortLabel: weekday.shortLabel,
+      dishes: [
+        { name: day.soupName || "", price: "", allergens: day.soupAllergens || "" },
+        { name: day.dishAName || "", price: "159 Kč", allergens: day.dishAAllergens || "" },
+        { name: day.dishBName || "", price: "169 Kč", allergens: day.dishBAllergens || "" },
+      ],
+    };
+  });
+}
+
 export async function getSiteContent(): Promise<SiteContent> {
   if (!projectId) return fallback;
 
@@ -120,36 +177,21 @@ export async function getSiteContent(): Promise<SiteContent> {
   });
 
   try {
-    const data = await client.fetch<Partial<SiteContent>>(`*[_type == "siteContent"][0]{
-      lunchUpdated,
-      lunchDays[]{date,label,shortLabel,dishes[]{name,detail,price,allergens}},
-      foodMenu[]{title,items[]{amount,name,allergens,price}},
-      drinkMenu[]{title,items[]{amount,name,allergens,price}},
-      rums[]{name,origin,note,abv,"image": image.asset->url},
-      specialties[]{name,note,price,"image": image.asset->url},
-      phone,phoneHref,email,address,mapUrl,hours[]{days,hours},
+    const data = await client.fetch<Partial<SiteContent> & { lunchMenu?: SanityLunchMenu }>(`*[_type == "siteContent"][0]{
+      lunchMenu{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
       operatingStatus{mode,closedReason,closedUntil}
     }`);
 
     if (!data) return fallback;
+    const dates = getCurrentWeekDates();
+    const lunchDays = data.lunchMenu ? normalizeLunchMenu(data.lunchMenu, dates) : fallback.lunchDays;
     return {
       ...fallback,
-      ...data,
-      notice: data.notice ?? (data.lunchDays?.length ? undefined : fallback.notice),
-      lunchUpdated: data.lunchUpdated ?? fallback.lunchUpdated,
-      lunchDays: data.lunchDays ?? fallback.lunchDays,
-      rums: data.rums ?? fallback.rums,
-      specialties: data.specialties ?? fallback.specialties,
-      phone: data.phone ?? fallback.phone,
-      phoneHref: data.phoneHref ?? fallback.phoneHref,
-      email: data.email ?? fallback.email,
-      address: data.address ?? fallback.address,
-      mapUrl: data.mapUrl ?? fallback.mapUrl,
-      hours: data.hours ?? fallback.hours,
+      notice: data.lunchMenu ? undefined : fallback.notice,
+      lunchUpdated: data.lunchMenu ? formatLunchWeek(dates) : fallback.lunchUpdated,
+      lunchDays,
       operatingStatus: data.operatingStatus ?? fallback.operatingStatus,
-      foodMenu: data.foodMenu ?? fallback.foodMenu,
-      drinkMenu: data.drinkMenu ?? fallback.drinkMenu,
-    } as SiteContent;
+    };
   } catch (error) {
     console.warn("Sanity content could not be loaded; using local fallback.", error);
     return fallback;
