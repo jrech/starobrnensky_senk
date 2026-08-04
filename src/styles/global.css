@@ -235,10 +235,11 @@ h1, h2, h3, p, figure { margin-top: 0; }
 address { margin-bottom: var(--space-6); font-style: normal; }
 address p { max-width: 320px; color: rgba(251,247,239,.7); text-wrap: balance; }
 address a { display: block; width: fit-content; margin-top: 8px; transition: color .45s var(--ease-out), transform .6s var(--ease-out); will-change: color, transform; }
+address .icon-link { display: flex; align-items: center; width: fit-content; }
 address a:hover, address a:focus-visible { color: var(--honey-300); transform: translateX(6px); }
 address a .icon { transition: transform .6s var(--ease-out); }
 address a:hover .icon, address a:focus-visible .icon { transform: translateX(2px); }
-.contact-phone { font-family: var(--font-display); font-size: clamp(28px, 3vw, 48px); }
+.contact-phone, address .icon-link { font-family: var(--font-display); font-size: clamp(24px, 2.6vw, 40px); line-height: 1.08; }
 .hours { max-width: 400px; margin-bottom: var(--space-6); padding-top: var(--space-3); border-top: 1px solid rgba(251,247,239,.25); }
 .hours h3 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
 .hours p { display: flex; justify-content: space-between; align-items: baseline; margin: 0; padding: 12px 0; color: rgba(251,247,239,.7); font-size: 18px; }
