@@ -24,6 +24,7 @@ export type SiteContent = {
   phone: string;
   phoneHref: string;
   email: string;
+  facebookUrl: string;
   address: string;
   mapUrl: string;
   hours: OpeningHours[];
@@ -99,7 +100,8 @@ const fallback: SiteContent = {
   ],
   phone: "+420 776 791 144",
   phoneHref: "+420776791144",
-  email: "info@starobrnenskysenk.cz",
+  email: "senkbrno@seznam.cz",
+  facebookUrl: "https://www.facebook.com/senkbrno",
   address: "Plachty 512/2, 634 00 Brno–Nový Lískovec",
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Starobrnensky+Senk+Plachty+512%2F2+Brno",
   hours: [

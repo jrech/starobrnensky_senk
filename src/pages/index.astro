@@ -55,7 +55,7 @@ const splitDayLabel = (label: string) => {
         <a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a>
         <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
         <div class="mobile-socials" aria-label="Sociální sítě">
-          <span class="mobile-contact-label"><Icon name="facebook" />Facebook</span>
+          <a class="mobile-contact-link" href={content.facebookUrl} target="_blank" rel="noopener noreferrer"><Icon name="facebook" />Facebook</a>
           <span class="mobile-contact-label"><Icon name="instagram" />Instagram</span>
         </div>
       </div>
@@ -252,7 +252,7 @@ const splitDayLabel = (label: string) => {
         <div><p>Najdete nás</p><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">{content.address}</a></div>
         <div><p>Ozvěte se</p><a class="icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></div>
         <div><p>Rychle k věci</p><a href="#obedove-menu">Obědové menu</a><a href="/listky">Jídelní lístek</a><a href="#rezervace">Rezervace</a></div>
-        <div class="socials"><p>Sledujte nás</p><div><span class="social-icon" role="img" aria-label="Facebook – odkaz doplníme"><Icon name="facebook" label="Facebook" /></span><span class="social-icon" role="img" aria-label="Instagram – odkaz doplníme"><Icon name="instagram" label="Instagram" /></span></div></div>
+        <div class="socials"><p>Sledujte nás</p><div><a class="social-icon" href={content.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Icon name="facebook" label="Facebook" /></a><span class="social-icon" role="img" aria-label="Instagram – odkaz doplníme"><Icon name="instagram" label="Instagram" /></span></div></div>
       </div>
     </div>
     <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrnenský Šenk</span><span>IČ: 62080245</span><a class="footer-credit" href="https://www.jonasrech.com" target="_blank" rel="noopener noreferrer">Vytvořeno Jonas Rech</a></div>
