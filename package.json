@@ -1,0 +1,33 @@
+{
+  "name": "starobrnensky-senk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "images:optimize": "node scripts/optimize-images.mjs",
+    "studio": "pnpm --dir studio dev",
+    "studio:build": "pnpm --dir studio build"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.3",
+    "@astrojs/vercel": "11.0.4",
+    "@fontsource-variable/manrope": "5.3.0",
+    "@fontsource/caudex": "5.3.0",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@sanity/client": "7.26.0",
+    "@sanity/image-url": "2.1.1",
+    "astro": "7.1.6",
+    "gsap": "3.15.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "sharp": "0.35.3",
+    "typescript": "6.0.3"
+  }
+}

@@ -1,0 +1,39 @@
+---
+import "@fontsource/caudex/400.css";
+import "@fontsource/caudex/700.css";
+import "@fontsource-variable/manrope";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Starobrnenský Šenk | Obědové menu a pivo v Novém Lískovci",
+  description = "Místní šenk v Brně–Novém Lískovci. Aktuální obědové menu, dobré pivo, poctivé jídlo, zahrádka a rumy z celého světa.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#12372d" />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={Astro.url} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Přejít k obsahu</a>
+    <slot />
+  </body>
+</html>

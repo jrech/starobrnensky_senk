@@ -1,0 +1,276 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { getSiteContent } from "../lib/site-content";
+import { getOpeningStatus } from "../lib/opening-status";
+
+const content = await getSiteContent();
+const heroImage = "/assets/hero-senk.webp";
+const rumImage = "/assets/rum-bottle.png";
+const gardenImage = "/assets/zahradka-senk.webp";
+const foodImage = "/assets/specialita-koleno.webp";
+const burgerImage = "/assets/senkovni-burger.png";
+const ribsImage = "/assets/bbq-zebra.png";
+const specialtyImages = [foodImage, burgerImage, ribsImage];
+const heroStatus = getOpeningStatus(content.hours, content.operatingStatus);
+const lunchDishLabel = (index: number) => {
+  if (index === 0) return "Polévka";
+  if (index === 1) return "Jídlo A";
+  if (index === 2) return "Jídlo B";
+  return `Jídlo ${String.fromCharCode(64 + index)}`;
+};
+const splitDayLabel = (label: string) => {
+  const [name, ...dateParts] = label.split(" ");
+  return { name, date: dateParts.join(" ") };
+};
+---
+
+<BaseLayout>
+  <header class="site-header" data-header>
+    <a class="brand" href="#top" aria-label="Starobrnenský Šenk – domů">
+      <span class="brand-mark">SŠ</span>
+      <span>Starobrnenský<br />Šenk</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Hlavní navigace">
+      <a class="nav-priority" href="#obedove-menu">Obědové menu</a>
+      <a href="/listky">Jídelní lístek</a>
+      <a href="#rumy">Rumy</a>
+      <a href="#o-nas">O nás</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+    <a class="button button-small button-light header-cta" href="#rezervace">Rezervovat</a>
+    <button class="menu-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav aria-label="Mobilní navigace">
+        <a href="#obedove-menu">Obědové menu</a>
+        <a href="/listky">Jídelní a nápojový lístek</a>
+        <a href="#rumy">Rumy</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#o-nas">O nás</a>
+        <a href="#speciality">Speciality</a>
+        <a href="#kontakt">Kontakt a rezervace</a>
+      </nav>
+      <div class="mobile-contact" aria-label="Kontaktní údaje">
+        <a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a>
+        <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
+        <div class="mobile-socials" aria-label="Sociální sítě">
+          <span class="mobile-contact-label"><Icon name="facebook" />Facebook</span>
+          <span class="mobile-contact-label"><Icon name="instagram" />Instagram</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="homepage-flow">
+    <section class="hero" id="top" data-theme="dark">
+      <div class="hero-media reveal-media" aria-hidden="true">
+        <img src={heroImage} alt="" width="1536" height="1024" fetchpriority="high" />
+      </div>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-content shell">
+        <p class="eyebrow hero-eyebrow">Brno · Nový Lískovec</p>
+        <h1 class="hero-title motion-title">
+          <span class="line"><span>Po práci</span></span>
+          <span class="line"><span>na jedno.</span></span>
+          <span class="line title-indent"><span>A něco k tomu.</span></span>
+        </h1>
+        <div class="hero-bottom">
+          <p>Známé místo na dobré pivo, poctivé jídlo a pohodové posezení s lidmi z okolí.</p>
+          <div class="hero-actions">
+            <a class="button button-ghost" href="#obedove-menu">Dnešní obědové menu <Icon name="arrowDown" /></a>
+          </div>
+        </div>
+      </div>
+      <div class:list={["hero-status", `is-${heroStatus.state}`]} data-hero-status data-hours={JSON.stringify(content.hours)} data-status-override={JSON.stringify(content.operatingStatus)} role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span data-hero-status-message>{heroStatus.message}</span>
+      </div>
+    </section>
+
+    <section class="lunch section" id="obedove-menu" data-theme="light" aria-labelledby="lunch-title">
+      <div class="shell">
+        <div class="section-intro split-intro">
+          <div>
+            <p class="eyebrow">Tento týden</p>
+            <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line"><span>k obědu?</span></span></h2>
+          </div>
+          <div class="intro-copy">
+            <p>Každý pracovní den vaříme poctivé obědy. Vyberte si den a stavte se — obědové menu podáváme do 14:00.</p>
+            <p class="updated">{content.lunchUpdated}</p>
+          </div>
+        </div>
+
+        {content.notice && <p class="content-notice" role="note">{content.notice}</p>}
+
+        <div class="lunch-widget" data-lunch-tabs>
+          <div class="day-tabs" role="tablist" aria-label="Dny obědového menu">
+            {content.lunchDays.map((day, index) => (
+              <button type="button" role="tab" id={`tab-${index}`} aria-controls={`panel-${index}`} aria-selected={index === 0 ? "true" : "false"} tabindex={index === 0 ? 0 : -1} data-tab={index} data-date={day.date}>
+                <span class="day-short">{day.shortLabel}</span>
+                <span class="day-name">{splitDayLabel(day.label).name}</span>
+                <span class="day-date">{splitDayLabel(day.label).date}</span>
+              </button>
+            ))}
+          </div>
+          <div class="lunch-panels">
+            {content.lunchDays.map((day, index) => (
+              <div class="lunch-panel" role="tabpanel" id={`panel-${index}`} aria-labelledby={`tab-${index}`} hidden={index !== 0} data-panel={index}>
+                <div class="dish-list">
+                  {day.dishes.map((dish, dishIndex) => (
+                    <article class="dish">
+                      <span class="dish-type">{lunchDishLabel(dishIndex)}</span>
+                      <div>
+                        <h3>{dish.name}</h3>
+                        {dish.detail && <p>{dish.detail}</p>}
+                        {dish.allergens && <p class="allergens">Alergeny: {dish.allergens}</p>}
+                      </div>
+                      {dishIndex > 0 && <strong>{dish.price}</strong>}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="lunch-footer">
+          <p>Obědové menu podáváme v pracovní dny od 11:00 do 14:00.</p>
+          <button class="text-link allergen-trigger" type="button" data-allergen-open>Seznam alergenů <Icon name="arrowUpRight" /></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="rum-section section" id="rumy" data-theme="dark" aria-labelledby="rum-title">
+      <div class="shell rum-heading">
+        <p class="eyebrow">Rumy z celého světa</p>
+        <h2 id="rum-title" class="display motion-title"><span class="line"><span>Ochutnejte rumy</span></span><span class="line title-indent"><span>z celého světa.</span></span></h2>
+        <p class="rum-lead">Od lehkých karibských rumů po výrazné stařené lahve. Ptejte se obsluhy, rádi poradíme.</p>
+      </div>
+      <div class="rum-viewport" data-rum-viewport tabindex="0" aria-label="Výběr rumů, vodorovně posuvný seznam">
+        <div class="rum-track" data-rum-track>
+          {content.rums.map((rum, index) => (
+            <article class="rum-card">
+              <div class="rum-card-image">
+                <img src={rum.image || rumImage} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} />
+              </div>
+              <div class="rum-meta">
+                <p>{rum.origin} · {rum.abv}</p>
+                <h3>{rum.name}</h3>
+                <p>{rum.note}</p>
+              </div>
+            </article>
+          ))}
+          <article class="rum-card rum-card-last">
+            <div>
+              <p class="eyebrow">Na baru je toho víc</p>
+              <h3>Najdeme rum podle vaší chuti.</h3>
+              <p>Sladší, sušší, kořenitý nebo jen něco dobrého po večeři.</p>
+              <a class="button button-light" href="#kontakt">Stavte se ochutnat</a>
+            </div>
+          </article>
+        </div>
+        <div class="rum-progress shell" aria-hidden="true">
+          <span>Posuňte dál</span><div><i data-rum-progress></i></div><span>04</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="gallery section" id="galerie" data-theme="cream" aria-labelledby="gallery-title">
+      <div class="shell gallery-header">
+        <p class="eyebrow">U nás v Šenku</p>
+        <h2 id="gallery-title" class="display motion-title"><span class="line"><span>Známé místo.</span></span><span class="line title-indent"><span>Dobré chvíle.</span></span></h2>
+      </div>
+      <div class="gallery-grid shell">
+        <figure class="gallery-item gallery-wide reveal-media"><img src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" width="1536" height="1024" loading="lazy" /></figure>
+        <figure class="gallery-item gallery-tall reveal-media"><img src={heroImage} alt="Čerstvě načepované pivo na stole" width="1536" height="1024" loading="lazy" /></figure>
+        <figure class="gallery-item reveal-media"><img src={foodImage} alt="Pečené vepřové koleno s přílohami" width="1536" height="1024" loading="lazy" /></figure>
+        <figure class="gallery-item reveal-media"><img src={rumImage} alt="Výběr rumů ve skle na baru" width="1536" height="1024" loading="lazy" /></figure>
+      </div>
+    </section>
+
+    <section class="about section" id="o-nas" data-theme="green" aria-labelledby="about-title">
+      <div class="shell about-grid">
+        <div><p class="eyebrow">O nás</p><p class="about-number">Od sousedů<br />pro sousedy.</p></div>
+        <div>
+          <h2 id="about-title" class="about-statement motion-title"><span class="line"><span>Šenk patří do každodenního rytmu Nového Lískovce.</span></span><span class="line"><span>Přijdete po práci na jedno, pozdravíte známé,</span></span><span class="line"><span>dáte si dobré jídlo — a chvíli zůstanete.</span></span></h2>
+          <p class="about-copy" data-about-copy>Naše hodnota není v okázalosti. Je v tom, že víte, kam jdete: na poctivé pivo, normální obsluhu, zahrádku a místo, kde se lidé opravdu potkávají.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="specialties section" id="speciality" data-theme="light" aria-labelledby="specialties-title">
+      <div class="shell">
+        <div class="section-intro split-intro">
+          <div><p class="eyebrow">Když máte větší hlad</p><h2 id="specialties-title" class="display motion-title"><span class="line"><span>Šenkovní</span></span><span class="line"><span>speciality.</span></span></h2></div>
+          <p class="intro-copy">Pár jistot, kvůli kterým stojí za to zůstat déle než na jedno.</p>
+        </div>
+        <div class="specialty-grid">
+          {content.specialties.map((item, index) => (
+            <article class="specialty-card">
+              <div class="specialty-image reveal-media"><img src={item.image || specialtyImages[index] || foodImage} alt={item.name} width="1536" height="1024" loading="lazy" style={`object-position:${38 + index * 17}% center`} /></div>
+              <div class="specialty-copy"><h3>{item.name}</h3><p>{item.note}</p><strong>{item.price || "Cena na dotaz"}</strong></div>
+            </article>
+          ))}
+        </div>
+        <p class="future-link">Kompletní jídelní lístek připravujeme.</p>
+      </div>
+    </section>
+
+    <section class="contact section" id="kontakt" data-theme="brown" aria-labelledby="contact-title">
+      <div class="shell contact-grid">
+        <div class="contact-copy">
+          <p class="eyebrow">Jsme kousek</p>
+          <h2 id="contact-title" class="display motion-title"><span class="line"><span>Tak kdy</span></span><span class="line"><span>se uvidíme?</span></span></h2>
+          <address><p>{content.address}</p><a class="contact-phone icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></address>
+          <div class="hours" aria-label="Otevírací doba"><h3>Otevírací doba</h3>{content.hours.map((row) => <p><span>{row.days}</span><strong>{row.hours}</strong></p>)}</div>
+          <div class="map-embed">
+            <iframe title="Mapa Starobrněnského Šenku" src="https://www.google.com/maps?q=Starobrnensky%20Senk%2C%20Plachty%20512%2F2%2C%20Brno&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <a href={content.mapUrl} target="_blank" rel="noopener noreferrer">Otevřít v Mapách Google <Icon name="arrowUpRight" /></a>
+          </div>
+        </div>
+
+        <div class="reservation" id="rezervace">
+          <div class="reservation-head"><p class="eyebrow">Rezervace</p><h3>Chcete si rezervovat stůl?</h3><p>Rezervace platí až po potvrzení obsluhou. Pro dnešní stůl je nejrychlejší zavolat.</p></div>
+          <form data-reservation-form action="/api/reservation" method="post">
+            <div class="form-row"><label>Jméno<input type="text" name="name" autocomplete="name" required /></label><label>Telefon<input type="tel" name="phone" autocomplete="tel" required /></label></div>
+            <div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" required /></label></div>
+            <label>Počet osob<input type="number" name="guests" min="1" max="30" value="2" required /></label>
+            <label>Poznámka<textarea name="message" rows="3" placeholder="Kočárek, oslava nebo jiné přání?"></textarea></label>
+            <label class="honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+            <button class="button button-dark" type="submit">Odeslat žádost <Icon name="arrowRight" /></button>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" data-theme="dark">
+    <div class="shell footer-top">
+      <p class="footer-signature motion-title"><span class="line"><span>Na jedno.</span></span><span class="line"><span><em>A klidně déle.</em></span></span></p>
+      <div class="footer-links">
+        <div><p>Najdete nás</p><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">{content.address}</a></div>
+        <div><p>Ozvěte se</p><a class="icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></div>
+        <div><p>Rychle k věci</p><a href="#obedove-menu">Obědové menu</a><a href="#rezervace">Rezervace</a><a href="#rumy">Rumy</a></div>
+        <div class="socials"><p>Sledujte nás</p><div><span class="social-icon" role="img" aria-label="Facebook – odkaz doplníme"><Icon name="facebook" label="Facebook" /></span><span class="social-icon" role="img" aria-label="Instagram – odkaz doplníme"><Icon name="instagram" label="Instagram" /></span></div></div>
+      </div>
+    </div>
+    <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrnenský Šenk</span><a class="footer-credit" href="https://www.jonasrech.com" target="_blank" rel="noopener noreferrer">Vytvořeno Jonas Rech</a></div>
+  </footer>
+
+  <div class="mobile-actions" aria-label="Rychlé akce"><a href="#obedove-menu">Dnešní menu</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
+
+  <dialog class="allergen-dialog" data-allergen-dialog aria-labelledby="allergen-title">
+    <div class="allergen-dialog-inner">
+      <button class="dialog-close" type="button" aria-label="Zavřít seznam alergenů" data-allergen-close><Icon name="close" /></button>
+      <p class="eyebrow">Praktické informace</p>
+      <h2 id="allergen-title">Seznam alergenů</h2>
+      <ol>
+        <li>Obiloviny obsahující lepek</li><li>Korýši</li><li>Vejce</li><li>Ryby</li><li>Arašídy</li><li>Sójové boby</li><li>Mléko</li><li>Skořápkové plody</li><li>Celer</li><li>Hořčice</li><li>Sezamová semena</li><li>Oxid siřičitý a siřičitany</li><li>Vlčí bob</li><li>Měkkýši</li>
+      </ol>
+    </div>
+  </dialog>
+
+  <script>import "../scripts/site.ts";</script>
+</BaseLayout>

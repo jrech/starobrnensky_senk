@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+.env.*
+!.env.example
+studio/dist/
+.sanity/
+*.log
+
+# Local agent/editor state and unoptimized source references
+.agents/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.impeccable/
+.kiro/
+.opencode/
+source-images/

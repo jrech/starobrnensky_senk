@@ -1,0 +1,13 @@
+{
+  "_id": "siteContent",
+  "_type": "siteContent",
+  "operatingStatus": {
+    "mode": "automatic"
+  },
+  "hours": [
+    { "days": "Po\u2013\u010Ct", "hours": "11:00\u201323:00" },
+    { "days": "P\u00e1", "hours": "11:00\u201300:00" },
+    { "days": "So", "hours": "12:00\u201300:00" },
+    { "days": "Ne", "hours": "12:00\u201322:00" }
+  ]
+}

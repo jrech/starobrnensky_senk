@@ -1,0 +1,22 @@
+---
+import { icon } from "@fortawesome/fontawesome-svg-core";
+import { faArrowDown, faArrowRight, faArrowUpRightFromSquare, faEnvelope, faPhone, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faFacebookF, faInstagram } from "@fortawesome/free-brands-svg-icons";
+
+const icons = {
+  arrowDown: faArrowDown,
+  arrowRight: faArrowRight,
+  arrowUpRight: faArrowUpRightFromSquare,
+  email: faEnvelope,
+  phone: faPhone,
+  close: faXmark,
+  facebook: faFacebookF,
+  instagram: faInstagram,
+};
+
+type IconName = keyof typeof icons;
+const { name, label } = Astro.props as { name: IconName; label?: string };
+const svg = icon(icons[name]).html.join("");
+---
+
+<span class:list={["icon", `icon-${name}`]} aria-hidden={label ? undefined : "true"} aria-label={label} set:html={svg}></span>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { getSiteContent } from "../lib/site-content";
+
+const content = await getSiteContent();
+const foodMenu = content.foodMenu;
+const drinkMenu = content.drinkMenu;
+const foodImage = "/assets/specialita-koleno.webp";
+const foodSectionIds = foodMenu.map((_, index) => `jidlo-${index}`);
+const drinkSectionIds = drinkMenu.map((_, index) => `piti-${index}`);
+---
+
+<BaseLayout title="Jídelní a nápojový lístek | Starobrněnský Šenk" description="Jídelní a nápojový lístek Starobrněnského Šenku v Brně–Novém Lískovci.">
+  <header class="site-header" data-header>
+    <a class="brand" href="/" aria-label="Starobrněnský Šenk – domů"><span class="brand-mark">SŠ</span><span>Starobrněnský<br />Šenk</span></a>
+    <nav class="desktop-nav" aria-label="Hlavní navigace"><a href="/#obedove-menu">Obědové menu</a><a class="nav-priority" href="/listky">Jídelní lístek</a><a href="/#rumy">Rumy</a><a href="/#o-nas">O nás</a><a href="/#kontakt">Kontakt</a></nav>
+    <a class="button button-small button-light header-cta" href="#rezervace">Rezervovat</a>
+    <button class="menu-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span></button>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <nav aria-label="Mobilní navigace"><a href="/#obedove-menu">Obědové menu</a><a href="/listky">Jídelní a nápojový lístek</a><a href="/#rumy">Rumy</a><a href="/#galerie">Galerie</a><a href="/#o-nas">O nás</a><a href="#kontakt">Kontakt a rezervace</a></nav>
+      <div class="mobile-contact" aria-label="Kontaktní údaje"><a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a><div class="mobile-socials" aria-label="Sociální sítě"><span class="mobile-contact-label"><Icon name="facebook" />Facebook</span><span class="mobile-contact-label"><Icon name="instagram" />Instagram</span></div></div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero menu-page-hero" data-theme="dark">
+      <div class="hero-media reveal-media" aria-hidden="true"><img src={foodImage} alt="" width="1536" height="1024" fetchpriority="high" /></div><div class="hero-shade" aria-hidden="true"></div>
+      <div class="shell hero-content"><p class="hero-eyebrow">Starobrněnský Šenk · Nový Lískovec</p><h1 class="hero-title"><span class="line"><span>Jídlo</span></span><span class="line title-indent"><span>& pití.</span></span></h1><div class="hero-bottom"><p>Poctivá klasika k pivu, něco malého na stůl i lahve, které stojí za večer.</p><div class="hero-actions"><a class="button button-light" href="#jidlo">Jídelní lístek <Icon name="arrowDown" /></a><a class="button button-ghost" href="#piti">Nápojový lístek <Icon name="arrowDown" /></a></div></div></div>
+    </section>
+
+    <nav class="menu-jump-nav" aria-label="Rychlá navigace v lístku"><div class="shell"><a href="#jidlo">Jídlo</a><a href="#piti">Pití</a><a href="#kontakt">Kontakt a rezervace</a></div></nav>
+
+    <section class="menu-page-section section" id="jidlo" data-theme="cream" aria-labelledby="food-menu-title"><div class="shell"><div class="menu-page-intro"><h2 id="food-menu-title" class="display motion-title"><span class="line"><span>K pivu i</span></span><span class="line title-indent"><span>na pořádný hlad.</span></span></h2><p>Váha masa je uvedená v syrovém stavu. Alergeny najdete u jednotlivých položek.</p></div><div class="menu-category-grid">{foodMenu.map((category, categoryIndex) => (<section class:list={["menu-category", category.title === "Doporučujeme" && "menu-category-featured"]} id={foodSectionIds[categoryIndex]} aria-labelledby={`food-category-${categoryIndex}`}><h3 id={`food-category-${categoryIndex}`} class="motion-title"><span class="line"><span>{category.title}</span></span></h3><ul>{category.items.map((item) => (<li><span class="menu-item-amount">{item.amount}</span><div><strong>{item.name}</strong>{item.allergens && <small>Alergeny: {item.allergens}</small>}</div><b>{item.price}</b></li>))}</ul></section>))}</div></div></section>
+
+    <section class="menu-page-section menu-drinks section" id="piti" data-theme="brown" aria-labelledby="drink-menu-title"><div class="shell"><div class="menu-page-intro"><h2 id="drink-menu-title" class="display motion-title"><span class="line"><span>Na žízeň</span></span><span class="line title-indent"><span>i na chuť.</span></span></h2><p>Od čepovaného piva po rum, který si necháte doporučit přímo u baru.</p></div><div class="menu-category-grid">{drinkMenu.map((category, categoryIndex) => (<section class="menu-category" id={drinkSectionIds[categoryIndex]} aria-labelledby={`drink-category-${categoryIndex}`}><h3 id={`drink-category-${categoryIndex}`} class="motion-title"><span class="line"><span>{category.title}</span></span></h3><ul>{category.items.map((item) => (<li><span class="menu-item-amount">{item.amount}</span><div><strong>{item.name}</strong>{item.allergens && <small>Alergeny: {item.allergens}</small>}</div><b>{item.price}</b></li>))}</ul></section>))}</div></div></section>
+
+    <section class="contact section" id="kontakt" data-theme="brown" aria-labelledby="contact-title"><div class="shell contact-grid"><div class="contact-copy"><h2 id="contact-title" class="display motion-title"><span class="line"><span>Stůl na</span></span><span class="line"><span>dnešek?</span></span></h2><address><p>{content.address}</p><a class="contact-phone icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></address><div class="hours" aria-label="Otevírací doba"><h3>Otevírací doba</h3>{content.hours.map((row) => <p><span>{row.days}</span><strong>{row.hours}</strong></p>)}</div><div class="map-embed"><iframe title="Mapa Starobrněnského Šenku" src="https://www.google.com/maps?q=Starobrnensky%20Senk%2C%20Plachty%20512%2F2%2C%20Brno&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">Otevřít v Mapách Google <Icon name="arrowUpRight" /></a></div></div><div class="reservation" id="rezervace"><div class="reservation-head"><h3>Chcete si rezervovat stůl?</h3><p>Rezervace platí až po potvrzení obsluhou. Pro dnešní stůl je nejrychlejší zavolat.</p></div><form data-reservation-form action="/api/reservation" method="post"><div class="form-row"><label>Jméno<input type="text" name="name" autocomplete="name" required /></label><label>Telefon<input type="tel" name="phone" autocomplete="tel" required /></label></div><div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" required /></label></div><label>Počet osob<select name="guests" required><option value="">Vyberte počet osob</option>{Array.from({ length: 12 }, (_, index) => <option value={index + 1}>{index + 1} {index === 0 ? "osoba" : index < 4 ? "osoby" : "osob"}</option>)}</select></label><label>Poznámka<textarea name="note" rows="3" placeholder="Například kočárek, pes nebo přání k místu."></textarea></label><label class="honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off" /></label><button class="button button-dark" type="submit">Odeslat žádost <Icon name="arrowRight" /></button><p class="form-status" data-form-status role="status" aria-live="polite"></p></form></div></div></section>
+  </main>
+
+  <footer class="footer" data-theme="dark"><div class="shell footer-top"><p class="footer-signature motion-title"><span class="line"><span>Na jedno.</span></span><span class="line"><span><em>A klidně déle.</em></span></span></p><div class="footer-links"><div><p>Najdete nás</p><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">{content.address}</a></div><div><p>Ozvěte se</p><a class="icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></div><div><p>Rychle k věci</p><a href="/#obedove-menu">Obědové menu</a><a href="#jidlo">Jídelní lístek</a><a href="#piti">Nápojový lístek</a></div><div class="socials"><p>Sledujte nás</p><div><span class="social-icon" role="img" aria-label="Facebook – odkaz doplníme"><Icon name="facebook" label="Facebook" /></span><span class="social-icon" role="img" aria-label="Instagram – odkaz doplníme"><Icon name="instagram" label="Instagram" /></span></div></div></div></div><div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrněnský Šenk</span><span>Brno–Nový Lískovec</span></div></footer>
+
+  <div class="mobile-actions" aria-label="Rychlé akce"><a href="#jidlo">Jídelní lístek</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
+  <script>import "../scripts/site.ts";</script>
+</BaseLayout>
