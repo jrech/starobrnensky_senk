@@ -62,7 +62,7 @@ const splitDayLabel = (label: string) => {
     </div>
   </header>
 
-  <main id="main" class="homepage-flow">
+  <main id="main" class="homepage-flow" data-sanity-project={import.meta.env.PUBLIC_SANITY_PROJECT_ID} data-sanity-dataset={import.meta.env.PUBLIC_SANITY_DATASET || "production"}>
     <section class="hero" id="top" data-theme="dark">
       <div class="hero-media reveal-media" aria-hidden="true">
         <img src={heroImage} alt="" width="1536" height="1024" fetchpriority="high" />

@@ -12,6 +12,61 @@ const mobileMenu = document.querySelector<HTMLElement>(".mobile-menu");
 const mobileMenuItems = mobileMenu?.querySelectorAll<HTMLElement>("nav a, .mobile-contact-link, .mobile-contact-label") || [];
 const allergenDialog = document.querySelector<HTMLDialogElement>("[data-allergen-dialog]");
 const heroStatus = document.querySelector<HTMLElement>("[data-hero-status]");
+const contentRoot = document.querySelector<HTMLElement>("[data-sanity-project]");
+
+type SanityLunchDay = {
+  soupName?: string;
+  soupAllergens?: string;
+  dishAName?: string;
+  dishAAllergens?: string;
+  dishBName?: string;
+  dishBAllergens?: string;
+};
+
+type PublishedContent = {
+  lunchMenu?: Partial<Record<"monday" | "tuesday" | "wednesday" | "thursday" | "friday", SanityLunchDay>>;
+  operatingStatus?: OperatingStatusOverride;
+};
+
+const lunchWeekdays = [
+  { key: "monday", label: "Pondělí", shortLabel: "Po" },
+  { key: "tuesday", label: "Úterý", shortLabel: "Út" },
+  { key: "wednesday", label: "Středa", shortLabel: "St" },
+  { key: "thursday", label: "Čtvrtek", shortLabel: "Čt" },
+  { key: "friday", label: "Pátek", shortLabel: "Pá" },
+] as const;
+
+function getPragueDate(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
+  return `${value("year")}-${value("month")}-${value("day")}`;
+}
+
+function getCurrentWeekDates(now = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
+  const weekday = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 }[value("weekday") as "Mon"] ?? 1;
+  const monday = new Date(Date.UTC(Number(value("year")), Number(value("month")) - 1, Number(value("day")) - ((weekday + 6) % 7), 12));
+  return lunchWeekdays.map((_, index) => {
+    const date = new Date(monday);
+    date.setUTCDate(monday.getUTCDate() + index);
+    return date.toISOString().slice(0, 10);
+  });
+}
+
+let updateHeroStatus = () => {};
+let setHeroStatusOverride = (_override: OperatingStatusOverride) => {};
 
 function updateLunchWeekLabel() {
   const target = document.querySelector<HTMLElement>("[data-lunch-updated]");
@@ -38,14 +93,19 @@ updateLunchWeekLabel();
 if (heroStatus) {
   try {
     const hours = JSON.parse(heroStatus.dataset.hours || "[]") as OpeningHours[];
-    const override = JSON.parse(heroStatus.dataset.statusOverride || "{}") as OperatingStatusOverride;
+    let override = JSON.parse(heroStatus.dataset.statusOverride || "{}") as OperatingStatusOverride;
     const message = heroStatus.querySelector<HTMLElement>("[data-hero-status-message]");
-    const updateHeroStatus = () => {
+    updateHeroStatus = () => {
       const status = getOpeningStatus(hours, override);
       heroStatus.classList.toggle("is-open", status.state === "open");
       heroStatus.classList.toggle("is-closed", status.state === "closed");
       heroStatus.setAttribute("aria-label", status.message);
       if (message) message.textContent = status.message;
+    };
+    setHeroStatusOverride = (nextOverride) => {
+      override = nextOverride;
+      heroStatus.dataset.statusOverride = JSON.stringify(nextOverride);
+      updateHeroStatus();
     };
     const scheduleHeroStatusUpdate = () => {
       updateHeroStatus();
@@ -118,13 +178,79 @@ tabs.forEach((tab, index) => {
   });
 });
 
-const today = new Date().toISOString().slice(0, 10);
+function hasLunchMenuContent(menu: PublishedContent["lunchMenu"]) {
+  return Object.values(menu || {}).some((day) => Object.values(day || {}).some((value) => typeof value === "string" && value.trim().length > 0));
+}
+
+function updateLunchMenu(menu: NonNullable<PublishedContent["lunchMenu"]>) {
+  const dates = getCurrentWeekDates();
+  lunchWeekdays.forEach((weekday, index) => {
+    const day = menu[weekday.key] || {};
+    const tab = tabs[index];
+    const panel = panels[index];
+    if (!tab || !panel) return;
+
+    tab.dataset.date = dates[index];
+    const dayName = tab.querySelector<HTMLElement>(".day-name");
+    const dayShort = tab.querySelector<HTMLElement>(".day-short");
+    const dayDate = tab.querySelector<HTMLElement>(".day-date");
+    if (dayName) dayName.textContent = weekday.label;
+    if (dayShort) dayShort.textContent = weekday.shortLabel;
+    if (dayDate) dayDate.textContent = `${Number(dates[index].slice(8, 10))}. ${Number(dates[index].slice(5, 7))}.`;
+
+    const dishes = [
+      { name: day.soupName || "", allergens: day.soupAllergens || "" },
+      { name: day.dishAName || "", allergens: day.dishAAllergens || "" },
+      { name: day.dishBName || "", allergens: day.dishBAllergens || "" },
+    ];
+    panel.querySelectorAll<HTMLElement>(".dish").forEach((dish, dishIndex) => {
+      const value = dishes[dishIndex];
+      if (!value) return;
+      const title = dish.querySelector<HTMLElement>("h3");
+      const allergens = dish.querySelector<HTMLElement>(".allergens");
+      if (title) title.textContent = value.name;
+      if (allergens) {
+        allergens.hidden = !value.allergens;
+        allergens.textContent = value.allergens ? `Alergeny: ${value.allergens}` : "";
+      }
+    });
+  });
+
+  const currentDayIndex = dates.indexOf(getPragueDate());
+  if (currentDayIndex >= 0) activateTab(currentDayIndex);
+}
+
+async function hydratePublishedContent() {
+  const projectId = contentRoot?.dataset.sanityProject;
+  const dataset = contentRoot?.dataset.sanityDataset || "production";
+  if (!projectId) return;
+
+  const query = `{
+    "lunchMenu": *[_type == "lunchMenu" && _id == "lunchMenu"][0]{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
+    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil}
+  }`;
+
+  try {
+    const response = await fetch(`https://${projectId}.api.sanity.io/v2026-08-01/data/query/${dataset}?query=${encodeURIComponent(query)}`);
+    if (!response.ok) throw new Error(`Sanity request failed with ${response.status}`);
+    const payload = await response.json() as { result?: PublishedContent };
+    const data = payload.result;
+    if (!data) return;
+    if (data.operatingStatus) setHeroStatusOverride(data.operatingStatus);
+    if (data.lunchMenu && hasLunchMenuContent(data.lunchMenu)) updateLunchMenu(data.lunchMenu);
+  } catch (error) {
+    console.warn("Published Sanity content could not be refreshed.", error);
+  }
+}
+
+const today = getPragueDate();
 const matchingPanel = Array.from(document.querySelectorAll<HTMLElement>(".lunch-panel")).findIndex((panel) => {
   const tabIndex = panel.dataset.panel;
   const tab = document.querySelector<HTMLElement>(`[data-tab="${tabIndex}"]`);
   return tab?.getAttribute("data-date") === today;
 });
 if (matchingPanel >= 0) activateTab(matchingPanel);
+void hydratePublishedContent();
 
 const rumViewport = document.querySelector<HTMLElement>("[data-rum-viewport]");
 rumViewport?.addEventListener("keydown", (event) => {
