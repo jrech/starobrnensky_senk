@@ -146,7 +146,8 @@ function getCurrentWeekDates(now = new Date()): string[] {
 function formatLunchWeek(dates: string[]): string {
   const first = new Date(`${dates[0]}T12:00:00Z`);
   const last = new Date(`${dates[dates.length - 1]}T12:00:00Z`);
-  return `Obědové menu · ${first.getUTCDate()}.–${last.getUTCDate()}. ${last.getUTCMonth() + 1}. ${last.getUTCFullYear()}`;
+  const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
+  return `Obědové menu · ${first.getUTCDate()}.–${last.getUTCDate()}. ${months[last.getUTCMonth()]} ${last.getUTCFullYear()}`;
 }
 
 function normalizeLunchMenu(menu: SanityLunchMenu, dates: string[]): LunchDay[] {
@@ -170,7 +171,9 @@ function hasLunchMenuContent(menu: SanityLunchMenu): boolean {
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
-  if (!projectId) return fallback;
+  const dates = getCurrentWeekDates();
+  const currentLunchLabel = formatLunchWeek(dates);
+  if (!projectId) return { ...fallback, lunchUpdated: currentLunchLabel };
 
   const client = createClient({
     projectId,
@@ -186,19 +189,18 @@ export async function getSiteContent(): Promise<SiteContent> {
       operatingStatus{mode,closedReason,closedUntil}
     }`);
 
-    if (!data) return fallback;
-    const dates = getCurrentWeekDates();
+    if (!data) return { ...fallback, lunchUpdated: currentLunchLabel };
     const hasLunchMenu = Boolean(data.lunchMenu && hasLunchMenuContent(data.lunchMenu));
     const lunchDays = hasLunchMenu ? normalizeLunchMenu(data.lunchMenu!, dates) : fallback.lunchDays;
     return {
       ...fallback,
       notice: hasLunchMenu ? undefined : fallback.notice,
-      lunchUpdated: hasLunchMenu ? formatLunchWeek(dates) : fallback.lunchUpdated,
+      lunchUpdated: currentLunchLabel,
       lunchDays,
       operatingStatus: data.operatingStatus ?? fallback.operatingStatus,
     };
   } catch (error) {
     console.warn("Sanity content could not be loaded; using local fallback.", error);
-    return fallback;
+    return { ...fallback, lunchUpdated: currentLunchLabel };
   }
 }

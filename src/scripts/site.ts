@@ -13,6 +13,28 @@ const mobileMenuItems = mobileMenu?.querySelectorAll<HTMLElement>("nav a, .mobil
 const allergenDialog = document.querySelector<HTMLDialogElement>("[data-allergen-dialog]");
 const heroStatus = document.querySelector<HTMLElement>("[data-hero-status]");
 
+function updateLunchWeekLabel() {
+  const target = document.querySelector<HTMLElement>("[data-lunch-updated]");
+  if (!target) return;
+
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).formatToParts(new Date());
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
+  const weekday = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 }[value("weekday") as "Mon"] ?? 1;
+  const monday = new Date(Date.UTC(Number(value("year")), Number(value("month")) - 1, Number(value("day")) - ((weekday + 6) % 7), 12));
+  const friday = new Date(monday);
+  friday.setUTCDate(monday.getUTCDate() + 4);
+  const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
+  target.textContent = `Obědové menu · ${monday.getUTCDate()}.–${friday.getUTCDate()}. ${months[friday.getUTCMonth()]} ${friday.getUTCFullYear()}`;
+}
+
+updateLunchWeekLabel();
+
 if (heroStatus) {
   try {
     const hours = JSON.parse(heroStatus.dataset.hours || "[]") as OpeningHours[];
