@@ -425,6 +425,28 @@ if (!reduceMotion) {
     });
     return () => tween.kill();
   });
+
+  gsap.matchMedia().add("(max-width: 1024px)", () => {
+    const viewport = document.querySelector<HTMLElement>("[data-rum-viewport]");
+    const progress = document.querySelector<HTMLElement>("[data-rum-progress]");
+    if (!viewport || !progress) return;
+
+    const updateProgress = () => {
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+      const ratio = maxScroll > 0 ? viewport.scrollLeft / maxScroll : 0;
+      progress.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`;
+    };
+
+    viewport.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    window.addEventListener("load", updateProgress, { once: true });
+    updateProgress();
+
+    return () => {
+      viewport.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  });
 }
 
 window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
