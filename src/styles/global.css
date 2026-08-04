@@ -229,7 +229,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .future-link { margin: var(--space-6) 0 0; color: rgba(251,247,239,.62); font-size: 13px; text-align: right; }
 
 .contact { color: var(--cream-50); background: var(--forest-950); }
-.contact-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(64px, 10vw, 160px); align-items: stretch; }
+.contact-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(64px, 10vw, 160px); align-items: start; }
 .contact-copy { display: flex; flex-direction: column; }
 .contact-copy .display { margin-bottom: var(--space-8); font-size: clamp(64px, 7.6vw, 128px); }
 address { margin-bottom: var(--space-6); font-style: normal; }
@@ -248,7 +248,7 @@ address a:hover .icon, address a:focus-visible .icon { transform: translateX(2px
 .map-embed iframe { width: 100%; height: 248px; border: 0; filter: saturate(.68) contrast(1.06); }
 .map-embed a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: 48px; padding: 12px 16px; color: var(--forest-950); background: var(--honey-300); font-size: 13px; font-weight: 700; transition: background .25s, color .25s; }
 .map-embed a:hover { color: var(--cream-50); background: var(--forest-800); }
-.reservation { padding: clamp(32px, 5vw, 72px); color: var(--ink); background: var(--cream-50); }
+.reservation { align-self: start; padding: clamp(32px, 5vw, 72px); color: var(--ink); background: var(--cream-50); }
 .reservation-head { margin-bottom: var(--space-5); }
 .reservation-head h3 { margin: 0 0 var(--space-2); font-family: var(--font-display); font-size: clamp(38px, 4vw, 64px); font-weight: 400; line-height: 1; }
 .reservation-head > p:last-child { max-width: 520px; color: var(--muted); font-size: 14px; }
