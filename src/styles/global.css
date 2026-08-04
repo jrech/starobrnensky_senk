@@ -210,7 +210,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .about { color: var(--cream-50); background: var(--forest-900); }
 .about-grid { display: grid; grid-template-columns: .7fr 1.8fr; gap: var(--space-10); }
 .about-number { margin-top: var(--space-8); color: var(--honey-300); font-family: var(--font-display); font-size: 28px; line-height: 1.15; }
-.about-statement { margin: 0; font-family: var(--font-display); font-size: clamp(48px, 6.1vw, 104px); font-weight: 400; letter-spacing: -.045em; line-height: .98; }
+.about-statement { margin: 0; font-family: var(--font-display); font-size: clamp(48px, 6.1vw, 104px); font-weight: 400; letter-spacing: -.045em; line-height: .98; text-wrap: balance; }
 .about-copy { max-width: 580px; margin: var(--space-8) 0 0 auto; color: rgba(251,247,239,.66); font-size: 18px; }
 
 .specialties { color: var(--cream-50); background: var(--brown-900); }
