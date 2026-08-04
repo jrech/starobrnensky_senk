@@ -1,9 +1,44 @@
 {
   "_id": "lunchMenu",
   "_type": "lunchMenu",
-  "monday": {},
-  "tuesday": {},
-  "wednesday": {},
-  "thursday": {},
-  "friday": {}
+  "monday": {
+    "soupName": "Kulajda s vejcem",
+    "soupAllergens": "1, 3, 7",
+    "dishAName": "Vepřový vrabec, špenát, bramborový knedlík",
+    "dishAAllergens": "1, 3, 7",
+    "dishBName": "Kuřecí steak, pepřová omáčka, hranolky",
+    "dishBAllergens": "1, 7"
+  },
+  "tuesday": {
+    "soupName": "Hovězí vývar s nudlemi",
+    "soupAllergens": "1, 3, 9",
+    "dishAName": "Smažený kuřecí řízek, bramborová kaše",
+    "dishAAllergens": "1, 3, 7",
+    "dishBName": "Fazolový guláš s klobásou a chlebem",
+    "dishBAllergens": "1"
+  },
+  "wednesday": {
+    "soupName": "Bramboračka s houbami",
+    "soupAllergens": "1, 9",
+    "dishAName": "Hovězí na česneku, rýže",
+    "dishAAllergens": "1",
+    "dishBName": "Smažený sýr, hranolky, tatarská omáčka",
+    "dishBAllergens": "1, 3, 7"
+  },
+  "thursday": {
+    "soupName": "Česneková polévka se sýrem a krutony",
+    "soupAllergens": "1, 7",
+    "dishAName": "Segedínský guláš, houskový knedlík",
+    "dishAAllergens": "1, 3, 7",
+    "dishBName": "Grilovaný hermelín, salát a toast",
+    "dishBAllergens": "1, 7"
+  },
+  "friday": {
+    "soupName": "Gulášová polévka",
+    "soupAllergens": "1",
+    "dishAName": "Moravský závitek, dušená rýže",
+    "dishAAllergens": "1, 3, 10",
+    "dishBName": "Bramborové noky s kuřecím masem a špenátem",
+    "dishBAllergens": "1, 3, 7"
+  }
 }

@@ -1,5 +1,7 @@
 {
   "_id": "operatingStatus",
   "_type": "operatingStatus",
-  "mode": "automatic"
+  "mode": "closed",
+  "closedReason": "Testovací uzavření",
+  "closedUntil": "2026-08-05"
 }
