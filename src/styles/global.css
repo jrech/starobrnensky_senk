@@ -278,6 +278,8 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
 .footer-links a:hover, .footer-links a:focus-visible { color: var(--honey-300); transform: translateX(6px); }
 .socials > div { display: flex; gap: var(--space-2); }
 .social-icon { width: 40px; height: 40px; display: grid; place-items: center; color: var(--cream-50); border: 1px solid rgba(251,247,239,.35); border-radius: 50%; transition: color .45s var(--ease-out), background-color .55s var(--ease-out), border-color .45s var(--ease-out), transform .6s var(--ease-out); will-change: color, background-color, border-color, transform; }
+.footer-links .social-icon { width: 40px; font-size: 0; line-height: 1; transform: none; }
+.footer-links .social-icon:hover, .footer-links .social-icon:focus-visible { transform: translateY(-4px) scale(1.04); }
 .social-icon:hover, .social-icon:focus-visible { color: var(--forest-950); background: var(--honey-300); border-color: var(--honey-300); transform: translateY(-4px) scale(1.04); }
 .social-icon svg { width: 18px; height: 18px; }
 .social-icon .icon { width: 18px; height: 18px; }

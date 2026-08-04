@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
+import Footer from "../components/Footer.astro";
 import { getSiteContent } from "../lib/site-content";
 import { getOpeningStatus } from "../lib/opening-status";
 
@@ -245,7 +246,8 @@ const splitDayLabel = (label: string) => {
     </section>
   </main>
 
-  <footer class="footer" data-theme="dark">
+  <Footer content={content} />
+  <!--
     <div class="shell footer-top">
       <p class="footer-signature motion-title"><span class="line"><span>Na jedno.</span></span><span class="line"><span><em>A klidně déle.</em></span></span></p>
       <div class="footer-links">
@@ -256,7 +258,7 @@ const splitDayLabel = (label: string) => {
       </div>
     </div>
     <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrnenský Šenk</span><span>IČ: 62080245</span><a class="footer-credit" href="https://www.jonasrech.com" target="_blank" rel="noopener noreferrer">Vytvořeno Jonas Rech</a></div>
-  </footer>
+  -->
 
   <div class="mobile-actions" aria-label="Rychlé akce"><a href="#obedove-menu">Dnešní menu</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
 
