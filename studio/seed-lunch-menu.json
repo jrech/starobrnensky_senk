@@ -2,43 +2,43 @@
   "_id": "lunchMenu",
   "_type": "lunchMenu",
   "monday": {
-    "soupName": "Kulajda s vejcem",
-    "soupAllergens": "1, 3, 7",
-    "dishAName": "Vepřový vrabec, špenát, bramborový knedlík",
-    "dishAAllergens": "1, 3, 7",
-    "dishBName": "Kuřecí steak, pepřová omáčka, hranolky",
-    "dishBAllergens": "1, 7"
+    "soupName": "Pórkový krém s krutony",
+    "soupAllergens": "1, 7",
+    "dishAName": "Kuřecí nudličky na kari, jasmínová rýže",
+    "dishAAllergens": "7",
+    "dishBName": "Bratislavský guláš, houskový knedlík",
+    "dishBAllergens": "1, 3, 7, 9"
   },
   "tuesday": {
-    "soupName": "Hovězí vývar s nudlemi",
-    "soupAllergens": "1, 3, 9",
-    "dishAName": "Smažený kuřecí řízek, bramborová kaše",
+    "soupName": "Rajčatová polévka s bazalkou",
+    "soupAllergens": "7, 9",
+    "dishAName": "Vepřová pečeně, dušené zelí, bramborový knedlík",
     "dishAAllergens": "1, 3, 7",
-    "dishBName": "Fazolový guláš s klobásou a chlebem",
-    "dishBAllergens": "1"
+    "dishBName": "Těstovinový salát s kuřecím masem a zeleninou",
+    "dishBAllergens": "1, 3, 7"
   },
   "wednesday": {
-    "soupName": "Bramboračka s houbami",
+    "soupName": "Čočková polévka s majoránkou",
     "soupAllergens": "1, 9",
-    "dishAName": "Hovězí na česneku, rýže",
-    "dishAAllergens": "1",
-    "dishBName": "Smažený sýr, hranolky, tatarská omáčka",
-    "dishBAllergens": "1, 3, 7"
-  },
-  "thursday": {
-    "soupName": "Česneková polévka se sýrem a krutony",
-    "soupAllergens": "1, 7",
-    "dishAName": "Segedínský guláš, houskový knedlík",
+    "dishAName": "Smažený květák, vařené brambory, tatarská omáčka",
     "dishAAllergens": "1, 3, 7",
-    "dishBName": "Grilovaný hermelín, salát a toast",
+    "dishBName": "Hovězí nudličky na pepři, hranolky",
     "dishBAllergens": "1, 7"
   },
-  "friday": {
-    "soupName": "Gulášová polévka",
-    "soupAllergens": "1",
-    "dishAName": "Moravský závitek, dušená rýže",
-    "dishAAllergens": "1, 3, 10",
-    "dishBName": "Bramborové noky s kuřecím masem a špenátem",
+  "thursday": {
+    "soupName": "Kuřecí vývar s domácími nudlemi",
+    "soupAllergens": "1, 3, 9",
+    "dishAName": "Moravský vrabec, špenát, bramborový knedlík",
+    "dishAAllergens": "1, 3, 7",
+    "dishBName": "Zapečené těstoviny se šunkou a sýrem",
     "dishBAllergens": "1, 3, 7"
+  },
+  "friday": {
+    "soupName": "Houbový krém",
+    "soupAllergens": "1, 7",
+    "dishAName": "Rybí filé, bramborová kaše, okurkový salát",
+    "dishAAllergens": "4, 7",
+    "dishBName": "Srbské rizoto sypané sýrem",
+    "dishBAllergens": "7, 9"
   }
 }
