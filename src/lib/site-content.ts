@@ -184,9 +184,9 @@ export async function getSiteContent(): Promise<SiteContent> {
   });
 
   try {
-    const data = await client.fetch<Partial<SiteContent> & { lunchMenu?: SanityLunchMenu }>(`*[_type == "siteContent"][0]{
-      lunchMenu{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
-      operatingStatus{mode,closedReason,closedUntil}
+    const data = await client.fetch<{ lunchMenu?: SanityLunchMenu; operatingStatus?: OperatingStatusOverride }>(`{
+      "lunchMenu": *[_type == "lunchMenu" && _id == "lunchMenu"][0]{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
+      "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil}
     }`);
 
     if (!data) return { ...fallback, lunchUpdated: currentLunchLabel };

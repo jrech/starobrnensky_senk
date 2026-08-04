@@ -10,11 +10,20 @@ export default defineConfig({
   dataset: process.env.SANITY_STUDIO_DATASET || "production",
   plugins: [structureTool({
     structure: (S) => S.list()
-      .title("Starobrněnský Šenk")
+      .title("Obsah webu")
       .items([
         S.listItem()
           .title("Obsah webu")
-          .child(S.document().schemaType("siteContent").documentId("siteContent")),
+          .child(S.list()
+            .title("Obsah webu")
+            .items([
+              S.listItem()
+                .title("Stav provozu")
+                .child(S.document().schemaType("operatingStatus").documentId("operatingStatus")),
+              S.listItem()
+                .title("Obědové menu")
+                .child(S.document().schemaType("lunchMenu").documentId("lunchMenu")),
+            ])),
       ]),
   }), visionTool()],
   schema: { types: schemaTypes },

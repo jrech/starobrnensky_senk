@@ -1,3 +1,4 @@
-import siteContent from "./siteContent";
+import lunchMenu from "./lunchMenu";
+import operatingStatus from "./operatingStatus";
 
-export const schemaTypes = [siteContent];
+export const schemaTypes = [operatingStatus, lunchMenu];
