@@ -329,6 +329,7 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .rum-heading { grid-template-columns: 1fr 2fr; }
   .rum-heading .eyebrow { grid-column: 1 / -1; }
   .rum-lead { margin-left: auto; }
+  .rum-progress { position: sticky; right: auto; bottom: auto; left: 0; z-index: 2; width: var(--shell); margin-inline: auto; background: var(--cream-50); }
   .about-grid { grid-template-columns: .5fr 1.5fr; gap: var(--space-6); }
   .contact-grid { gap: var(--space-8); }
 }
@@ -349,8 +350,8 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .title-indent { padding-left: 24px; }
   .split-intro { grid-template-columns: 1fr; gap: var(--space-6); }
   .intro-copy { margin: 0; font-size: 18px; }
-  .hero { min-height: 760px; }
-  .hero-content { padding-top: 128px; padding-bottom: 120px; }
+  .hero { min-height: max(640px, 100svh); }
+  .hero-content { padding-top: 112px; padding-bottom: 88px; }
   .hero-title { font-size: clamp(70px, 23vw, 112px); line-height: .86; }
   .hero-title .title-indent { padding-left: 18px; font-size: .55em; }
   .hero-bottom { grid-template-columns: 1fr; gap: var(--space-4); margin-top: var(--space-5); }
@@ -369,8 +370,8 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .lunch .section-intro { margin-bottom: var(--space-8); }
   .content-notice { margin-top: calc(-1 * var(--space-4)); }
   .lunch-widget { grid-template-columns: 1fr; }
-  .day-tabs { flex-direction: row; overflow-x: auto; padding: 0 0 var(--space-2); border-right: 0; border-bottom: 1px solid rgba(9,36,29,.22); scrollbar-width: none; }
-  .day-tabs button { min-width: 76px; min-height: 64px; flex-direction: column; justify-content: center; gap: 4px; border-bottom: 0; }
+  .day-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 0 0 var(--space-2); border-right: 0; border-bottom: 1px solid rgba(9,36,29,.22); }
+  .day-tabs button { min-width: 0; min-height: 64px; flex-direction: column; justify-content: center; gap: 4px; padding-inline: 4px; border-bottom: 0; }
   .day-tabs button:hover { padding-left: 16px; }
   .day-short { display: block; }
   .day-date { display: block; font-size: 11px; letter-spacing: 0; }
@@ -381,6 +382,7 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .lunch-footer { align-items: flex-start; flex-direction: column; }
   .rum-heading { display: block; margin-bottom: var(--space-6); }
   .rum-heading .display { margin-bottom: var(--space-4); font-size: clamp(52px, 15vw, 84px); }
+  .rum-heading .display .line > span { white-space: normal; }
   .rum-lead { margin: 0; }
   .rum-track { gap: 16px; padding-inline: 24px; scroll-snap-type: x mandatory; }
   .rum-card { width: calc(100vw - 48px); scroll-snap-align: start; }
