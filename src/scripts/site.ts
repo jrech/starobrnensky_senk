@@ -126,7 +126,7 @@ function setMenu(open: boolean) {
   document.body.classList.toggle("menu-open", open);
 
   if (!reduceMotion && open && mobileMenuItems.length) {
-    gsap.fromTo(mobileMenuItems, { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: .7, stagger: .09, delay: .14, ease: "power3.out", overwrite: "auto" });
+    gsap.fromTo(mobileMenuItems, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: .24, stagger: .035, delay: .06, ease: "power3.out", overwrite: "auto" });
   }
 
   if (!open) gsap.killTweensOf(mobileMenuItems);
@@ -164,7 +164,7 @@ function activateTab(index: number, focus = false) {
   panels.forEach((panel, panelIndex) => {
     const active = panelIndex === index;
     panel.hidden = !active;
-    if (active && !reduceMotion) gsap.fromTo(panel, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: .42, ease: "power2.out" });
+    if (active && !reduceMotion) gsap.fromTo(panel, { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: .2, ease: "power3.out", overwrite: "auto" });
   });
 }
 
@@ -363,45 +363,31 @@ if (!reduceMotion) {
     const revealGalleryItem = (media: HTMLElement, index: number) => {
       const image = media.querySelector("img");
       const reveal = gsap.timeline({ defaults: { ease: "power4.out" } });
-      reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.3, delay: index * .14 });
-      if (image) reveal.to(image, { scale: 1, duration: 1.6, ease: "power3.out" }, "<");
+      reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
+      if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
     };
 
     galleryItems.forEach((media) => gsap.set(media, { clipPath: "inset(100% 0 0 0)", y: 72 }));
     if (window.innerWidth >= 1025) {
-      const revealed = new Set<HTMLElement>();
-      let ticking = false;
-      const checkGalleryVisibility = () => {
-        const threshold = window.innerHeight * .75;
-        galleryItems.forEach((media, index) => {
-          if (revealed.has(media)) return;
-          const bounds = media.getBoundingClientRect();
-          if (bounds.top <= threshold && bounds.bottom >= window.innerHeight * .05) {
-            revealed.add(media);
-            revealGalleryItem(media, index);
-          }
+      const galleryObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const media = entry.target as HTMLElement;
+          const index = Array.from(galleryItems).indexOf(media);
+          galleryObserver.unobserve(media);
+          revealGalleryItem(media, index);
         });
-        if (revealed.size === galleryItems.length) window.removeEventListener("scroll", onGalleryScroll);
-      };
-      const onGalleryScroll = () => {
-        if (ticking) return;
-        ticking = true;
-        window.requestAnimationFrame(() => {
-          ticking = false;
-          checkGalleryVisibility();
-        });
-      };
-      window.addEventListener("scroll", onGalleryScroll, { passive: true });
-      checkGalleryVisibility();
+      }, { rootMargin: "-25% 0px -5%", threshold: 0.01 });
+      galleryItems.forEach((media) => galleryObserver.observe(media));
     } else {
       galleryItems.forEach((media, index) => {
         const reveal = gsap.timeline({
           scrollTrigger: { trigger: media, start: "top 100%", once: true },
           defaults: { ease: "power4.out" },
         });
-        reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.3, delay: index * .14 });
+        reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
         const image = media.querySelector("img");
-        if (image) reveal.to(image, { scale: 1, duration: 1.6, ease: "power3.out" }, "<");
+        if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
       });
     }
   }
@@ -414,14 +400,14 @@ if (!reduceMotion) {
       scrollTrigger: { trigger: media, start: "top 82%", once: true },
       defaults: { ease: "power4.out" },
     });
-    reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: 1.3, delay: index * .16 });
-    if (image) reveal.to(image, { scale: 1, duration: 1.6, ease: "power3.out" }, "<");
+    reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
+    if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
   });
 
   const statement = document.querySelector<HTMLElement>(".about-statement");
   if (statement) {
     const aboutCopy = document.querySelector<HTMLElement>("[data-about-copy]");
-    if (aboutCopy) gsap.fromTo(aboutCopy, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .95, ease: "power4.out", scrollTrigger: { trigger: statement, start: "top 86%", once: true } });
+    if (aboutCopy) gsap.fromTo(aboutCopy, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: .7, ease: "power4.out", scrollTrigger: { trigger: statement, start: "top 86%", once: true } });
   }
 
   gsap.matchMedia().add("(min-width: 1025px)", () => {
@@ -439,7 +425,7 @@ if (!reduceMotion) {
         start: "center center",
         end: () => `+=${distance()}`,
         pin: true,
-        scrub: .8,
+        scrub: .2,
         invalidateOnRefresh: true,
         anticipatePin: 1,
         onUpdate: (self) => { if (progress) progress.style.width = `${self.progress * 100}%`; },
