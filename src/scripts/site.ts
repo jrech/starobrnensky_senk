@@ -360,36 +360,16 @@ if (!reduceMotion) {
   const gallery = document.querySelector<HTMLElement>(".gallery");
   const galleryItems = gallery?.querySelectorAll<HTMLElement>(".reveal-media") || [];
   if (gallery && galleryItems.length) {
-    const revealGalleryItem = (media: HTMLElement, index: number) => {
-      const image = media.querySelector("img");
-      const reveal = gsap.timeline({ defaults: { ease: "power4.out" } });
-      reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
-      if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
-    };
-
     galleryItems.forEach((media) => gsap.set(media, { clipPath: "inset(100% 0 0 0)", y: 72 }));
-    if (window.innerWidth >= 1025) {
-      const galleryObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const media = entry.target as HTMLElement;
-          const index = Array.from(galleryItems).indexOf(media);
-          galleryObserver.unobserve(media);
-          revealGalleryItem(media, index);
-        });
-      }, { rootMargin: "-25% 0px -5%", threshold: 0.01 });
-      galleryItems.forEach((media) => galleryObserver.observe(media));
-    } else {
-      galleryItems.forEach((media, index) => {
-        const reveal = gsap.timeline({
-          scrollTrigger: { trigger: media, start: "top 100%", once: true },
-          defaults: { ease: "power4.out" },
-        });
-        reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
-        const image = media.querySelector("img");
-        if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
+    galleryItems.forEach((media, index) => {
+      const reveal = gsap.timeline({
+        scrollTrigger: { trigger: media, start: "top 82%", once: true },
+        defaults: { ease: "power4.out" },
       });
-    }
+      reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
+      const image = media.querySelector("img");
+      if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
+    });
   }
 
   const specialtyImages = document.querySelectorAll<HTMLElement>(".specialty-image.reveal-media");
