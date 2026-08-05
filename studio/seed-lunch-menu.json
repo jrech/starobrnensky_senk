@@ -2,43 +2,43 @@
   "_id": "lunchMenu",
   "_type": "lunchMenu",
   "monday": {
-    "soupName": "Pórkový krém s krutony",
-    "soupAllergens": "1, 7",
-    "dishAName": "Kuřecí nudličky na kari, jasmínová rýže",
-    "dishAAllergens": "7",
-    "dishBName": "Bratislavský guláš, houskový knedlík",
-    "dishBAllergens": "1, 3, 7, 9"
-  },
-  "tuesday": {
-    "soupName": "Rajčatová polévka s bazalkou",
-    "soupAllergens": "7, 9",
-    "dishAName": "Vepřová pečeně, dušené zelí, bramborový knedlík",
-    "dishAAllergens": "1, 3, 7",
-    "dishBName": "Těstovinový salát s kuřecím masem a zeleninou",
+    "soupName": "Bramboračka",
+    "soupAllergens": "1",
+    "dishAName": "Pečená krkovice, petrželové brambory",
+    "dishAAllergens": "1",
+    "dishBName": "Kuřecí steak, pepřová omáčka, hranolky",
     "dishBAllergens": "1, 3, 7"
   },
+  "tuesday": {
+    "soupName": "Zeleninová",
+    "soupAllergens": "1",
+    "dishAName": "Segedínský guláš, houskový knedlík",
+    "dishAAllergens": "1, 3",
+    "dishBName": "Smažený hermelín, vařené brambory, tatarka",
+    "dishBAllergens": "1, 3, 7, 10"
+  },
   "wednesday": {
-    "soupName": "Čočková polévka s majoránkou",
-    "soupAllergens": "1, 9",
-    "dishAName": "Smažený květák, vařené brambory, tatarská omáčka",
+    "soupName": "Hovězí vývar s nudlemi",
+    "soupAllergens": "1, 3, 9",
+    "dishAName": "Kuřecí v sezamu, bramborové koše, okurek",
     "dishAAllergens": "1, 3, 7",
-    "dishBName": "Hovězí nudličky na pepři, hranolky",
-    "dishBAllergens": "1, 7"
+    "dishBName": "Hovězí pečeně, dušená rýže",
+    "dishBAllergens": "1"
   },
   "thursday": {
-    "soupName": "Kuřecí vývar s domácími nudlemi",
-    "soupAllergens": "1, 3, 9",
-    "dishAName": "Moravský vrabec, špenát, bramborový knedlík",
+    "soupName": "Žampionový krém",
+    "soupAllergens": "1, 3, 7",
+    "dishAName": "Vepřový vrabec, dušený špenát, vařené brambory",
     "dishAAllergens": "1, 3, 7",
-    "dishBName": "Zapečené těstoviny se šunkou a sýrem",
+    "dishBName": "Mix grill, americké brambory, česneková majonéza",
     "dishBAllergens": "1, 3, 7"
   },
   "friday": {
-    "soupName": "Houbový krém",
-    "soupAllergens": "1, 7",
-    "dishAName": "Rybí filé, bramborová kaše, okurkový salát",
-    "dishAAllergens": "4, 7",
-    "dishBName": "Srbské rizoto sypané sýrem",
-    "dishBAllergens": "7, 9"
+    "soupName": "Francouzská",
+    "soupAllergens": "1, 3, 9",
+    "dishAName": "Čočka na kyselo, grilovaná klobása, okurek, chléb",
+    "dishAAllergens": "1",
+    "dishBName": "Smažený kuřecí řízek, vařené brambory, okurek",
+    "dishBAllergens": "1, 3"
   }
 }
