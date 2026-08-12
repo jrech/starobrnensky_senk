@@ -6,7 +6,8 @@ import { getSiteContent } from "../lib/site-content";
 import { getOpeningStatus } from "../lib/opening-status";
 
 const content = await getSiteContent();
-const heroImage = "/assets/hero-senk.webp";
+const heroImage = "/assets/hero-interior-enhanced.png";
+const galleryHeroImage = "/assets/hero-senk.webp";
 const rumImage = "/assets/rum-bottle.png";
 const gardenImage = "/assets/zahradka-senk.webp";
 const foodImage = "/assets/specialita-koleno.webp";
@@ -180,7 +181,7 @@ const splitDayLabel = (label: string) => {
       </div>
       <div class="gallery-grid shell">
         <figure class="gallery-item gallery-wide reveal-media"><img src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" width="1536" height="1024" loading="lazy" /></figure>
-        <figure class="gallery-item gallery-tall reveal-media"><img src={heroImage} alt="Čerstvě načepované pivo na stole" width="1536" height="1024" loading="lazy" /></figure>
+        <figure class="gallery-item gallery-tall reveal-media"><img src={galleryHeroImage} alt="Čerstvě načepované pivo na stole" width="1536" height="1024" loading="lazy" /></figure>
         <figure class="gallery-item reveal-media"><img src={foodImage} alt="Pečené vepřové koleno s přílohami" width="1536" height="1024" loading="lazy" /></figure>
         <figure class="gallery-item reveal-media"><img src={rumImage} alt="Výběr rumů ve skle na baru" width="1536" height="1024" loading="lazy" /></figure>
       </div>
