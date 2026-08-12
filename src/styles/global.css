@@ -91,7 +91,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .hero { position: relative; min-height: max(720px, 100svh); display: flex; align-items: flex-end; overflow: hidden; color: var(--cream-50); background: var(--forest-950); }
 .hero-media, .hero-shade { position: absolute; inset: 0; }
 .hero-media img { object-position: center 55%; transform: scale(1.035); }
-.hero-shade { background: linear-gradient(180deg, rgba(3, 19, 15, .24) 0%, rgba(3, 19, 15, .05) 38%, rgba(3, 19, 15, .87) 100%), linear-gradient(90deg, rgba(3, 19, 15, .35), transparent 60%); }
+.hero-shade { background: linear-gradient(180deg, rgba(3, 19, 15, .28) 0%, rgba(3, 19, 15, .1) 38%, rgba(3, 19, 15, .91) 100%), linear-gradient(90deg, rgba(3, 19, 15, .5) 0%, rgba(3, 19, 15, .24) 44%, transparent 72%); }
 .hero-content { position: relative; z-index: 2; padding-top: 144px; padding-bottom: clamp(88px, 9vw, 144px); }
 .hero-eyebrow { margin-bottom: var(--space-4); }
 .hero-title { max-width: 1200px; margin: 0; font-family: var(--font-display); font-size: clamp(72px, 10.4vw, 176px); font-weight: 400; letter-spacing: -.055em; line-height: .84; }
