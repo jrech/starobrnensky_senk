@@ -101,7 +101,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .hero-bottom > p { margin: 0; font-size: 17px; }
 .hero-actions { display: flex; align-items: center; gap: var(--space-4); }
 .hero-status { position: absolute; right: 24px; bottom: 24px; z-index: 2; display: flex; align-items: center; gap: 16px; max-width: min(calc(100% - 48px), 440px); padding: 0; font-size: 16px; font-weight: 700; letter-spacing: .12em; line-height: 1.3; text-transform: uppercase; }
-.status-dot { width: 14px; height: 14px; flex: 0 0 auto; border-radius: 50%; background: #85d699; box-shadow: 0 0 0 4px rgba(133,214,153,.15); transition: background .36s var(--ease-out), box-shadow .36s var(--ease-out); }
+.status-dot { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: #85d699; box-shadow: 0 0 0 3px rgba(133,214,153,.15); transition: background .36s var(--ease-out), box-shadow .36s var(--ease-out); }
 .hero-status.is-closed { color: var(--honey-300); }
 .hero-status.is-closed .status-dot { background: var(--honey-300); box-shadow: 0 0 0 4px rgba(226,184,100,.18); }
 
