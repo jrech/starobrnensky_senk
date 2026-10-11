@@ -99,8 +99,13 @@ if (heroStatus) {
       const status = getOpeningStatus(hours, override);
       heroStatus.classList.toggle("is-open", status.state === "open");
       heroStatus.classList.toggle("is-closed", status.state === "closed");
-      heroStatus.setAttribute("aria-label", status.message);
+      heroStatus.setAttribute("aria-label", status.notice ? `${status.message}. ${status.notice}` : status.message);
       if (message) message.textContent = status.message;
+      const notice = heroStatus.querySelector<HTMLElement>("[data-hero-status-notice]");
+      if (notice) {
+        notice.textContent = status.notice || "";
+        notice.hidden = !status.notice;
+      }
     };
     setHeroStatusOverride = (nextOverride) => {
       override = nextOverride;
@@ -227,7 +232,7 @@ async function hydratePublishedContent() {
 
   const query = `{
     "lunchMenu": *[_type == "lunchMenu" && _id == "lunchMenu"][0]{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
-    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil}
+    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText}
   }`;
 
   try {

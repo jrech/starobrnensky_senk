@@ -1,14 +1,16 @@
 export type OpeningHours = { days: string; hours: string };
 
 export type OperatingStatusOverride = {
-  mode?: "automatic" | "closed";
+  mode?: "automatic" | "closed" | "notice";
   closedReason?: string;
   closedUntil?: string;
+  noticeText?: string;
 };
 
 export type HeroOpeningStatus = {
   state: "open" | "closed";
   message: string;
+  notice?: string;
 };
 
 const DAY_INDEX: Record<string, number> = {
@@ -102,6 +104,9 @@ export function getOpeningStatus(
     return { state: "closed", message: reason ? `Dnes zavřeno — ${reason}` : "Dnes zavřeno" };
   }
 
+  const notice = override?.mode === "notice" ? override.noticeText?.trim() : undefined;
+  const withNotice = (status: Omit<HeroOpeningStatus, "notice">): HeroOpeningStatus => ({ ...status, ...(notice ? { notice } : {}) });
+
   const slots = parseSlots(hours);
   const todaySlots = slots.filter((slot) => slot.days.includes(local.day));
   const previousDay = (local.day + 6) % 7;
@@ -110,10 +115,10 @@ export function getOpeningStatus(
     const crossesMidnight = slot.closes <= slot.opens;
     const openFromPreviousDay = crossesMidnight && slot.days.includes(previousDay) && local.minutes < slot.closes;
     const openToday = slot.days.includes(local.day) && local.minutes >= slot.opens && (crossesMidnight || local.minutes < slot.closes);
-    if (openFromPreviousDay || openToday) return { state: "open", message: `Dnes otevřeno do ${slot.closesAt}` };
+    if (openFromPreviousDay || openToday) return withNotice({ state: "open", message: `Dnes otevřeno do ${slot.closesAt}` });
   }
 
   const nextSlot = todaySlots.find((slot) => local.minutes < slot.opens);
-  if (nextSlot) return { state: "open", message: `Dnes otevřeno od ${nextSlot.opensAt}` };
-  return { state: "closed", message: "Nyní zavřeno" };
+  if (nextSlot) return withNotice({ state: "open", message: `Dnes otevřeno od ${nextSlot.opensAt}` });
+  return withNotice({ state: "closed", message: "Nyní zavřeno" });
 }

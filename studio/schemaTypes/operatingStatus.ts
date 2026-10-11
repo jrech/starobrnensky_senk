@@ -14,9 +14,19 @@ export default defineType({
         list: [
           { title: "Automaticky podle otevírací doby", value: "automatic" },
           { title: "Zavřeno · zobrazit důvod", value: "closed" },
+          { title: "Hlášení · zobrazit text při běžné otevírací době", value: "notice" },
         ],
         layout: "radio",
       },
+    }),
+    defineField({
+      name: "noticeText",
+      title: "Hlášení pro návštěvníky",
+      type: "string",
+      placeholder: "Například dnes vaříme jen do 12 hod.",
+      description: "Hlavní stav se stále řídí běžnou otevírací dobou. Text se zobrazí pod ním.",
+      hidden: ({ document }) => document?.mode !== "notice",
+      validation: (rule) => rule.custom((value, context: any) => context.document?.mode !== "notice" || Boolean(value?.trim()) || "Doplňte text hlášení."),
     }),
     defineField({
       name: "closedReason",

@@ -80,7 +80,10 @@ const splitDayLabel = (label: string) => {
       </div>
       <div class:list={["hero-status", `is-${heroStatus.state}`]} data-hero-status data-hours={JSON.stringify(content.hours)} data-status-override={JSON.stringify(content.operatingStatus)} role="status" aria-live="polite">
         <span class="status-dot" aria-hidden="true"></span>
-        <span data-hero-status-message>{heroStatus.message}</span>
+        <span class="hero-status-copy">
+          <span data-hero-status-message>{heroStatus.message}</span>
+          <span class="hero-status-notice" data-hero-status-notice hidden={!heroStatus.notice}>{heroStatus.notice}</span>
+        </span>
       </div>
     </section>
 
