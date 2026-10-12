@@ -2,6 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import Footer from "../components/Footer.astro";
+import ContactReservation from "../components/ContactReservation.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
 import { getOpeningStatus } from "../lib/opening-status";
 
@@ -28,43 +30,7 @@ const splitDayLabel = (label: string) => {
 ---
 
 <BaseLayout>
-  <header class="site-header" data-header>
-    <div class="site-header-inner shell">
-    <a class="brand" href="#top" aria-label="Starobrnenský Šenk – domů">
-      <span class="brand-name">Starobrnenský Šenk</span>
-    </a>
-    <nav class="desktop-nav" aria-label="Hlavní navigace">
-      <a class="nav-priority" href="#obedove-menu">Obědové menu</a>
-      <a href="/listky">Jídelní lístek</a>
-      <a href="#rumy">Rumy</a>
-      <a href="#o-nas">O nás</a>
-      <a href="#kontakt">Kontakt</a>
-    </nav>
-    <a class="button button-small button-light header-cta" href="#rezervace">Rezervovat</a>
-    <button class="menu-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobile-menu">
-      <span></span><span></span>
-    </button>
-    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-      <nav aria-label="Mobilní navigace">
-        <a href="#obedove-menu">Obědové menu</a>
-        <a href="/listky">Jídelní a nápojový lístek</a>
-        <a href="#rumy">Rumy</a>
-        <a href="#galerie">Galerie</a>
-        <a href="#o-nas">O nás</a>
-        <a href="#speciality">Speciality</a>
-        <a href="#kontakt">Kontakt a rezervace</a>
-      </nav>
-      <div class="mobile-contact" aria-label="Kontaktní údaje">
-        <a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a>
-        <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
-        <div class="mobile-socials" aria-label="Sociální sítě">
-          <a class="mobile-contact-link" href={content.facebookUrl} target="_blank" rel="noopener noreferrer"><Icon name="facebook" />Facebook</a>
-          <span class="mobile-contact-label"><Icon name="instagram" />Instagram</span>
-        </div>
-      </div>
-    </div>
-    </div>
-  </header>
+  <SiteHeader content={content} />
 
   <main id="main" class="homepage-flow" data-sanity-project={import.meta.env.PUBLIC_SANITY_PROJECT_ID} data-sanity-dataset={import.meta.env.PUBLIC_SANITY_DATASET || "production"}>
     <section class="hero" id="top" data-theme="dark">
@@ -94,7 +60,7 @@ const splitDayLabel = (label: string) => {
         <div class="section-intro split-intro">
           <div>
             <p class="eyebrow">Tento týden</p>
-            <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line"><span>k obědu?</span></span></h2>
+            <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line title-indent"><span>k obědu?</span></span></h2>
           </div>
           <div class="intro-copy">
             <p>Každý pracovní den vaříme poctivé obědy. Vyberte si den a stavte se — obědové menu podáváme do 14:00.</p>
@@ -147,7 +113,7 @@ const splitDayLabel = (label: string) => {
         <h2 id="rum-title" class="display motion-title"><span class="line"><span>Ochutnejte rumy</span></span><span class="line title-indent"><span>z celého světa.</span></span></h2>
         <p class="rum-lead">Od lehkých karibských rumů po výrazné stařené lahve. Ptejte se obsluhy, rádi poradíme.</p>
       </div>
-      <div class="rum-viewport" data-rum-viewport tabindex="0" aria-label="Výběr rumů, vodorovně posuvný seznam">
+      <div class="rum-viewport" data-rum-viewport tabindex="0" role="region" aria-label="Výběr rumů. Karty lze posouvat vodorovně pomocí trackpadu, posuvníku nebo šipek na klávesnici.">
         <div class="rum-track" data-rum-track>
           {content.rums.map((rum, index) => (
             <article class="rum-card">
@@ -170,9 +136,9 @@ const splitDayLabel = (label: string) => {
             </div>
           </article>
         </div>
-        <div class="rum-progress shell" aria-hidden="true">
-          <span>Posuňte dál</span><div><i data-rum-progress></i></div><span>04</span>
-        </div>
+      </div>
+      <div class="rum-progress shell" aria-hidden="true">
+        <span>Posuňte dál</span><div><i data-rum-progress></i></div><span>04</span>
       </div>
     </section>
 
@@ -202,7 +168,7 @@ const splitDayLabel = (label: string) => {
     <section class="specialties section" id="speciality" data-theme="light" aria-labelledby="specialties-title">
       <div class="shell">
         <div class="section-intro split-intro">
-          <div><p class="eyebrow">Když máte větší hlad</p><h2 id="specialties-title" class="display motion-title"><span class="line"><span>Šenkovní</span></span><span class="line"><span>speciality.</span></span></h2></div>
+          <div><p class="eyebrow">Když máte větší hlad</p><h2 id="specialties-title" class="display motion-title"><span class="line"><span>Šenkovní</span></span><span class="line title-indent"><span>speciality.</span></span></h2></div>
           <p class="intro-copy">Pár jistot, kvůli kterým stojí za to zůstat déle než na jedno.</p>
         </div>
         <div class="specialty-grid">
@@ -217,48 +183,10 @@ const splitDayLabel = (label: string) => {
       </div>
     </section>
 
-    <section class="contact section" id="kontakt" data-theme="brown" aria-labelledby="contact-title">
-      <div class="shell contact-grid">
-        <div class="contact-copy">
-          <p class="eyebrow">Jsme kousek</p>
-          <h2 id="contact-title" class="display motion-title"><span class="line"><span>Tak kdy</span></span><span class="line"><span>se uvidíme?</span></span></h2>
-          <address><p>{content.address}</p><a class="contact-phone icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></address>
-          <div class="hours" aria-label="Otevírací doba"><h3>Otevírací doba</h3>{content.hours.map((row) => <p><span>{row.days}</span><strong>{row.hours}</strong></p>)}</div>
-          <div class="map-embed">
-            <iframe title="Mapa Starobrněnského Šenku" src="https://www.google.com/maps?q=Starobrnensky%20Senk%2C%20Plachty%20512%2F2%2C%20Brno&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <a href={content.mapUrl} target="_blank" rel="noopener noreferrer">Otevřít v Mapách Google <Icon name="arrowUpRight" /></a>
-          </div>
-        </div>
-
-        <div class="reservation" id="rezervace">
-          <div class="reservation-head"><p class="eyebrow">Rezervace</p><h3>Chcete si rezervovat stůl?</h3><p>Rezervace platí až po potvrzení obsluhou. Pro dnešní stůl je nejrychlejší zavolat.</p></div>
-          <form data-reservation-form action="/api/reservation" method="post">
-            <div class="form-row"><label>Jméno<input type="text" name="name" autocomplete="name" required /></label><label>Telefon<input type="tel" name="phone" autocomplete="tel" required /></label></div>
-            <div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" step="900" required /></label></div>
-            <label>Počet osob<input type="number" name="guests" min="1" max="30" value="2" required /></label>
-            <label>Poznámka<textarea name="message" rows="3" placeholder="Kočárek, oslava nebo jiné přání?"></textarea></label>
-            <label class="honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
-            <button class="button button-dark" type="submit">Odeslat žádost <Icon name="arrowRight" /></button>
-            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </div>
-    </section>
+    <ContactReservation content={content} />
   </main>
 
   <Footer content={content} />
-  <!--
-    <div class="shell footer-top">
-      <p class="footer-signature motion-title"><span class="line"><span>Na jedno.</span></span><span class="line"><span><em>A klidně déle.</em></span></span></p>
-      <div class="footer-links">
-        <div><p>Najdete nás</p><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">{content.address}</a></div>
-        <div><p>Ozvěte se</p><a class="icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></div>
-        <div><p>Rychle k věci</p><a href="#obedove-menu">Obědové menu</a><a href="/listky">Jídelní lístek</a><a href="#rezervace">Rezervace</a></div>
-        <div class="socials"><p>Sledujte nás</p><div><a class="social-icon" href={content.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Icon name="facebook" label="Facebook" /></a><span class="social-icon" role="img" aria-label="Instagram – odkaz doplníme"><Icon name="instagram" label="Instagram" /></span></div></div>
-      </div>
-    </div>
-    <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrnenský Šenk</span><span>IČ: 62080245</span><a class="footer-credit" href="https://www.jonasrech.com" target="_blank" rel="noopener noreferrer">Vytvořeno Jonas Rech</a></div>
-  -->
 
   <div class="mobile-actions" aria-label="Rychlé akce"><a href="#obedove-menu">Dnešní menu</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
 

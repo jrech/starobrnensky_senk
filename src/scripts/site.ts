@@ -264,6 +264,50 @@ rumViewport?.addEventListener("keydown", (event) => {
   rumViewport.scrollBy({ left: event.key === "ArrowRight" ? 360 : -360, behavior: reduceMotion ? "auto" : "smooth" });
 });
 
+let rumDragPointer: number | null = null;
+let rumDragStartX = 0;
+let rumDragStartScroll = 0;
+let rumIsDragging = false;
+rumViewport?.addEventListener("pointerdown", (event) => {
+  if (event.pointerType !== "mouse" || event.button !== 0 || (event.target as Element).closest("a, button")) return;
+  rumDragPointer = event.pointerId;
+  rumDragStartX = event.clientX;
+  rumDragStartScroll = rumViewport.scrollLeft;
+});
+rumViewport?.addEventListener("pointermove", (event) => {
+  if (!rumViewport || rumDragPointer !== event.pointerId) return;
+  const distance = event.clientX - rumDragStartX;
+  if (!rumIsDragging && Math.abs(distance) > 6) {
+    rumIsDragging = true;
+    rumViewport.classList.add("is-dragging");
+    rumViewport.setPointerCapture(event.pointerId);
+  }
+  if (!rumIsDragging) return;
+  event.preventDefault();
+  rumViewport.scrollLeft = rumDragStartScroll - distance;
+});
+const finishRumDrag = (event: PointerEvent) => {
+  if (!rumViewport || rumDragPointer !== event.pointerId) return;
+  rumDragPointer = null;
+  rumIsDragging = false;
+  rumViewport.classList.remove("is-dragging");
+};
+rumViewport?.addEventListener("pointerup", finishRumDrag);
+rumViewport?.addEventListener("pointercancel", finishRumDrag);
+rumViewport?.addEventListener("lostpointercapture", finishRumDrag);
+
+const rumProgress = document.querySelector<HTMLElement>("[data-rum-progress]");
+const updateRumProgress = () => {
+  if (!rumViewport || !rumProgress) return;
+  const maxScroll = rumViewport.scrollWidth - rumViewport.clientWidth;
+  const ratio = maxScroll > 0 ? rumViewport.scrollLeft / maxScroll : 0;
+  rumProgress.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`;
+};
+rumViewport?.addEventListener("scroll", updateRumProgress, { passive: true });
+window.addEventListener("resize", updateRumProgress);
+window.addEventListener("load", updateRumProgress, { once: true });
+updateRumProgress();
+
 const reservationForm = document.querySelector<HTMLFormElement>("[data-reservation-form]");
 const formStatus = document.querySelector<HTMLElement>("[data-form-status]");
 const dateInput = reservationForm?.querySelector<HTMLInputElement>('input[type="date"]');
@@ -395,51 +439,6 @@ if (!reduceMotion) {
     if (aboutCopy) gsap.fromTo(aboutCopy, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: .7, ease: "power4.out", scrollTrigger: { trigger: statement, start: "top 86%", once: true } });
   }
 
-  gsap.matchMedia().add("(min-width: 1025px)", () => {
-    const track = document.querySelector<HTMLElement>("[data-rum-track]");
-    const viewport = document.querySelector<HTMLElement>("[data-rum-viewport]");
-    const progress = document.querySelector<HTMLElement>("[data-rum-progress]");
-    if (!track || !viewport) return;
-
-    const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
-    const tween = gsap.to(track, {
-      x: () => -distance(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: viewport,
-        start: "center center",
-        end: () => `+=${distance()}`,
-        pin: true,
-        scrub: .2,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-        onUpdate: (self) => { if (progress) progress.style.width = `${self.progress * 100}%`; },
-      },
-    });
-    return () => tween.kill();
-  });
-
-  gsap.matchMedia().add("(max-width: 1024px)", () => {
-    const viewport = document.querySelector<HTMLElement>("[data-rum-viewport]");
-    const progress = document.querySelector<HTMLElement>("[data-rum-progress]");
-    if (!viewport || !progress) return;
-
-    const updateProgress = () => {
-      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-      const ratio = maxScroll > 0 ? viewport.scrollLeft / maxScroll : 0;
-      progress.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`;
-    };
-
-    viewport.addEventListener("scroll", updateProgress, { passive: true });
-    window.addEventListener("resize", updateProgress);
-    window.addEventListener("load", updateProgress, { once: true });
-    updateProgress();
-
-    return () => {
-      viewport.removeEventListener("scroll", updateProgress);
-      window.removeEventListener("resize", updateProgress);
-    };
-  });
 }
 
 window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
