@@ -164,7 +164,7 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .gallery-lead { max-width: 46ch; margin: var(--space-4) 0 0 auto; font-size: 20px; line-height: 1.5; }
 .form-hint { margin: -8px 0 0; color: rgba(251,247,239,.72); font-size: 15px; }
 .form-hint a { text-decoration: underline; text-underline-offset: 3px; }
-.mobile-hours { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 24px; margin: 0 0 4px; font-size: 16px; }
+.mobile-hours { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 32px; margin: 0; font-size: 17px; }
 .mobile-hours div { display: flex; justify-content: space-between; gap: 8px; }
 .mobile-hours dt { color: rgba(251,247,239,.7); }
 .mobile-hours dd { margin: 0; }
@@ -310,11 +310,12 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3.5px) rotate(45deg); }
   .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
 .mobile-menu { position: fixed; inset: 0; z-index: -1; display: grid; align-content: center; gap: var(--space-8); padding: 112px 24px 48px; color: var(--cream-50); background: var(--forest-950); opacity: 0; visibility: hidden; transform: translateY(-16px); transition: opacity .24s, transform .24s var(--ease-out), visibility .24s; }
-  .mobile-menu { overflow-y: auto; align-content: safe center; gap: var(--space-5); }
+  .mobile-menu { overflow-y: auto; align-content: start; gap: 0; padding-top: 96px; }
   .mobile-menu.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
-  .mobile-menu nav { display: grid; }
-  .mobile-menu nav a { padding: 8px 0; font-family: var(--font-display); font-size: clamp(36px, 8vw, 64px); line-height: 1.05; }
-  .mobile-contact { display: grid; gap: 12px; padding-top: var(--space-2); border-top: 1px solid rgba(251,247,239,.22); }
+  .mobile-menu nav { display: grid; gap: 6px; padding-bottom: var(--space-5); }
+  .mobile-menu nav a { padding: 6px 0; font-family: var(--font-display); font-size: clamp(32px, 8vw, 56px); line-height: 1.1; }
+  .mobile-contact, .mobile-hours-block { display: grid; gap: 14px; padding-block: var(--space-4); border-top: 1px solid rgba(251,247,239,.22); }
+  .mobile-label { margin: 0 0 4px; color: var(--honey-300); font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
   .mobile-contact-link, .mobile-contact-label { display: inline-flex; align-items: center; gap: 12px; width: fit-content; font-size: 18px; line-height: 1.25; }
   .mobile-contact-link .icon, .mobile-contact-label .icon { width: 18px; height: 18px; }
   .mobile-socials { display: flex; flex-wrap: wrap; gap: 20px; }

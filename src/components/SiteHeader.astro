@@ -36,8 +36,12 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
         <a href={sectionHref("rumy")}>Rumy</a>
         <a href={sectionHref("kontakt")}>Kontakt a rezervace</a>
       </nav>
+      <div class="mobile-hours-block">
+        <p class="mobile-label">Otevírací doba</p>
+        <dl class="mobile-hours">{content.hours.map((row) => <div><dt>{row.days}</dt><dd>{row.hours}</dd></div>)}</dl>
+      </div>
       <div class="mobile-contact" aria-label="Kontaktní údaje">
-        <dl class="mobile-hours" aria-label="Otevírací doba">{content.hours.map((row) => <div><dt>{row.days}</dt><dd>{row.hours}</dd></div>)}</dl>
+        <p class="mobile-label">Kontakt</p>
         <a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a>
         <a class="mobile-contact-link" href={content.mapUrl} target="_blank" rel="noopener noreferrer"><Icon name="location" />Navigovat k nám</a>
         <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
