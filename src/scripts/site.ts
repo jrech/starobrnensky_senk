@@ -296,7 +296,7 @@ if (!reduceMotion) {
     .to(".hero .reveal-media", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.45 })
     .to(".hero .reveal-media img", { scale: 1.035, duration: 1.65 }, 0)
     .to(".hero .line > span", { y: 0, rotate: 0, duration: 1.15, stagger: .14 }, .28)
-    .from(".hero-bottom, .hero-eyebrow, .hero-lead, .hero-status", { autoAlpha: 0, y: 16, duration: .8, stagger: .1 }, .72)
+    .from(".hero-bottom, .hero-eyebrow, .hero-status", { autoAlpha: 0, y: 16, duration: .8, stagger: .1 }, .72)
     .fromTo(".site-header", { autoAlpha: 0 }, { autoAlpha: 1, duration: .85, ease: "power3.out" });
 
   gsap.to(".hero-media img", {
