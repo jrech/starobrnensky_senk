@@ -24,10 +24,8 @@ const beerIndex = drinkMenu.findIndex((category) => /piv/i.test(category.title))
   <main id="main" data-sanity-project={import.meta.env.PUBLIC_SANITY_PROJECT_ID} data-sanity-dataset={import.meta.env.PUBLIC_SANITY_DATASET || "production"}>
     <section class="hero menu-page-hero" data-theme="dark">
       <div class="hero-media reveal-media" aria-hidden="true"><Image src={foodImage} alt="" widths={[640, 960, 1280, 1600]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" /></div><div class="hero-shade" aria-hidden="true"></div>
-      <div class="shell hero-content"><h1 class="hero-title"><span class="line"><span>Jídlo</span></span><span class="line title-indent"><span>& pití.</span></span></h1><div class="hero-bottom"><p>Poctivá klasika k pivu, něco malého na stůl i lahve, které stojí za večer.</p></div></div>
+      <div class="shell hero-content"><h1 class="hero-title"><span class="line"><span>Jídlo</span></span><span class="line title-indent"><span>& pití.</span></span></h1><div class="hero-bottom"><p>Poctivá klasika k pivu, něco malého na stůl i lahve, které stojí za večer.</p></div><StatusBanner override={content.operatingStatus} initial={getStatusBanner(content.operatingStatus)} /></div>
     </section>
-
-    <div class="shell menu-page-banner"><StatusBanner override={content.operatingStatus} initial={getStatusBanner(content.operatingStatus)} /></div>
 
     <nav class="menu-jump-nav" aria-label="Kategorie lístku" data-menu-nav>
       <div class="shell">

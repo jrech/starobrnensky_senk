@@ -158,7 +158,8 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .day-tabs button.is-today:not([aria-selected="true"]) .day-date { color: var(--brick-600); }
 .status-banner { margin: 0 0 var(--space-4); padding: 16px 20px; border-left: 4px solid var(--brick-600); color: var(--brick-700); background: rgba(165, 64, 45, .08); font-size: 18px; font-weight: 700; line-height: 1.45; }
 .status-banner.is-notice { color: var(--forest-950); border-color: var(--honey-300); background: rgba(226, 184, 100, .2); }
-.menu-page-banner .status-banner { margin: var(--space-4) 0 0; }
+.hero .status-banner { max-width: 640px; margin: var(--space-4) 0 0 clamp(0px, 10vw, 168px); color: var(--cream-50); border-color: var(--honey-300); background: rgba(9, 36, 29, .62); backdrop-filter: blur(6px); font-size: 17px; }
+.hero .status-banner.is-closed { color: var(--honey-300); }
 .menu-page-intro .allergen-legend { margin-top: var(--space-2); }
 .rum-price { display: block; margin-top: 8px; color: var(--brick-700); font-size: 16px; font-weight: 700; }
 .gallery-lead { max-width: 46ch; margin: var(--space-4) 0 0 auto; font-size: 20px; line-height: 1.5; }
@@ -366,6 +367,7 @@ input:focus, textarea:focus, select:focus { outline: 0; border-bottom-color: var
   .menu-page-hero .hero-content { padding-top: 104px; padding-bottom: var(--space-4); }
   .menu-page-hero .hero-title { font-size: clamp(56px, 16vw, 72px); }
   .menu-page-hero .hero-bottom { display: none; }
+  .hero .status-banner { margin-left: 0; font-size: 16px; }
   .menu-page-section.section { padding-block: var(--space-8); }
   .menu-page-intro { grid-template-columns: 1fr; gap: var(--space-4); margin-bottom: var(--space-6); }
   .menu-page-intro .display { font-size: clamp(44px, 12vw, 64px); }
