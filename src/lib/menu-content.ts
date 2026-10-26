@@ -13,7 +13,7 @@ export const foodMenu: MenuCategory[] = [
     { amount: "0,33 l", name: "Hovězí vývar s játrovými knedlíčky, zeleninou a nudlemi", allergens: "1, 3, 7, 9", price: "69 Kč" },
     { amount: "0,33 l", name: "Polévka dle denní nabídky", price: "69 Kč" },
   ] },
-  { title: "Tortilly a wrapy", items: [
+  { title: "Tortilly", items: [
     { amount: "300 g", name: "Tortilla s pancettou, nivou, cibulkou a rukolou", allergens: "1, 7", price: "179 Kč" },
     { amount: "300 g", name: "Tortilla quattro formaggi — eidam, niva, hermelín, parmazán", price: "179 Kč" },
     { amount: "400 g", name: "Wrap s trhaným vepřovým masem a ledovým salátem s mrkví", allergens: "1, 3, 7, 9", price: "199 Kč" },
@@ -39,8 +39,10 @@ export const foodMenu: MenuCategory[] = [
     { amount: "250 g", name: "Z vepřové panenky", price: "259 Kč" },
     { amount: "200 g", name: "Z kuřecích prsíček", price: "189 Kč" },
   ] },
-  { title: "Omáčky", items: [
+  { title: "Omáčky teplé", items: [
     { amount: "100 g", name: "Houbová", allergens: "1, 7, 9", price: "59 Kč" }, { amount: "100 g", name: "Pepřová", allergens: "1, 7, 9, 10", price: "59 Kč" },
+  ] },
+  { title: "Omáčky studené", items: [
     { amount: "100 g", name: "Barbecue", price: "49 Kč" }, { amount: "100 g", name: "Buffalo", allergens: "3, 7", price: "49 Kč" }, { amount: "100 g", name: "Sweet chilli", allergens: "7, 9", price: "49 Kč" },
     { amount: "100 g", name: "Domácí tatarská omáčka", allergens: "7, 10", price: "39 Kč" }, { amount: "100 g", name: "Česneková majonéza", allergens: "7, 10", price: "39 Kč" }, { amount: "100 g", name: "Kečup", price: "39 Kč" },
   ] },

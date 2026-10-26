@@ -13,6 +13,7 @@ type SanityLunchDay = {
   dishBAllergens?: string;
 };
 type SanityLunchMenu = Partial<Record<"monday" | "tuesday" | "wednesday" | "thursday" | "friday", SanityLunchDay>>;
+type SanityMenu = { categories?: Array<{ title?: string; items?: Array<{ name?: string; amount?: string; price?: number; allergens?: string }> }> };
 export type Rum = { name: string; origin: string; note: string; abv: string; image?: string };
 export type Specialty = { name: string; note: string; price?: string; image?: string };
 export type SiteContent = {
@@ -171,6 +172,20 @@ function hasLunchMenuContent(menu: SanityLunchMenu): boolean {
   return Object.values(menu).some((day) => Object.values(day || {}).some((value) => typeof value === "string" && value.trim().length > 0));
 }
 
+function normalizeMenu(menu: SanityMenu): MenuCategory[] {
+  return (menu.categories || []).map((category) => ({
+    title: category.title?.trim() || "",
+    items: (category.items || [])
+      .filter((item) => Boolean(item.name?.trim()) && typeof item.price === "number")
+      .map((item) => ({
+        name: item.name!.trim(),
+        amount: item.amount?.trim(),
+        price: `${item.price} Kč`,
+        allergens: item.allergens?.trim(),
+      })),
+  })).filter((category) => category.title && category.items.length > 0);
+}
+
 export async function getSiteContent(): Promise<SiteContent> {
   const dates = getCurrentWeekDates();
   const currentLunchLabel = formatLunchWeek(dates);
@@ -180,14 +195,16 @@ export async function getSiteContent(): Promise<SiteContent> {
     projectId,
     dataset,
     apiVersion: "2026-08-01",
-    useCdn: true,
+    useCdn: false,
     token: import.meta.env.SANITY_READ_TOKEN,
   });
 
   try {
-    const data = await client.fetch<{ lunchMenu?: SanityLunchMenu; operatingStatus?: OperatingStatusOverride }>(`{
+    const data = await client.fetch<{ lunchMenu?: SanityLunchMenu; operatingStatus?: OperatingStatusOverride; foodMenu?: SanityMenu; drinkMenu?: SanityMenu }>(`{
       "lunchMenu": *[_type == "lunchMenu" && _id == "lunchMenu"][0]{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
-      "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText}
+      "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText},
+      "foodMenu": *[_type == "foodMenu" && _id == "foodMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}},
+      "drinkMenu": *[_type == "drinkMenu" && _id == "drinkMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}}
     }`);
 
     if (!data) return { ...fallback, lunchUpdated: currentLunchLabel };
@@ -198,6 +215,8 @@ export async function getSiteContent(): Promise<SiteContent> {
       lunchUpdated: currentLunchLabel,
       lunchDays,
       operatingStatus: data.operatingStatus ?? fallback.operatingStatus,
+      foodMenu: data.foodMenu ? normalizeMenu(data.foodMenu) : fallback.foodMenu,
+      drinkMenu: data.drinkMenu ? normalizeMenu(data.drinkMenu) : fallback.drinkMenu,
     };
   } catch (error) {
     console.warn("Sanity content could not be loaded; using local fallback.", error);

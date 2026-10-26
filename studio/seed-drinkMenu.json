@@ -1,0 +1,458 @@
+{
+  "_id": "drinkMenu",
+  "_type": "drinkMenu",
+  "categories": [
+    {
+      "_key": "category-1",
+      "_type": "menuCategory",
+      "title": "Pivo",
+      "items": [
+        {
+          "_key": "item-1-1",
+          "_type": "menuItem",
+          "name": "Starobrno Medium",
+          "amount": "0,5 l",
+          "price": 48
+        },
+        {
+          "_key": "item-1-2",
+          "_type": "menuItem",
+          "name": "Starobrno Medium",
+          "amount": "0,3 l",
+          "price": 31
+        },
+        {
+          "_key": "item-1-3",
+          "_type": "menuItem",
+          "name": "Hauskrecht nefiltr 11",
+          "amount": "0,5 l",
+          "price": 51
+        },
+        {
+          "_key": "item-1-4",
+          "_type": "menuItem",
+          "name": "Hauskrecht nefiltr 11",
+          "amount": "0,3 l",
+          "price": 32
+        },
+        {
+          "_key": "item-1-5",
+          "_type": "menuItem",
+          "name": "Štatl 12",
+          "amount": "0,5 l",
+          "price": 54
+        },
+        {
+          "_key": "item-1-6",
+          "_type": "menuItem",
+          "name": "Štatl 12",
+          "amount": "0,3 l",
+          "price": 33
+        },
+        {
+          "_key": "item-1-7",
+          "_type": "menuItem",
+          "name": "Starobrno Bitr, láhev",
+          "amount": "0,5 l",
+          "price": 48
+        },
+        {
+          "_key": "item-1-8",
+          "_type": "menuItem",
+          "name": "Cider, plech",
+          "amount": "0,4 l",
+          "price": 50
+        }
+      ]
+    },
+    {
+      "_key": "category-2",
+      "_type": "menuCategory",
+      "title": "Nealkoholické nápoje",
+      "items": [
+        {
+          "_key": "item-2-1",
+          "_type": "menuItem",
+          "name": "Točená limonáda",
+          "amount": "0,5 l",
+          "price": 38
+        },
+        {
+          "_key": "item-2-2",
+          "_type": "menuItem",
+          "name": "Točená limonáda",
+          "amount": "0,3 l",
+          "price": 22
+        },
+        {
+          "_key": "item-2-3",
+          "_type": "menuItem",
+          "name": "Coca-Cola, Fanta, Tonic nebo Sprite, plech",
+          "amount": "0,3 l",
+          "price": 48
+        },
+        {
+          "_key": "item-2-4",
+          "_type": "menuItem",
+          "name": "Mattoni — perlivá, jemně perlivá nebo neperlivá",
+          "amount": "0,3 l",
+          "price": 40
+        },
+        {
+          "_key": "item-2-5",
+          "_type": "menuItem",
+          "name": "Juice Relax",
+          "amount": "0,25 l",
+          "price": 48
+        },
+        {
+          "_key": "item-2-6",
+          "_type": "menuItem",
+          "name": "Krušovice hořké nealko, plech",
+          "amount": "0,5 l",
+          "price": 48
+        },
+        {
+          "_key": "item-2-7",
+          "_type": "menuItem",
+          "name": "Radler nealko",
+          "amount": "0,5 l",
+          "price": 48
+        },
+        {
+          "_key": "item-2-8",
+          "_type": "menuItem",
+          "name": "Red Bull",
+          "amount": "1 ks",
+          "price": 65
+        },
+        {
+          "_key": "item-2-9",
+          "_type": "menuItem",
+          "name": "Kohoutková voda s citronem",
+          "amount": "1,0 l",
+          "price": 50
+        }
+      ]
+    },
+    {
+      "_key": "category-3",
+      "_type": "menuCategory",
+      "title": "Víno",
+      "items": [
+        {
+          "_key": "item-3-1",
+          "_type": "menuItem",
+          "name": "Veltlínské zelené, Chateau Valtice",
+          "amount": "0,2 l",
+          "price": 60
+        },
+        {
+          "_key": "item-3-2",
+          "_type": "menuItem",
+          "name": "Chardonnay, Chateau Valtice",
+          "amount": "0,2 l",
+          "price": 60
+        },
+        {
+          "_key": "item-3-3",
+          "_type": "menuItem",
+          "name": "Svatovavřinecké, Chateau Valtice",
+          "amount": "0,2 l",
+          "price": 60
+        },
+        {
+          "_key": "item-3-4",
+          "_type": "menuItem",
+          "name": "Bohemia sekt",
+          "amount": "0,7 l",
+          "price": 250
+        },
+        {
+          "_key": "item-3-5",
+          "_type": "menuItem",
+          "name": "Prosecco",
+          "amount": "0,2 l",
+          "price": 70
+        },
+        {
+          "_key": "item-3-6",
+          "_type": "menuItem",
+          "name": "Prosecco",
+          "amount": "0,7 l",
+          "price": 240
+        }
+      ]
+    },
+    {
+      "_key": "category-4",
+      "_type": "menuCategory",
+      "title": "Alkoholické nápoje",
+      "items": [
+        {
+          "_key": "item-4-1",
+          "_type": "menuItem",
+          "name": "Božkov Tuzemský, kávový, zelená nebo vodka",
+          "amount": "0,04 l",
+          "price": 44
+        },
+        {
+          "_key": "item-4-2",
+          "_type": "menuItem",
+          "name": "Republica Exclusive nebo Espresso",
+          "amount": "0,04 l",
+          "price": 55
+        },
+        {
+          "_key": "item-4-3",
+          "_type": "menuItem",
+          "name": "Stará myslivecká",
+          "amount": "0,04 l",
+          "price": 48
+        },
+        {
+          "_key": "item-4-4",
+          "_type": "menuItem",
+          "name": "Fernet Stock nebo Citrus",
+          "amount": "0,04 l",
+          "price": 48
+        },
+        {
+          "_key": "item-4-5",
+          "_type": "menuItem",
+          "name": "Becherovka",
+          "amount": "0,04 l",
+          "price": 48
+        },
+        {
+          "_key": "item-4-6",
+          "_type": "menuItem",
+          "name": "Spišská borovička",
+          "amount": "0,04 l",
+          "price": 48
+        },
+        {
+          "_key": "item-4-7",
+          "_type": "menuItem",
+          "name": "Havana Club",
+          "amount": "0,04 l",
+          "price": 55
+        },
+        {
+          "_key": "item-4-8",
+          "_type": "menuItem",
+          "name": "Finlandia",
+          "amount": "0,04 l",
+          "price": 55
+        },
+        {
+          "_key": "item-4-9",
+          "_type": "menuItem",
+          "name": "Malibu",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-10",
+          "_type": "menuItem",
+          "name": "Baileys",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-11",
+          "_type": "menuItem",
+          "name": "Captain Morgan",
+          "amount": "0,04 l",
+          "price": 55
+        },
+        {
+          "_key": "item-4-12",
+          "_type": "menuItem",
+          "name": "Tullamore Dew",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-13",
+          "_type": "menuItem",
+          "name": "Jameson",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-14",
+          "_type": "menuItem",
+          "name": "Tequila Sierra",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-15",
+          "_type": "menuItem",
+          "name": "Jägermeister",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-16",
+          "_type": "menuItem",
+          "name": "Beefeater Gin",
+          "amount": "0,04 l",
+          "price": 60
+        },
+        {
+          "_key": "item-4-17",
+          "_type": "menuItem",
+          "name": "Jack Daniel’s Tennessee Honey, Fire nebo Apple",
+          "amount": "0,04 l",
+          "price": 70
+        }
+      ]
+    },
+    {
+      "_key": "category-5",
+      "_type": "menuCategory",
+      "title": "Teplé nápoje",
+      "items": [
+        {
+          "_key": "item-5-1",
+          "_type": "menuItem",
+          "name": "Čaj Ahmad s medem",
+          "amount": "1 ks",
+          "price": 59
+        },
+        {
+          "_key": "item-5-2",
+          "_type": "menuItem",
+          "name": "Espresso",
+          "amount": "7 g",
+          "price": 50,
+          "allergens": "7"
+        },
+        {
+          "_key": "item-5-3",
+          "_type": "menuItem",
+          "name": "Turecká káva",
+          "amount": "7 g",
+          "price": 45
+        },
+        {
+          "_key": "item-5-4",
+          "_type": "menuItem",
+          "name": "Cappuccino",
+          "amount": "7 g",
+          "price": 60,
+          "allergens": "7"
+        },
+        {
+          "_key": "item-5-5",
+          "_type": "menuItem",
+          "name": "Latte macchiato",
+          "amount": "7 g",
+          "price": 65,
+          "allergens": "7"
+        },
+        {
+          "_key": "item-5-6",
+          "_type": "menuItem",
+          "name": "Vídeňská káva",
+          "amount": "7 g",
+          "price": 65,
+          "allergens": "7"
+        },
+        {
+          "_key": "item-5-7",
+          "_type": "menuItem",
+          "name": "Grog rumový",
+          "amount": "4 cl",
+          "price": 60
+        },
+        {
+          "_key": "item-5-8",
+          "_type": "menuItem",
+          "name": "Svařené červené víno",
+          "amount": "0,2 l",
+          "price": 70
+        }
+      ]
+    },
+    {
+      "_key": "category-6",
+      "_type": "menuCategory",
+      "title": "Dobroty",
+      "items": [
+        {
+          "_key": "item-6-1",
+          "_type": "menuItem",
+          "name": "Tyčinky",
+          "amount": "1 ks",
+          "price": 35
+        },
+        {
+          "_key": "item-6-2",
+          "_type": "menuItem",
+          "name": "Tyčinky dlouhé",
+          "amount": "1 ks",
+          "price": 35
+        },
+        {
+          "_key": "item-6-3",
+          "_type": "menuItem",
+          "name": "Brambůrky",
+          "amount": "1 ks",
+          "price": 40
+        },
+        {
+          "_key": "item-6-4",
+          "_type": "menuItem",
+          "name": "Arašídy solené",
+          "amount": "1 ks",
+          "price": 35
+        },
+        {
+          "_key": "item-6-5",
+          "_type": "menuItem",
+          "name": "Mandle solené nebo uzené",
+          "amount": "1 ks",
+          "price": 60
+        }
+      ]
+    },
+    {
+      "_key": "category-7",
+      "_type": "menuCategory",
+      "title": "Bartida pálenky",
+      "items": [
+        {
+          "_key": "item-7-1",
+          "_type": "menuItem",
+          "name": "Meruňkovice 43 %",
+          "amount": "0,04 l",
+          "price": 70
+        },
+        {
+          "_key": "item-7-2",
+          "_type": "menuItem",
+          "name": "Calvados 40 %",
+          "amount": "0,04 l",
+          "price": 70
+        },
+        {
+          "_key": "item-7-3",
+          "_type": "menuItem",
+          "name": "Hruškovice 43 %",
+          "amount": "0,04 l",
+          "price": 70
+        },
+        {
+          "_key": "item-7-4",
+          "_type": "menuItem",
+          "name": "Slivovice 47 %",
+          "amount": "0,04 l",
+          "price": 70
+        }
+      ]
+    }
+  ]
+}

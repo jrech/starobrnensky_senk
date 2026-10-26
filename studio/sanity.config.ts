@@ -1,6 +1,7 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
+import { csCZLocale } from "@sanity/locale-cs-cz";
 import { schemaTypes } from "./schemaTypes";
 
 export default defineConfig({
@@ -23,8 +24,14 @@ export default defineConfig({
               S.listItem()
                 .title("Obědové menu")
                 .child(S.document().schemaType("lunchMenu").documentId("lunchMenu")),
+              S.listItem()
+                .title("Jídelní lístek")
+                .child(S.document().schemaType("foodMenu").documentId("foodMenu")),
+              S.listItem()
+                .title("Nápojový lístek")
+                .child(S.document().schemaType("drinkMenu").documentId("drinkMenu")),
             ])),
       ]),
-  }), visionTool()],
+  }), visionTool(), csCZLocale()],
   schema: { types: schemaTypes },
 });

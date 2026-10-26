@@ -432,13 +432,6 @@ if (!reduceMotion) {
     reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
     if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
   });
-
-  const statement = document.querySelector<HTMLElement>(".about-statement");
-  if (statement) {
-    const aboutCopy = document.querySelector<HTMLElement>("[data-about-copy]");
-    if (aboutCopy) gsap.fromTo(aboutCopy, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: .7, ease: "power4.out", scrollTrigger: { trigger: statement, start: "top 86%", once: true } });
-  }
-
 }
 
 window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });

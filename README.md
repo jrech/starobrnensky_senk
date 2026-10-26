@@ -24,9 +24,9 @@ Web poběží na `http://localhost:4321`.
 corepack pnpm studio
 ```
 
-5. Vytvořte dokument typu `Obsah webu` a doplňte obědové menu, rumy, speciality a provozní informace.
+5. Ve Studiu otevřete `Obsah webu → Jídelní lístek` nebo `Obsah webu → Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny. Po kliknutí na `Publikovat` se změny na stránce `/listky` načtou bez nového nasazení webu.
 
-Bez Sanity credentials web bezpečně použije lokální ukázkový obsah a viditelně jej tak označí. Při dostupném projektu se během buildu automaticky použijí publikovaná data ze Sanity.
+Bez Sanity credentials web bezpečně použije lokální ukázkový obsah. Stránka `/listky` čte publikovaný jídelní a nápojový lístek ze Sanity při každé návštěvě; ostatní stránky se nadále generují při buildu.
 
 ## Nasazení na Vercel
 
