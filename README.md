@@ -24,8 +24,8 @@ Web poběží na `http://localhost:4321`.
 corepack pnpm studio
 ```
 
-5. Obědové menu: ve Studiu `Obědové menu → +` vytvoří menu na týden. Vyberte pondělí, od kterého platí, a vyplňte dny. Příští týden lze napsat dopředu, web sám ukáže menu pro aktuální týden (o víkendu už menu na příští týden). Prázdný den web označí „Tento den obědy nevaříme“, chybějící týden „Menu ještě připravujeme“. Ceny obědů se nastavují jednou v `Ceny obědů`.
-6. Ve Studiu otevřete `Jídelní lístek`, `Nápojový lístek`, `Rumy` nebo `Speciality`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
+5. Obědové menu: ve Studiu otevřete `Obědové menu` a o víkendu ho přepište na nadcházející týden (pondělí až pátek). Data u dnů doplňuje web sám. Prázdný den web označí „Tento den obědy nevaříme“. Menu, které nikdo neupravil od minulého pátku, web v týdnu nezobrazí a napíše „Menu ještě připravujeme“. Ceny jsou nepovinné ve sbalené skupině `Ceny`: prázdné jídlo A = 159 Kč, B = 169 Kč, polévka bez ceny.
+6. Ve Studiu otevřete `Jídelní lístek` nebo `Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny. Rumy a speciality jsou zatím pevně v kódu (`src/lib/site-content.ts`).
 
 Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 
@@ -40,7 +40,7 @@ Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 2. Sanity: na `sanity.io/manage` → projekt → `API → Webhooks → Create webhook`:
    - URL: deploy hook z kroku 1, HTTP method `POST`
    - Dataset: `production`, trigger on `Create`, `Update`, `Delete`
-   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchWeek", "lunchPrices", "operatingStatus", "rumMenu", "specialtyMenu"]`
+   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchMenu", "operatingStatus"]`
    - Projection nechte prázdnou, `Drafts` a `Versions` vypnuté
 3. Ověření: upravte cenu v lístku, publikujte a v přehledu deploymentů hostingu by se měl spustit nový build.
 

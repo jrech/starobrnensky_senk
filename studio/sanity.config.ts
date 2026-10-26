@@ -18,24 +18,15 @@ export default defineConfig({
         .title("Obsah webu")
         .items([
           singleton("Stav provozu", "operatingStatus"),
-          S.listItem()
-            .title("Obědové menu")
-            .child(S.documentTypeList("lunchWeek")
-              .title("Obědové menu · týdny")
-              .defaultOrdering([{ field: "weekStart", direction: "desc" }])),
-          singleton("Ceny obědů", "lunchPrices"),
-          S.divider(),
+          singleton("Obědové menu", "lunchMenu"),
           singleton("Jídelní lístek", "foodMenu"),
           singleton("Nápojový lístek", "drinkMenu"),
-          S.divider(),
-          singleton("Rumy", "rumMenu"),
-          singleton("Speciality", "specialtyMenu"),
         ]);
     },
   }), visionTool(), csCZLocale()],
   schema: { types: schemaTypes },
   document: {
-    // Only weekly lunch menus are created by hand; everything else is a single fixed document.
-    newDocumentOptions: (previous, { creationContext }) => creationContext.type === "global" ? previous.filter(({ templateId }) => templateId === "lunchWeek") : previous,
+    // Every document is a fixed single one opened from the list, so nothing is created by hand.
+    newDocumentOptions: (previous, { creationContext }) => creationContext.type === "global" ? [] : previous,
   },
 });
