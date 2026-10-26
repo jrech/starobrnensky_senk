@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { getOpeningStatus, getOpeningWindow, getStatusBanner, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
-import { getLunchView, lunchQuery, mondayOf, pragueNow, renderLunch, type LunchData } from "../lib/lunch";
+import { getLunchView, lunchQuery, pragueNow, renderLunch, type LunchData, type LunchMenu } from "../lib/lunch";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -15,7 +15,7 @@ const heroStatus = document.querySelector<HTMLElement>("[data-hero-status]");
 const contentRoot = document.querySelector<HTMLElement>("[data-sanity-project]");
 
 type PublishedContent = {
-  lunch?: Partial<LunchData>;
+  lunch?: LunchMenu | null;
   operatingStatus?: OperatingStatusOverride;
 };
 
@@ -96,7 +96,7 @@ updateHeaderState();
 window.addEventListener("scroll", updateHeaderState, { passive: true });
 
 const lunchRoot = document.querySelector<HTMLElement>("[data-lunch]");
-let lunchData = JSON.parse(lunchRoot?.dataset.lunchData || '{"weeks":[],"prices":{}}') as LunchData;
+let lunchData = JSON.parse(lunchRoot?.dataset.lunchData || "{}") as LunchData;
 const lunchPhone = JSON.parse(lunchRoot?.dataset.phone || "{}") as { label: string; href: string };
 
 function activateTab(index: number, focus = false) {
@@ -148,7 +148,7 @@ async function hydratePublishedContent() {
   if (!projectId) return;
 
   const query = `{
-    ${lunchRoot ? `"lunch": ${lunchQuery(mondayOf(pragueNow().date))},` : ""}
+    ${lunchRoot ? `"lunch": ${lunchQuery},` : ""}
     "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText}
   }`;
 
@@ -162,8 +162,8 @@ async function hydratePublishedContent() {
     setHeroStatusOverride(override);
     bannerOverride = override;
     updateStatusBanners();
-    if (data.lunch) {
-      lunchData = { weeks: data.lunch.weeks || [], prices: data.lunch.prices || {} };
+    if (lunchRoot) {
+      lunchData = { menu: data.lunch ?? undefined };
       renderLunchMenu();
     }
   } catch (error) {

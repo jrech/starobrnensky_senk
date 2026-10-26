@@ -9,9 +9,10 @@ export type LunchDayInput = {
   dishBAllergens?: string;
 };
 export type WeekdayKey = "monday" | "tuesday" | "wednesday" | "thursday" | "friday";
-export type LunchWeek = Partial<Record<WeekdayKey, LunchDayInput>> & { weekStart: string; updatedAt?: string };
-export type LunchPrices = { soup?: number; dishA?: number; dishB?: number };
-export type LunchData = { weeks: LunchWeek[]; prices: LunchPrices };
+export type LunchPrices = { soupPrice?: number; dishAPrice?: number; dishBPrice?: number };
+/** The single lunch menu the owner rewrites every weekend. */
+export type LunchMenu = Partial<Record<WeekdayKey, LunchDayInput>> & LunchPrices & { updatedAt?: string };
+export type LunchData = { menu?: LunchMenu };
 
 export type LunchDish = { type: string; name: string; allergens?: string; price?: string };
 export type LunchDayView = { key: WeekdayKey; label: string; shortLabel: string; dateLabel: string; dishes: LunchDish[]; isToday: boolean };
@@ -21,18 +22,14 @@ export type LunchView = {
   message?: string;
   /** Point to the regular menu, used when there is no lunch to serve right now. */
   linkMenu: boolean;
-  /** No menu published for the week at all: offer the phone instead. */
+  /** No menu for this week yet: offer the phone instead. */
   showPhone: boolean;
   days: LunchDayView[];
   activeIndex: number;
 };
 
 const dayFields = "soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens";
-/** GROQ for the weeks starting on or after `from` (YYYY-MM-DD) plus the shared prices. */
-export const lunchQuery = (from: string) => `{
-  "weeks": *[_type == "lunchWeek" && weekStart >= "${from}"] | order(weekStart asc)[0...3]{weekStart,"updatedAt":_updatedAt,monday{${dayFields}},tuesday{${dayFields}},wednesday{${dayFields}},thursday{${dayFields}},friday{${dayFields}}},
-  "prices": *[_type == "lunchPrices" && _id == "lunchPrices"][0]{soup,dishA,dishB}
-}`;
+export const lunchQuery = `*[_type == "lunchMenu" && _id == "lunchMenu"][0]{"updatedAt":_updatedAt,soupPrice,dishAPrice,dishBPrice,monday{${dayFields}},tuesday{${dayFields}},wednesday{${dayFields}},thursday{${dayFields}},friday{${dayFields}}}`;
 
 export const weekdays = [
   { key: "monday", label: "Pondělí", shortLabel: "Po" },
@@ -78,13 +75,14 @@ export function formatWeek(weekStart: string) {
 }
 
 const clean = (value?: string) => value?.trim() || "";
+// Lunch A and B cost 159 and 169 Kč unless the owner sets another price in Sanity.
 const price = (value?: number) => typeof value === "number" ? `${value} Kč` : undefined;
 
 function dishesFor(day: LunchDayInput | undefined, prices: LunchPrices): LunchDish[] {
   const dishes: LunchDish[] = [
-    { type: "Polévka", name: clean(day?.soupName), allergens: clean(day?.soupAllergens), price: price(prices.soup) },
-    { type: "Jídlo A", name: clean(day?.dishAName), allergens: clean(day?.dishAAllergens), price: price(prices.dishA) },
-    { type: "Jídlo B", name: clean(day?.dishBName), allergens: clean(day?.dishBAllergens), price: price(prices.dishB) },
+    { type: "Polévka", name: clean(day?.soupName), allergens: clean(day?.soupAllergens), price: price(prices.soupPrice) },
+    { type: "Jídlo A", name: clean(day?.dishAName), allergens: clean(day?.dishAAllergens), price: price(prices.dishAPrice ?? 159) },
+    { type: "Jídlo B", name: clean(day?.dishBName), allergens: clean(day?.dishBAllergens), price: price(prices.dishBPrice ?? 169) },
   ];
   return dishes.filter((dish) => dish.name);
 }
@@ -94,7 +92,12 @@ export function getLunchView(data: LunchData, now = new Date()): LunchView {
   const weekend = local.day === 0 || local.day === 6;
   const thisMonday = mondayOf(local.date);
   const weekStart = weekend ? addDays(thisMonday, 7) : thisMonday;
-  const week = data.weeks.find((candidate) => candidate.weekStart === weekStart);
+  // The owner rewrites the menu over the weekend. An edit since Friday counts as the menu for the coming week,
+  // so on weekdays a menu last touched before the previous Friday is last week's and is not shown as current.
+  const freshFrom = weekend ? addDays(thisMonday, 4) : addDays(thisMonday, -3);
+  const menu = data.menu;
+  const fresh = !menu?.updatedAt || pragueNow(new Date(menu.updatedAt)).date >= freshFrom;
+  const week = fresh ? menu : undefined;
   const days = weekdays.map((weekday, index): LunchDayView => {
     const date = addDays(weekStart, index);
     return {
@@ -102,7 +105,7 @@ export function getLunchView(data: LunchData, now = new Date()): LunchView {
       label: weekday.label,
       shortLabel: weekday.shortLabel,
       dateLabel: shortDate(date),
-      dishes: dishesFor(week?.[weekday.key], data.prices),
+      dishes: week ? dishesFor(week[weekday.key], week) : [],
       isToday: date === local.date,
     };
   });

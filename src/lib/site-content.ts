@@ -1,11 +1,9 @@
 import { createClient } from "@sanity/client";
 import type { OpeningHours, OperatingStatusOverride } from "./opening-status";
 import { drinkMenu as fallbackDrinkMenu, foodMenu as fallbackFoodMenu, type MenuCategory } from "./menu-content";
-import { addDays, lunchQuery, mondayOf, pragueNow, type LunchData, type LunchWeek } from "./lunch";
+import { lunchQuery, type LunchData, type LunchMenu } from "./lunch";
 
 type SanityMenu = { categories?: Array<{ title?: string; items?: Array<{ name?: string; amount?: string; price?: number; allergens?: string }> }> };
-type SanityRum = { name?: string; origin?: string; abv?: number; price?: number; note?: string; image?: string };
-type SanitySpecialty = { name?: string; note?: string; price?: string; image?: string };
 export type Rum = { name: string; origin?: string; note?: string; abv?: string; price?: string; image?: string };
 export type Specialty = { name: string; note?: string; price?: string; image?: string };
 export type SiteContent = {
@@ -27,8 +25,8 @@ export type SiteContent = {
 };
 
 const fallback: SiteContent = {
-  // getSiteContent fills in sample weeks only for local development without Sanity.
-  lunch: { weeks: [], prices: { dishA: 159, dishB: 169 } },
+  // getSiteContent uses the sample menu only for local development without Sanity.
+  lunch: {},
   rums: [
     { name: "Diplomático Reserva", origin: "Venezuela", note: "Kulatý, medový a jemně kořenitý.", abv: "40 %" },
     { name: "Abuelo 7 Años", origin: "Panama", note: "Sušší rum s tóny dubu a vanilky.", abv: "40 %" },
@@ -60,36 +58,13 @@ const fallback: SiteContent = {
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET || "production";
 
-const sampleWeek = (weekStart: string): LunchWeek => ({
-  weekStart,
+const sampleMenu: LunchMenu = {
   monday: { soupName: "Česneková polévka se sýrem a krutony", soupAllergens: "1, 7", dishAName: "Vepřový vrabec, špenát, bramborový knedlík", dishAAllergens: "1, 3, 7", dishBName: "Kuřecí steak, pepřová omáčka, hranolky", dishBAllergens: "1, 7" },
   tuesday: { soupName: "Hovězí vývar s nudlemi", soupAllergens: "1, 3, 9", dishAName: "Smažený kuřecí řízek, bramborová kaše", dishAAllergens: "1, 3, 7", dishBName: "Fazolový guláš s klobásou a chlebem", dishBAllergens: "1" },
   wednesday: { soupName: "Bramboračka s houbami", soupAllergens: "1, 9", dishAName: "Hovězí na česneku, rýže", dishAAllergens: "1", dishBName: "Smažený sýr, hranolky, tatarská omáčka", dishBAllergens: "1, 3, 7" },
   thursday: { soupName: "Kulajda s vejcem", soupAllergens: "1, 3, 7", dishAName: "Segedínský guláš, houskový knedlík", dishAAllergens: "1, 3, 7", dishBName: "Grilovaný hermelín, salát a toast", dishBAllergens: "1, 7" },
   friday: { soupName: "Gulášová polévka", soupAllergens: "1", dishAName: "Moravský závitek, dušená rýže", dishAAllergens: "1, 3, 10", dishBName: "Bramborové noky s kuřecím masem a špenátem", dishBAllergens: "1, 3, 7" },
-});
-
-const imageUrl = (url: string | undefined, width: number) => url ? `${url}?w=${width}&auto=format&fit=max` : undefined;
-
-function normalizeRums(rums: SanityRum[]): Rum[] {
-  return rums.filter((rum) => rum.name?.trim()).map((rum) => ({
-    name: rum.name!.trim(),
-    origin: rum.origin?.trim(),
-    note: rum.note?.trim(),
-    abv: typeof rum.abv === "number" ? `${String(rum.abv).replace(".", ",")} %` : undefined,
-    price: typeof rum.price === "number" ? `${rum.price} Kč` : undefined,
-    image: imageUrl(rum.image, 960),
-  }));
-}
-
-function normalizeSpecialties(specialties: SanitySpecialty[]): Specialty[] {
-  return specialties.filter((item) => item.name?.trim()).map((item) => ({
-    name: item.name!.trim(),
-    note: item.note?.trim(),
-    price: item.price?.trim() || undefined,
-    image: imageUrl(item.image, 1280),
-  }));
-}
+};
 
 function normalizeMenu(menu: SanityMenu): MenuCategory[] {
   return (menu.categories || []).map((category) => ({
@@ -106,10 +81,7 @@ function normalizeMenu(menu: SanityMenu): MenuCategory[] {
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
-  const thisMonday = mondayOf(pragueNow().date);
-  if (!projectId) {
-    return { ...fallback, lunch: { ...fallback.lunch, weeks: [sampleWeek(thisMonday), sampleWeek(addDays(thisMonday, 7))] } };
-  }
+  if (!projectId) return { ...fallback, lunch: { menu: sampleMenu } };
 
   const client = createClient({
     projectId,
@@ -120,29 +92,23 @@ export async function getSiteContent(): Promise<SiteContent> {
   });
 
   try {
-    const data = await client.fetch<{ lunch?: Partial<LunchData>; operatingStatus?: OperatingStatusOverride; foodMenu?: SanityMenu; drinkMenu?: SanityMenu; rums?: SanityRum[]; specialties?: SanitySpecialty[] }>(`{
-      "lunch": ${lunchQuery(thisMonday)},
+    const data = await client.fetch<{ lunch?: LunchMenu; operatingStatus?: OperatingStatusOverride; foodMenu?: SanityMenu; drinkMenu?: SanityMenu }>(`{
+      "lunch": ${lunchQuery},
       "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText},
       "foodMenu": *[_type == "foodMenu" && _id == "foodMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}},
-      "drinkMenu": *[_type == "drinkMenu" && _id == "drinkMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}},
-      "rums": *[_type == "rumMenu" && _id == "rumMenu"][0].rums[]{name,origin,abv,price,note,"image":image.asset->url},
-      "specialties": *[_type == "specialtyMenu" && _id == "specialtyMenu"][0].specialties[]{name,note,price,"image":image.asset->url}
+      "drinkMenu": *[_type == "drinkMenu" && _id == "drinkMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}}
     }`);
 
-    const rums = normalizeRums(data?.rums || []);
-    const specialties = normalizeSpecialties(data?.specialties || []);
     return {
       ...fallback,
       // No sample dishes here: an empty week tells guests the menu is on its way instead of showing made-up food.
-      lunch: { weeks: data?.lunch?.weeks || [], prices: data?.lunch?.prices || {} },
+      lunch: { menu: data?.lunch ?? undefined },
       operatingStatus: data?.operatingStatus ?? fallback.operatingStatus,
       foodMenu: data?.foodMenu ? normalizeMenu(data.foodMenu) : fallback.foodMenu,
       drinkMenu: data?.drinkMenu ? normalizeMenu(data.drinkMenu) : fallback.drinkMenu,
-      rums: rums.length ? rums : fallback.rums,
-      specialties: specialties.length ? specialties : fallback.specialties,
     };
   } catch (error) {
     console.warn("Sanity content could not be loaded; using local fallback.", error);
-    return { ...fallback, lunch: { weeks: [], prices: {} } };
+    return fallback;
   }
 }
