@@ -7,7 +7,7 @@ export default defineType({
   fields: [
     defineField({
       name: "mode",
-      title: "Stav v hero",
+      title: "Stav provozu na webu",
       type: "string",
       initialValue: "automatic",
       options: {
@@ -24,7 +24,7 @@ export default defineType({
       title: "Hlášení pro návštěvníky",
       type: "string",
       placeholder: "Například dnes vaříme jen do 12 hod.",
-      description: "Hlavní stav se stále řídí běžnou otevírací dobou. Text se zobrazí pod ním.",
+      description: "Hlavní stav se stále řídí běžnou otevírací dobou. Text se zobrazí v úvodu webu, nad obědovým menu a na lístku.",
       hidden: ({ document }) => document?.mode !== "notice",
       validation: (rule) => rule.custom((value, context: any) => context.document?.mode !== "notice" || Boolean(value?.trim()) || "Doplňte text hlášení."),
     }),
@@ -38,11 +38,11 @@ export default defineType({
     }),
     defineField({
       name: "closedUntil",
-      title: "Návrat k automatické otevírací době od",
+      title: "Znovu otevíráme",
       type: "date",
-      description: "Po tomto datu začne web znovu počítat stav podle běžné otevírací doby.",
+      description: "První den, kdy už máme zase otevřeno. Od tohoto dne se web vrátí k běžné otevírací době.",
       hidden: ({ document }) => document?.mode !== "closed",
-      validation: (rule) => rule.custom((value, context: any) => context.document?.mode !== "closed" || Boolean(value) || "Vyberte datum návratu k automatickému režimu."),
+      validation: (rule) => rule.custom((value, context: any) => context.document?.mode !== "closed" || Boolean(value) || "Vyberte den, kdy znovu otevíráte."),
     }),
   ],
   preview: { prepare: () => ({ title: "Stav provozu" }) },

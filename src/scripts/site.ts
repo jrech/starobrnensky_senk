@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { getOpeningStatus, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
+import { getOpeningStatus, getOpeningWindow, getStatusBanner, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
+import { getLunchView, lunchQuery, mondayOf, pragueNow, renderLunch, type LunchData } from "../lib/lunch";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,85 +11,29 @@ const header = document.querySelector<HTMLElement>("[data-header]");
 const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
 const mobileMenu = document.querySelector<HTMLElement>(".mobile-menu");
 const mobileMenuItems = mobileMenu?.querySelectorAll<HTMLElement>("nav a, .mobile-contact-link, .mobile-contact-label") || [];
-const allergenDialog = document.querySelector<HTMLDialogElement>("[data-allergen-dialog]");
 const heroStatus = document.querySelector<HTMLElement>("[data-hero-status]");
 const contentRoot = document.querySelector<HTMLElement>("[data-sanity-project]");
 
-type SanityLunchDay = {
-  soupName?: string;
-  soupAllergens?: string;
-  dishAName?: string;
-  dishAAllergens?: string;
-  dishBName?: string;
-  dishBAllergens?: string;
-};
-
 type PublishedContent = {
-  lunchMenu?: Partial<Record<"monday" | "tuesday" | "wednesday" | "thursday" | "friday", SanityLunchDay>>;
+  lunch?: Partial<LunchData>;
   operatingStatus?: OperatingStatusOverride;
 };
-
-const lunchWeekdays = [
-  { key: "monday", label: "Pondělí", shortLabel: "Po" },
-  { key: "tuesday", label: "Úterý", shortLabel: "Út" },
-  { key: "wednesday", label: "Středa", shortLabel: "St" },
-  { key: "thursday", label: "Čtvrtek", shortLabel: "Čt" },
-  { key: "friday", label: "Pátek", shortLabel: "Pá" },
-] as const;
-
-function getPragueDate(now = new Date()) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Prague",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(now);
-  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
-  return `${value("year")}-${value("month")}-${value("day")}`;
-}
-
-function getCurrentWeekDates(now = new Date()) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Prague",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    weekday: "short",
-  }).formatToParts(now);
-  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
-  const weekday = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 }[value("weekday") as "Mon"] ?? 1;
-  const monday = new Date(Date.UTC(Number(value("year")), Number(value("month")) - 1, Number(value("day")) - ((weekday + 6) % 7), 12));
-  return lunchWeekdays.map((_, index) => {
-    const date = new Date(monday);
-    date.setUTCDate(monday.getUTCDate() + index);
-    return date.toISOString().slice(0, 10);
-  });
-}
 
 let updateHeroStatus = () => {};
 let setHeroStatusOverride = (_override: OperatingStatusOverride) => {};
 
-function updateLunchWeekLabel() {
-  const target = document.querySelector<HTMLElement>("[data-lunch-updated]");
-  if (!target) return;
-
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Prague",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    weekday: "short",
-  }).formatToParts(new Date());
-  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
-  const weekday = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 }[value("weekday") as "Mon"] ?? 1;
-  const monday = new Date(Date.UTC(Number(value("year")), Number(value("month")) - 1, Number(value("day")) - ((weekday + 6) % 7), 12));
-  const friday = new Date(monday);
-  friday.setUTCDate(monday.getUTCDate() + 4);
-  const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
-  target.textContent = `Obědové menu · ${monday.getUTCDate()}.–${friday.getUTCDate()}. ${months[friday.getUTCMonth()]} ${friday.getUTCFullYear()}`;
+const statusBanners = Array.from(document.querySelectorAll<HTMLElement>("[data-status-banner]"));
+let bannerOverride = JSON.parse(statusBanners[0]?.dataset.statusOverride || "{}") as OperatingStatusOverride;
+function updateStatusBanners() {
+  const banner = getStatusBanner(bannerOverride);
+  statusBanners.forEach((element) => {
+    element.hidden = !banner;
+    element.textContent = banner?.text || "";
+    element.classList.toggle("is-closed", banner?.tone === "closed");
+    element.classList.toggle("is-notice", banner?.tone === "notice");
+  });
 }
-
-updateLunchWeekLabel();
+updateStatusBanners();
 
 if (heroStatus) {
   try {
@@ -143,11 +88,6 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") setMenu(false);
 });
 
-document.querySelector<HTMLButtonElement>("[data-allergen-open]")?.addEventListener("click", () => allergenDialog?.showModal());
-document.querySelector<HTMLButtonElement>("[data-allergen-close]")?.addEventListener("click", () => allergenDialog?.close());
-allergenDialog?.addEventListener("click", (event) => {
-  if (event.target === allergenDialog) allergenDialog.close();
-});
 
 const updateHeaderState = () => {
   header?.classList.toggle("is-scrolled", window.scrollY > 32);
@@ -155,10 +95,14 @@ const updateHeaderState = () => {
 updateHeaderState();
 window.addEventListener("scroll", updateHeaderState, { passive: true });
 
-const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-tab]"));
-const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-panel]"));
+const lunchRoot = document.querySelector<HTMLElement>("[data-lunch]");
+let lunchData = JSON.parse(lunchRoot?.dataset.lunchData || '{"weeks":[],"prices":{}}') as LunchData;
+const lunchPhone = JSON.parse(lunchRoot?.dataset.phone || "{}") as { label: string; href: string };
 
 function activateTab(index: number, focus = false) {
+  if (!lunchRoot) return;
+  const tabs = Array.from(lunchRoot.querySelectorAll<HTMLButtonElement>("[data-tab]"));
+  const panels = Array.from(lunchRoot.querySelectorAll<HTMLElement>("[role='tabpanel']"));
   tabs.forEach((tab, tabIndex) => {
     const active = tabIndex === index;
     tab.setAttribute("aria-selected", String(active));
@@ -173,57 +117,30 @@ function activateTab(index: number, focus = false) {
   });
 }
 
-tabs.forEach((tab, index) => {
-  tab.addEventListener("click", () => activateTab(index));
-  tab.addEventListener("keydown", (event) => {
-    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-    event.preventDefault();
-    const direction = event.key === "ArrowRight" ? 1 : -1;
-    activateTab((index + direction + tabs.length) % tabs.length, true);
-  });
+// The page is static, so "today", weekends and the lunch cut-off are worked out again in the browser.
+function renderLunchMenu() {
+  if (!lunchRoot) return;
+  const view = getLunchView(lunchData);
+  lunchRoot.innerHTML = renderLunch(view, lunchPhone);
+  const eyebrow = document.querySelector<HTMLElement>("[data-lunch-eyebrow]");
+  const updated = document.querySelector<HTMLElement>("[data-lunch-updated]");
+  if (eyebrow) eyebrow.textContent = view.eyebrow;
+  if (updated) updated.textContent = view.weekLabel;
+}
+
+lunchRoot?.addEventListener("click", (event) => {
+  const tab = (event.target as Element).closest<HTMLButtonElement>("[data-tab]");
+  if (tab) activateTab(Number(tab.dataset.tab));
 });
-
-function hasLunchMenuContent(menu: PublishedContent["lunchMenu"]) {
-  return Object.values(menu || {}).some((day) => Object.values(day || {}).some((value) => typeof value === "string" && value.trim().length > 0));
-}
-
-function updateLunchMenu(menu: NonNullable<PublishedContent["lunchMenu"]>) {
-  const dates = getCurrentWeekDates();
-  lunchWeekdays.forEach((weekday, index) => {
-    const day = menu[weekday.key] || {};
-    const tab = tabs[index];
-    const panel = panels[index];
-    if (!tab || !panel) return;
-
-    tab.dataset.date = dates[index];
-    const dayName = tab.querySelector<HTMLElement>(".day-name");
-    const dayShort = tab.querySelector<HTMLElement>(".day-short");
-    const dayDate = tab.querySelector<HTMLElement>(".day-date");
-    if (dayName) dayName.textContent = weekday.label;
-    if (dayShort) dayShort.textContent = weekday.shortLabel;
-    if (dayDate) dayDate.textContent = `${Number(dates[index].slice(8, 10))}. ${Number(dates[index].slice(5, 7))}.`;
-
-    const dishes = [
-      { name: day.soupName || "", allergens: day.soupAllergens || "" },
-      { name: day.dishAName || "", allergens: day.dishAAllergens || "" },
-      { name: day.dishBName || "", allergens: day.dishBAllergens || "" },
-    ];
-    panel.querySelectorAll<HTMLElement>(".dish").forEach((dish, dishIndex) => {
-      const value = dishes[dishIndex];
-      if (!value) return;
-      const title = dish.querySelector<HTMLElement>("h3");
-      const allergens = dish.querySelector<HTMLElement>(".allergens");
-      if (title) title.textContent = value.name;
-      if (allergens) {
-        allergens.hidden = !value.allergens;
-        allergens.textContent = value.allergens ? `Alergeny: ${value.allergens}` : "";
-      }
-    });
-  });
-
-  const currentDayIndex = dates.indexOf(getPragueDate());
-  if (currentDayIndex >= 0) activateTab(currentDayIndex);
-}
+lunchRoot?.addEventListener("keydown", (event) => {
+  const tab = (event.target as Element).closest<HTMLButtonElement>("[data-tab]");
+  if (!tab || (event.key !== "ArrowRight" && event.key !== "ArrowLeft")) return;
+  event.preventDefault();
+  const count = lunchRoot.querySelectorAll("[data-tab]").length;
+  const direction = event.key === "ArrowRight" ? 1 : -1;
+  activateTab((Number(tab.dataset.tab) + direction + count) % count, true);
+});
+renderLunchMenu();
 
 async function hydratePublishedContent() {
   const projectId = contentRoot?.dataset.sanityProject;
@@ -231,7 +148,7 @@ async function hydratePublishedContent() {
   if (!projectId) return;
 
   const query = `{
-    "lunchMenu": *[_type == "lunchMenu" && _id == "lunchMenu"][0]{monday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},tuesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},wednesday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},thursday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens},friday{soupName,soupAllergens,dishAName,dishAAllergens,dishBName,dishBAllergens}},
+    ${lunchRoot ? `"lunch": ${lunchQuery(mondayOf(pragueNow().date))},` : ""}
     "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText}
   }`;
 
@@ -241,20 +158,20 @@ async function hydratePublishedContent() {
     const payload = await response.json() as { result?: PublishedContent };
     const data = payload.result;
     if (!data) return;
-    if (data.operatingStatus) setHeroStatusOverride(data.operatingStatus);
-    if (data.lunchMenu && hasLunchMenuContent(data.lunchMenu)) updateLunchMenu(data.lunchMenu);
+    const override = data.operatingStatus || { mode: "automatic" };
+    setHeroStatusOverride(override);
+    bannerOverride = override;
+    updateStatusBanners();
+    if (data.lunch) {
+      lunchData = { weeks: data.lunch.weeks || [], prices: data.lunch.prices || {} };
+      renderLunchMenu();
+    }
   } catch (error) {
     console.warn("Published Sanity content could not be refreshed.", error);
   }
 }
 
-const today = getPragueDate();
-const matchingPanel = Array.from(document.querySelectorAll<HTMLElement>(".lunch-panel")).findIndex((panel) => {
-  const tabIndex = panel.dataset.panel;
-  const tab = document.querySelector<HTMLElement>(`[data-tab="${tabIndex}"]`);
-  return tab?.getAttribute("data-date") === today;
-});
-if (matchingPanel >= 0) activateTab(matchingPanel);
+const today = pragueNow().date;
 void hydratePublishedContent();
 
 const rumViewport = document.querySelector<HTMLElement>("[data-rum-viewport]");
@@ -311,33 +228,35 @@ updateRumProgress();
 const reservationForm = document.querySelector<HTMLFormElement>("[data-reservation-form]");
 const formStatus = document.querySelector<HTMLElement>("[data-form-status]");
 const dateInput = reservationForm?.querySelector<HTMLInputElement>('input[type="date"]');
+const reservationHours = JSON.parse(reservationForm?.dataset.hours || "[]") as OpeningHours[];
+const timeLabel = (minutes: number) => `${String(Math.floor(minutes / 60) % 24).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
 reservationForm?.querySelectorAll<HTMLInputElement>('input[type="time"]').forEach((input) => {
   const select = document.createElement("select");
   select.name = input.name;
   select.required = input.required;
   select.className = input.className;
   if (input.id) select.id = input.id;
-  if (input.disabled) select.disabled = true;
 
-  const placeholder = document.createElement("option");
-  placeholder.value = "";
-  placeholder.textContent = "Vyberte čas";
-  placeholder.selected = true;
-  select.append(placeholder);
-
-  for (let minutes = 11 * 60; minutes <= 23 * 60 + 45; minutes += 15) {
-    const option = document.createElement("option");
-    const hour = String(Math.floor(minutes / 60)).padStart(2, "0");
-    const minute = String(minutes % 60).padStart(2, "0");
-    option.value = `${hour}:${minute}`;
-    option.textContent = option.value;
-    select.append(option);
-  }
+  // Offer only times when the pub is open: from opening until an hour before closing, and not in the past today.
+  const fillTimes = () => {
+    const date = dateInput?.value;
+    const previous = select.value;
+    const opening = date ? getOpeningWindow(reservationHours, date) : null;
+    const slots: string[] = [];
+    if (date && opening) {
+      const now = pragueNow();
+      const earliest = date === now.date ? Math.max(opening.opens, Math.ceil((now.minutes + 30) / 15) * 15) : opening.opens;
+      for (let minutes = earliest; minutes <= opening.closes - 60; minutes += 15) slots.push(timeLabel(minutes));
+    }
+    const placeholder = !date ? "Nejdřív vyberte datum" : slots.length ? "Vyberte čas" : "Tento den už rezervace nebereme";
+    select.replaceChildren(new Option(placeholder, ""), ...slots.map((slot) => new Option(slot, slot)));
+    if (slots.includes(previous)) select.value = previous;
+  };
 
   input.replaceWith(select);
-});
-reservationForm?.querySelectorAll<HTMLTextAreaElement>('textarea[name="message"], textarea[name="note"]').forEach((textarea) => {
-  textarea.removeAttribute("placeholder");
+  dateInput?.addEventListener("change", fillTimes);
+  reservationForm?.addEventListener("reset", () => window.setTimeout(fillTimes));
+  fillTimes();
 });
 if (dateInput) dateInput.min = today;
 

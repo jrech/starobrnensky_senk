@@ -13,8 +13,8 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
 
 <header class="site-header" data-header>
   <div class="site-header-inner shell">
-    <a class="brand" href={menuPage ? "/" : "#top"} aria-label="Starobrněnský šenk – domů">
-      <span class="brand-name">Starobrněnský šenk</span>
+    <a class="brand" href={menuPage ? "/" : "#top"} aria-label="Starobrněnský Šenk – domů">
+      <span class="brand-name">Starobrněnský Šenk</span>
     </a>
     <nav class="desktop-nav" aria-label="Hlavní navigace">
       <a class={!menuPage ? "nav-priority" : undefined} href={sectionHref("obedove-menu")}>Obědové menu</a>
@@ -29,16 +29,21 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
     </button>
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <nav aria-label="Mobilní navigace">
-        <a href={sectionHref("obedove-menu")}>Obědové menu</a>
+        <a href={menuPage ? "/#dnesni-menu" : "#dnesni-menu"}>Obědové menu</a>
         <a href="/listky">Jídelní a nápojový lístek</a>
-        <a href={sectionHref("rumy")}>Rumy</a>
-        <a href={sectionHref("galerie")}>Galerie</a>
+        <a href={sectionHref("speciality")}>Speciality</a>
         <a href={sectionHref("o-nas")}>O nás</a>
-        {!menuPage && <a href="#speciality">Speciality</a>}
+        <a href={sectionHref("rumy")}>Rumy</a>
         <a href={sectionHref("kontakt")}>Kontakt a rezervace</a>
       </nav>
+      <div class="mobile-hours-block">
+        <p class="mobile-label">Otevírací doba</p>
+        <dl class="mobile-hours">{content.hours.map((row) => <div><dt>{row.days}</dt><dd>{row.hours}</dd></div>)}</dl>
+      </div>
       <div class="mobile-contact" aria-label="Kontaktní údaje">
+        <p class="mobile-label">Kontakt</p>
         <a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a>
+        <a class="mobile-contact-link" href={content.mapUrl} target="_blank" rel="noopener noreferrer"><Icon name="location" />Navigovat k nám</a>
         <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
         <div class="mobile-socials" aria-label="Sociální sítě">
           <a class="mobile-contact-link" href={content.facebookUrl} target="_blank" rel="noopener noreferrer"><Icon name="facebook" />Facebook</a>

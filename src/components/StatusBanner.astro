@@ -1,0 +1,13 @@
+---
+import type { OperatingStatusOverride } from "../lib/opening-status";
+
+interface Props {
+  override?: OperatingStatusOverride;
+  initial: { tone: "closed" | "notice"; text: string } | null;
+}
+
+const { override, initial } = Astro.props;
+---
+
+<!-- Re-evaluated in the browser (site.ts), because a closure ends on a date while the page is static. -->
+<p class:list={["status-banner", initial && `is-${initial.tone}`]} data-status-banner data-status-override={JSON.stringify(override ?? {})} role="status" hidden={!initial}>{initial?.text}</p>

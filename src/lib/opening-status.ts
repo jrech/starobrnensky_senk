@@ -92,14 +92,46 @@ function parseSlots(hours: OpeningHours[]): OpeningSlot[] {
   });
 }
 
+/** `closedUntil` is the first day the pub is open again. */
+function isManuallyClosed(override: OperatingStatusOverride | undefined, date: string): boolean {
+  return override?.mode === "closed" && (!override.closedUntil || date < override.closedUntil);
+}
+
+const weekdayNames = ["neděli", "pondělí", "úterý", "středu", "čtvrtek", "pátek", "sobotu"];
+const weekdayPrepositions = ["v", "v", "v", "ve", "ve", "v", "v"];
+
+/** Text for the banner shown above the lunch menu and on the menu page, or null when there is nothing to announce. */
+export function getStatusBanner(override: OperatingStatusOverride | undefined, now = new Date()): { tone: "closed" | "notice"; text: string } | null {
+  const local = getPragueTime(now);
+  if (isManuallyClosed(override, local.date)) {
+    const reason = override?.closedReason?.trim().replace(/[.!]+$/, "");
+    let reopen = "";
+    if (override?.closedUntil) {
+      const date = new Date(`${override.closedUntil}T12:00:00Z`);
+      const day = date.getUTCDay();
+      reopen = ` Znovu otevíráme ${weekdayPrepositions[day]} ${weekdayNames[day]} ${date.getUTCDate()}. ${date.getUTCMonth() + 1}.`;
+    }
+    return { tone: "closed", text: `${reason ? `Zavřeno — ${reason}.` : "Zavřeno."}${reopen}` };
+  }
+  const notice = override?.mode === "notice" ? override.noticeText?.trim() : undefined;
+  return notice ? { tone: "notice", text: notice } : null;
+}
+
+/** Opening and closing minute for a date (YYYY-MM-DD); closing after midnight counts past 24:00. */
+export function getOpeningWindow(hours: OpeningHours[], date: string): { opens: number; closes: number } | null {
+  const day = new Date(`${date}T12:00:00Z`).getUTCDay();
+  const slot = parseSlots(hours).find((candidate) => candidate.days.includes(day));
+  if (!slot) return null;
+  return { opens: slot.opens, closes: slot.closes <= slot.opens ? slot.closes + 24 * 60 : slot.closes };
+}
+
 export function getOpeningStatus(
   hours: OpeningHours[],
   override: OperatingStatusOverride | undefined,
   now = new Date(),
 ): HeroOpeningStatus {
   const local = getPragueTime(now);
-  const isManualClosure = override?.mode === "closed" && (!override.closedUntil || override.closedUntil >= local.date);
-  if (isManualClosure) {
+  if (isManuallyClosed(override, local.date)) {
     const reason = override?.closedReason?.trim();
     return { state: "closed", message: reason ? `Dnes zavřeno — ${reason}` : "Dnes zavřeno" };
   }

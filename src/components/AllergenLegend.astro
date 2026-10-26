@@ -1,0 +1,15 @@
+---
+const allergens = ["Obiloviny obsahující lepek", "Korýši", "Vejce", "Ryby", "Arašídy", "Sójové boby", "Mléko", "Skořápkové plody", "Celer", "Hořčice", "Sezamová semena", "Oxid siřičitý a siřičitany", "Vlčí bob", "Měkkýši"];
+---
+
+<details class="allergen-legend">
+  <summary>Seznam alergenů</summary>
+  <ol>{allergens.map((name) => <li>{name}</li>)}</ol>
+</details>
+
+<style>
+  .allergen-legend { font-size: 16px; }
+  .allergen-legend summary { width: fit-content; color: var(--brick-700); font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+  .allergen-legend ol { columns: 2; column-gap: var(--space-3); margin: var(--space-2) 0 0; padding-left: 1.6em; color: var(--ink); font-size: 15px; line-height: 1.5; }
+  @media (max-width: 480px) { .allergen-legend ol { columns: 1; } }
+</style>

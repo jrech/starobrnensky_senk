@@ -1,9 +1,9 @@
 ---
 import type { MenuCategory } from "../lib/menu-content";
 import MenuList from "./MenuList.astro";
+import AllergenLegend from "./AllergenLegend.astro";
 interface Props { categories: MenuCategory[] }
 const { categories } = Astro.props;
-const allergens = ["Obiloviny obsahující lepek", "Korýši", "Vejce", "Ryby", "Arašídy", "Sójové boby", "Mléko", "Skořápkové plody", "Celer", "Hořčice", "Sezamová semena", "Oxid siřičitý a siřičitany", "Vlčí bob", "Měkkýši"];
 ---
 
 <section class="menu-page-section section" id="jidlo" data-theme="cream" aria-labelledby="food-menu-title">
@@ -12,18 +12,9 @@ const allergens = ["Obiloviny obsahující lepek", "Korýši", "Vejce", "Ryby", 
       <h2 id="food-menu-title" class="display motion-title"><span class="line"><span>K pivu i</span></span><span class="line title-indent"><span>na pořádný hlad.</span></span></h2>
       <div>
         <p>Váha masa je uvedená v syrovém stavu. Čísla u položek označují alergeny.</p>
-        <details class="allergen-legend">
-          <summary>Seznam alergenů</summary>
-          <ol>{allergens.map((name) => <li>{name}</li>)}</ol>
-        </details>
+        <AllergenLegend />
       </div>
     </div>
     <MenuList categories={categories} idPrefix="jidlo" />
   </div>
 </section>
-
-<style>
-  .allergen-legend { margin-top: var(--space-2); font-size: 15px; }
-  .allergen-legend summary { width: fit-content; color: var(--brick-700); font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-  .allergen-legend ol { columns: 2; column-gap: var(--space-3); margin: var(--space-2) 0 0; padding-left: 1.6em; color: var(--ink); font-size: 14px; line-height: 1.5; }
-</style>

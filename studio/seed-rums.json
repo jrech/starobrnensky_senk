@@ -1,0 +1,38 @@
+{
+  "_id": "rumMenu",
+  "_type": "rumMenu",
+  "rums": [
+    {
+      "_key": "rum0",
+      "_type": "rum",
+      "name": "Diplomático Reserva",
+      "origin": "Venezuela",
+      "abv": 40,
+      "note": "Kulatý, medový a jemně kořenitý."
+    },
+    {
+      "_key": "rum1",
+      "_type": "rum",
+      "name": "Abuelo 7 Años",
+      "origin": "Panama",
+      "abv": 40,
+      "note": "Sušší rum s tóny dubu a vanilky."
+    },
+    {
+      "_key": "rum2",
+      "_type": "rum",
+      "name": "Plantation XO",
+      "origin": "Barbados",
+      "abv": 40,
+      "note": "Kokos, kakao a dlouhý sametový závěr."
+    },
+    {
+      "_key": "rum3",
+      "_type": "rum",
+      "name": "Ron Zacapa 23",
+      "origin": "Guatemala",
+      "abv": 40,
+      "note": "Bohatý styl s karamelem a sušeným ovocem."
+    }
+  ]
+}

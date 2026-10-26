@@ -1,11 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Icon from "../components/Icon.astro";
 import Footer from "../components/Footer.astro";
 import ContactReservation from "../components/ContactReservation.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
-import { getOpeningStatus, parseDays } from "../lib/opening-status";
+import { getOpeningStatus, getStatusBanner, parseDays } from "../lib/opening-status";
+import { getLunchView, renderLunch } from "../lib/lunch";
+import AllergenLegend from "../components/AllergenLegend.astro";
+import StatusBanner from "../components/StatusBanner.astro";
 import { Image } from "astro:assets";
 import heroImage from "../assets/hero-interior-enhanced.png";
 import galleryHeroImage from "../assets/hero-senk.webp";
@@ -39,16 +41,8 @@ const restaurantSchema = {
   }),
 };
 const heroStatus = getOpeningStatus(content.hours, content.operatingStatus);
-const lunchDishLabel = (index: number) => {
-  if (index === 0) return "Polévka";
-  if (index === 1) return "Jídlo A";
-  if (index === 2) return "Jídlo B";
-  return `Jídlo ${String.fromCharCode(64 + index)}`;
-};
-const splitDayLabel = (label: string) => {
-  const [name, ...dateParts] = label.split(" ");
-  return { name, date: dateParts.join(" ") };
-};
+const lunchView = getLunchView(content.lunch);
+const phone = { label: content.phone, href: content.phoneHref };
 ---
 
 <BaseLayout>
@@ -82,50 +76,22 @@ const splitDayLabel = (label: string) => {
       <div class="shell">
         <div class="section-intro split-intro">
           <div>
-            <p class="eyebrow">Tento týden</p>
+            <p class="eyebrow" data-lunch-eyebrow>{lunchView.eyebrow}</p>
             <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line title-indent"><span>k obědu?</span></span></h2>
           </div>
           <div class="intro-copy">
             <p>Každý pracovní den vaříme poctivé obědy. Vyberte si den a stavte se — obědové menu podáváme do 14:00.</p>
-            <p class="updated" data-lunch-updated>{content.lunchUpdated}</p>
+            <p class="updated" data-lunch-updated>{lunchView.weekLabel}</p>
           </div>
         </div>
 
-        {content.notice && <p class="content-notice" role="note">{content.notice}</p>}
-
-        <div class="lunch-widget" data-lunch-tabs>
-          <div class="day-tabs" role="tablist" aria-label="Dny obědového menu">
-            {content.lunchDays.map((day, index) => (
-              <button type="button" role="tab" id={`tab-${index}`} aria-controls={`panel-${index}`} aria-selected={index === 0 ? "true" : "false"} tabindex={index === 0 ? 0 : -1} data-tab={index} data-date={day.date}>
-                <span class="day-short">{day.shortLabel}</span>
-                <span class="day-name">{splitDayLabel(day.label).name}</span>
-                <span class="day-date">{splitDayLabel(day.label).date}</span>
-              </button>
-            ))}
-          </div>
-          <div class="lunch-panels">
-            {content.lunchDays.map((day, index) => (
-              <div class="lunch-panel" role="tabpanel" id={`panel-${index}`} aria-labelledby={`tab-${index}`} hidden={index !== 0} data-panel={index}>
-                <div class="dish-list">
-                  {day.dishes.map((dish, dishIndex) => (
-                    <article class="dish">
-                      <span class="dish-type">{lunchDishLabel(dishIndex)}</span>
-                      <div>
-                        <h3>{dish.name}</h3>
-                        {dish.detail && <p>{dish.detail}</p>}
-                        {dish.allergens && <p class="allergens">Alergeny: {dish.allergens}</p>}
-                      </div>
-                      {dishIndex > 0 && <strong>{dish.price}</strong>}
-                    </article>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+        <div class="lunch-body" id="dnesni-menu">
+          <StatusBanner override={content.operatingStatus} initial={getStatusBanner(content.operatingStatus)} />
+          <div data-lunch data-lunch-data={JSON.stringify(content.lunch)} data-phone={JSON.stringify(phone)} set:html={renderLunch(lunchView, phone)} />
         </div>
         <div class="lunch-footer">
           <p>Obědové menu podáváme v pracovní dny od 11:00 do 14:00.</p>
-          <button class="text-link allergen-trigger" type="button" data-allergen-open>Seznam alergenů <Icon name="arrowUpRight" /></button>
+          <AllergenLegend />
         </div>
       </div>
     </section>
@@ -144,9 +110,10 @@ const splitDayLabel = (label: string) => {
                 {rum.image ? <img src={rum.image} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} /> : <Image src={rumImage} alt={`Rum ${rum.name}`} widths={cardWidths} sizes="(max-width: 760px) 80vw, 420px" format="webp" loading="lazy" style={`object-position:${20 + index * 18}% center`} />}
               </div>
               <div class="rum-meta">
-                <p>{rum.origin} · {rum.abv}</p>
+                {(rum.origin || rum.abv) && <p>{[rum.origin, rum.abv].filter(Boolean).join(" · ")}</p>}
                 <h3>{rum.name}</h3>
-                <p>{rum.note}</p>
+                {rum.note && <p>{rum.note}</p>}
+                {rum.price && <strong class="rum-price">0,04 l · {rum.price}</strong>}
               </div>
             </article>
           ))}
@@ -161,27 +128,21 @@ const splitDayLabel = (label: string) => {
         </div>
       </div>
       <div class="rum-progress shell" aria-hidden="true">
-        <span>Posuňte dál</span><div><i data-rum-progress></i></div><span>04</span>
+        <span>Posuňte dál</span><div><i data-rum-progress></i></div><span>{String(content.rums.length).padStart(2, "0")}</span>
       </div>
     </section>
 
-    <section class="gallery section" id="galerie" data-theme="cream" aria-labelledby="gallery-title">
+    <section class="gallery section" id="o-nas" data-theme="cream" aria-labelledby="gallery-title">
       <div class="shell gallery-header">
-        <p class="eyebrow">U nás v Šenku</p>
+        <p class="eyebrow">O nás</p>
         <h2 id="gallery-title" class="display motion-title"><span class="line"><span>Známé místo.</span></span><span class="line title-indent"><span>Dobré chvíle.</span></span></h2>
+        <p class="gallery-lead">Od sousedů pro sousedy. Šenk patří do rytmu Nového Lískovce: po práci na jedno, dobré jídlo a známé tváře.</p>
       </div>
       <div class="gallery-grid shell">
         <figure class="gallery-item gallery-wide reveal-media"><Image src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" widths={[640, 960, 1280]} sizes="(max-width: 760px) 100vw, 66vw" format="webp" loading="lazy" /></figure>
         <figure class="gallery-item gallery-tall reveal-media"><Image src={galleryHeroImage} alt="Čerstvě načepované pivo na stole" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
         <figure class="gallery-item reveal-media"><Image src={foodImage} alt="Pečené vepřové koleno s přílohami" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
         <figure class="gallery-item reveal-media"><Image src={rumImage} alt="Výběr rumů ve skle na baru" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
-      </div>
-    </section>
-
-    <section class="about section" id="o-nas" data-theme="green" aria-labelledby="about-title">
-      <div class="shell about-grid">
-        <div><p class="eyebrow">O nás</p><p class="about-number">Od sousedů<br />pro sousedy.</p></div>
-        <h2 id="about-title" class="about-statement motion-title"><span class="line"><span>Šenk patří do rytmu</span></span><span class="line"><span>Nového Lískovce.</span></span><span class="line"><span>Po práci na jedno,</span></span><span class="line"><span>dobré jídlo a známé tváře.</span></span></h2>
       </div>
     </section>
 
@@ -195,7 +156,7 @@ const splitDayLabel = (label: string) => {
           {content.specialties.map((item, index) => (
             <article class="specialty-card">
               <div class="specialty-image reveal-media">{item.image ? <img src={item.image} alt={item.name} width="1536" height="1024" loading="lazy" style={`object-position:${38 + index * 17}% center`} /> : <Image src={specialtyImages[index] || foodImage} alt={item.name} widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" style={`object-position:${38 + index * 17}% center`} />}</div>
-              <div class="specialty-copy"><h3>{item.name}</h3><p>{item.note}</p><strong>{item.price || "Cena na dotaz"}</strong></div>
+              <div class="specialty-copy"><h3>{item.name}</h3>{item.note && <p>{item.note}</p>}{item.price && <strong>{item.price}</strong>}</div>
             </article>
           ))}
         </div>
@@ -208,18 +169,7 @@ const splitDayLabel = (label: string) => {
 
   <Footer content={content} />
 
-  <div class="mobile-actions" aria-label="Rychlé akce"><a href="#obedove-menu">Dnešní menu</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
-
-  <dialog class="allergen-dialog" data-allergen-dialog aria-labelledby="allergen-title">
-    <div class="allergen-dialog-inner">
-      <button class="dialog-close" type="button" aria-label="Zavřít seznam alergenů" data-allergen-close><Icon name="close" /></button>
-      <p class="eyebrow">Praktické informace</p>
-      <h2 id="allergen-title">Seznam alergenů</h2>
-      <ol>
-        <li>Obiloviny obsahující lepek</li><li>Korýši</li><li>Vejce</li><li>Ryby</li><li>Arašídy</li><li>Sójové boby</li><li>Mléko</li><li>Skořápkové plody</li><li>Celer</li><li>Hořčice</li><li>Sezamová semena</li><li>Oxid siřičitý a siřičitany</li><li>Vlčí bob</li><li>Měkkýši</li>
-      </ol>
-    </div>
-  </dialog>
+  <div class="mobile-actions" aria-label="Rychlé akce"><a href="#dnesni-menu">Dnešní menu</a><a href="/listky">Lístek</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
 
   <script>import "../scripts/site.ts";</script>
 </BaseLayout>
