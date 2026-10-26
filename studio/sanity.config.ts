@@ -6,7 +6,7 @@ import { schemaTypes } from "./schemaTypes";
 
 export default defineConfig({
   name: "starobrnensky-senk",
-  title: "Starobrnenský Šenk",
+  title: "Starobrněnský Šenk",
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || "6yiqg6vd",
   dataset: process.env.SANITY_STUDIO_DATASET || "production",
   plugins: [structureTool({

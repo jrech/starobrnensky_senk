@@ -6,11 +6,12 @@ import FoodMenu from "../components/FoodMenu.astro";
 import DrinkMenu from "../components/DrinkMenu.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
+import { Image } from "astro:assets";
+import foodImage from "../assets/specialita-koleno.webp";
 
 const content = await getSiteContent();
 const foodMenu = content.foodMenu;
 const drinkMenu = content.drinkMenu;
-const foodImage = "/assets/specialita-koleno.webp";
 ---
 
 <BaseLayout title="Jídelní a nápojový lístek | Starobrněnský Šenk" description="Jídelní a nápojový lístek Starobrněnského Šenku v Brně–Novém Lískovci.">
@@ -18,7 +19,7 @@ const foodImage = "/assets/specialita-koleno.webp";
 
   <main id="main">
     <section class="hero menu-page-hero" data-theme="dark">
-      <div class="hero-media reveal-media" aria-hidden="true"><img src={foodImage} alt="" width="1536" height="1024" fetchpriority="high" /></div><div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-media reveal-media" aria-hidden="true"><Image src={foodImage} alt="" widths={[640, 960, 1280, 1600]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" /></div><div class="hero-shade" aria-hidden="true"></div>
       <div class="shell hero-content"><h1 class="hero-title"><span class="line"><span>Jídlo</span></span><span class="line title-indent"><span>& pití.</span></span></h1><div class="hero-bottom"><p>Poctivá klasika k pivu, něco malého na stůl i lahve, které stojí za večer.</p></div></div>
     </section>
 

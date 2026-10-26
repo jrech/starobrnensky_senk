@@ -8,10 +8,10 @@ export default defineConfig({
   integrations: [sitemap()],
   adapter: vercel({
     webAnalytics: { enabled: true },
-    imageService: true,
+    imageService: false,
   }),
   build: {
-    inlineStylesheets: "never",
+    inlineStylesheets: "auto",
   },
   vite: {
     build: {

@@ -10,9 +10,10 @@ interface Props {
 }
 
 const {
-  title = "Starobrnenský Šenk | Obědové menu a pivo v Novém Lískovci",
+  title = "Starobrněnský Šenk | Obědové menu a pivo v Novém Lískovci",
   description = "Místní šenk v Brně–Novém Lískovci. Aktuální obědové menu, dobré pivo, poctivé jídlo, zahrádka a rumy z celého světa.",
 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -26,11 +27,13 @@ const {
     <meta property="og:locale" content="cs_CZ" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/og.jpg" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL("/og.jpg", Astro.site)} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href={Astro.url} />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#main">Přejít k obsahu</a>

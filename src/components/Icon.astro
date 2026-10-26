@@ -20,4 +20,4 @@ const { name, label } = Astro.props as { name: IconName; label?: string };
 const svg = icon(icons[name]).html.join("");
 ---
 
-<span class:list={["icon", `icon-${name}`]} aria-hidden={label ? undefined : "true"} aria-label={label} set:html={svg}></span>
+<span class:list={["icon", `icon-${name}`]} role={label ? "img" : undefined} aria-hidden={label ? undefined : "true"} aria-label={label} set:html={svg}></span>

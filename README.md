@@ -1,6 +1,6 @@
-# Starobrnenský Šenk
+# Starobrněnský Šenk
 
-Produkční základ nové homepage pro Starobrnenský Šenk. Web je postavený jako rychlý statický Astro projekt, obsah spravuje Sanity CMS, komplexnější pohyb zajišťuje GSAP a hosting je připravený pro Vercel.
+Produkční základ nové homepage pro Starobrněnský Šenk. Web je postavený jako rychlý statický Astro projekt, obsah spravuje Sanity CMS, komplexnější pohyb zajišťuje GSAP a hosting je připravený pro Vercel.
 
 ## Lokální spuštění
 

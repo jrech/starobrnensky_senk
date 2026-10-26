@@ -5,17 +5,39 @@ import Footer from "../components/Footer.astro";
 import ContactReservation from "../components/ContactReservation.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
-import { getOpeningStatus } from "../lib/opening-status";
+import { getOpeningStatus, parseDays } from "../lib/opening-status";
+import { Image } from "astro:assets";
+import heroImage from "../assets/hero-interior-enhanced.png";
+import galleryHeroImage from "../assets/hero-senk.webp";
+import rumImage from "../assets/rum-bottle.png";
+import gardenImage from "../assets/zahradka-senk.webp";
+import foodImage from "../assets/specialita-koleno.webp";
+import burgerImage from "../assets/senkovni-burger.png";
+import ribsImage from "../assets/bbq-zebra.png";
 
 const content = await getSiteContent();
-const heroImage = "/assets/hero-interior-enhanced.png";
-const galleryHeroImage = "/assets/hero-senk.webp";
-const rumImage = "/assets/rum-bottle.png";
-const gardenImage = "/assets/zahradka-senk.webp";
-const foodImage = "/assets/specialita-koleno.webp";
-const burgerImage = "/assets/senkovni-burger.png";
-const ribsImage = "/assets/bbq-zebra.png";
 const specialtyImages = [foodImage, burgerImage, ribsImage];
+const cardWidths = [400, 640, 960];
+const schemaDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const restaurantSchema = {
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  name: "Starobrněnský Šenk",
+  url: Astro.site?.href,
+  image: new URL("/og.jpg", Astro.site).href,
+  telephone: content.phone,
+  email: content.email,
+  servesCuisine: "Česká kuchyně",
+  priceRange: "$$",
+  hasMenu: new URL("/listky", Astro.site).href,
+  sameAs: [content.facebookUrl, content.instagramUrl].filter(Boolean),
+  address: { "@type": "PostalAddress", streetAddress: "Plachty 512/2", postalCode: "634 00", addressLocality: "Brno–Nový Lískovec", addressCountry: "CZ" },
+  openingHoursSpecification: content.hours.flatMap((row) => {
+    const times = row.hours.match(/(\d{1,2}:\d{2})\s*[–—-]\s*(\d{1,2}:\d{2})/);
+    if (!times) return [];
+    return [{ "@type": "OpeningHoursSpecification", dayOfWeek: parseDays(row.days).map((day) => schemaDays[day]), opens: times[1], closes: times[2] === "00:00" ? "23:59" : times[2] }];
+  }),
+};
 const heroStatus = getOpeningStatus(content.hours, content.operatingStatus);
 const lunchDishLabel = (index: number) => {
   if (index === 0) return "Polévka";
@@ -30,12 +52,13 @@ const splitDayLabel = (label: string) => {
 ---
 
 <BaseLayout>
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(restaurantSchema)} />
   <SiteHeader content={content} />
 
   <main id="main" class="homepage-flow" data-sanity-project={import.meta.env.PUBLIC_SANITY_PROJECT_ID} data-sanity-dataset={import.meta.env.PUBLIC_SANITY_DATASET || "production"}>
     <section class="hero" id="top" data-theme="dark">
       <div class="hero-media reveal-media" aria-hidden="true">
-        <img src={heroImage} alt="" width="1536" height="1024" fetchpriority="high" />
+        <Image src={heroImage} alt="" widths={[640, 960, 1280, 1600, 1920]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" />
       </div>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-content shell">
@@ -118,7 +141,7 @@ const splitDayLabel = (label: string) => {
           {content.rums.map((rum, index) => (
             <article class="rum-card">
               <div class="rum-card-image">
-                <img src={rum.image || rumImage} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} />
+                {rum.image ? <img src={rum.image} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} /> : <Image src={rumImage} alt={`Rum ${rum.name}`} widths={cardWidths} sizes="(max-width: 760px) 80vw, 420px" format="webp" loading="lazy" style={`object-position:${20 + index * 18}% center`} />}
               </div>
               <div class="rum-meta">
                 <p>{rum.origin} · {rum.abv}</p>
@@ -148,10 +171,10 @@ const splitDayLabel = (label: string) => {
         <h2 id="gallery-title" class="display motion-title"><span class="line"><span>Známé místo.</span></span><span class="line title-indent"><span>Dobré chvíle.</span></span></h2>
       </div>
       <div class="gallery-grid shell">
-        <figure class="gallery-item gallery-wide reveal-media"><img src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" width="1536" height="1024" loading="lazy" /></figure>
-        <figure class="gallery-item gallery-tall reveal-media"><img src={galleryHeroImage} alt="Čerstvě načepované pivo na stole" width="1536" height="1024" loading="lazy" /></figure>
-        <figure class="gallery-item reveal-media"><img src={foodImage} alt="Pečené vepřové koleno s přílohami" width="1536" height="1024" loading="lazy" /></figure>
-        <figure class="gallery-item reveal-media"><img src={rumImage} alt="Výběr rumů ve skle na baru" width="1536" height="1024" loading="lazy" /></figure>
+        <figure class="gallery-item gallery-wide reveal-media"><Image src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" widths={[640, 960, 1280]} sizes="(max-width: 760px) 100vw, 66vw" format="webp" loading="lazy" /></figure>
+        <figure class="gallery-item gallery-tall reveal-media"><Image src={galleryHeroImage} alt="Čerstvě načepované pivo na stole" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
+        <figure class="gallery-item reveal-media"><Image src={foodImage} alt="Pečené vepřové koleno s přílohami" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
+        <figure class="gallery-item reveal-media"><Image src={rumImage} alt="Výběr rumů ve skle na baru" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
       </div>
     </section>
 
@@ -171,7 +194,7 @@ const splitDayLabel = (label: string) => {
         <div class="specialty-grid">
           {content.specialties.map((item, index) => (
             <article class="specialty-card">
-              <div class="specialty-image reveal-media"><img src={item.image || specialtyImages[index] || foodImage} alt={item.name} width="1536" height="1024" loading="lazy" style={`object-position:${38 + index * 17}% center`} /></div>
+              <div class="specialty-image reveal-media">{item.image ? <img src={item.image} alt={item.name} width="1536" height="1024" loading="lazy" style={`object-position:${38 + index * 17}% center`} /> : <Image src={specialtyImages[index] || foodImage} alt={item.name} widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" style={`object-position:${38 + index * 17}% center`} />}</div>
               <div class="specialty-copy"><h3>{item.name}</h3><p>{item.note}</p><strong>{item.price || "Cena na dotaz"}</strong></div>
             </article>
           ))}

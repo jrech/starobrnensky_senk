@@ -42,7 +42,7 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
         <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
         <div class="mobile-socials" aria-label="Sociální sítě">
           <a class="mobile-contact-link" href={content.facebookUrl} target="_blank" rel="noopener noreferrer"><Icon name="facebook" />Facebook</a>
-          <span class="mobile-contact-label"><Icon name="instagram" />Instagram</span>
+          {content.instagramUrl && <a class="mobile-contact-link" href={content.instagramUrl} target="_blank" rel="noopener noreferrer"><Icon name="instagram" />Instagram</a>}
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const sourceDir = fileURLToPath(new URL("../source-images/", import.meta.url));
-const assetsDir = fileURLToPath(new URL("../public/assets/", import.meta.url));
+const assetsDir = fileURLToPath(new URL("../src/assets/", import.meta.url));
 const files = await readdir(sourceDir);
 
 await Promise.all(files.filter((file) => extname(file).toLowerCase() === ".png" && file !== "og-source.png").map(async (file) => {

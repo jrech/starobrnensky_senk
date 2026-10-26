@@ -26,6 +26,8 @@ export type SiteContent = {
   phoneHref: string;
   email: string;
   facebookUrl: string;
+  /** Leave empty until the pub has an Instagram profile; the icon is hidden without it. */
+  instagramUrl?: string;
   address: string;
   mapUrl: string;
   hours: OpeningHours[];
