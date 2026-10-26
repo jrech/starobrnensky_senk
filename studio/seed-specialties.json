@@ -1,0 +1,27 @@
+{
+  "_id": "specialtyMenu",
+  "_type": "specialtyMenu",
+  "specialties": [
+    {
+      "_key": "sp0",
+      "_type": "specialty",
+      "name": "Pečené vepřové koleno",
+      "note": "Hořčice, křen, nakládaná zelenina a chléb.",
+      "price": "249 Kč / kg"
+    },
+    {
+      "_key": "sp1",
+      "_type": "specialty",
+      "name": "Šenkovní burger",
+      "note": "Hovězí maso, slanina, čedar a naše omáčka.",
+      "price": "199 Kč"
+    },
+    {
+      "_key": "sp2",
+      "_type": "specialty",
+      "name": "BBQ žebra",
+      "note": "Pomalu pečená, s chlebem a salátkem coleslaw.",
+      "price": "229 Kč"
+    }
+  ]
+}

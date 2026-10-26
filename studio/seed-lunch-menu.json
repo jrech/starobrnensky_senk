@@ -1,6 +1,7 @@
 {
-  "_id": "lunchMenu",
-  "_type": "lunchMenu",
+  "_id": "lunchWeek-2026-10-26",
+  "_type": "lunchWeek",
+  "weekStart": "2026-10-26",
   "monday": {
     "soupName": "Bramboračka",
     "soupAllergens": "1",

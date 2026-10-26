@@ -4,10 +4,9 @@ import type { SiteContent } from "../lib/site-content";
 
 interface Props {
   content: SiteContent;
-  menuPage?: boolean;
 }
 
-const { content, menuPage = false } = Astro.props;
+const { content } = Astro.props;
 ---
 
 <section class="contact section" id="kontakt" data-theme="brown" aria-labelledby="contact-title">
@@ -22,15 +21,12 @@ const { content, menuPage = false } = Astro.props;
 
     <div class="reservation" id="rezervace">
       <div class="reservation-head"><p class="eyebrow">Rezervace</p><h3>Rezervujte si stůl</h3><p>Rezervace platí až po potvrzení obsluhou.</p></div>
-      <form data-reservation-form action="/api/reservation" method="post">
+      <form data-reservation-form data-hours={JSON.stringify(content.hours)} action="/api/reservation" method="post">
         <div class="form-row"><label>Jméno<input type="text" name="name" autocomplete="name" required /></label><label>Telefon<input type="tel" name="phone" autocomplete="tel" required /></label></div>
-        <div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" step={menuPage ? undefined : "900"} required /></label></div>
-        {menuPage ? (
-          <label>Počet osob<select name="guests" required><option value="">Vyberte počet osob</option>{Array.from({ length: 12 }, (_, index) => <option value={index + 1}>{index + 1} {index === 0 ? "osoba" : index < 4 ? "osoby" : "osob"}</option>)}</select></label>
-        ) : (
-          <label>Počet osob<input type="number" name="guests" min="1" max="30" value="2" required /></label>
-        )}
-        <details class="reservation-note"><summary><span><span aria-hidden="true">+</span> Přidat poznámku (nepovinné)</span><Icon name="arrowDown" /></summary><label>Poznámka<textarea name={menuPage ? "note" : "message"} rows="3" placeholder={menuPage ? "Například kočárek, pes nebo přání k místu." : "Kočárek, oslava nebo jiné přání?"}></textarea></label></details>
+        <div class="form-row"><label>Datum<input type="date" name="date" required /></label><label>Čas<input type="time" name="time" min="11:00" step="900" required /></label></div>
+        <label>Počet osob<select name="guests" required>{Array.from({ length: 12 }, (_, index) => <option value={index + 1} selected={index === 1}>{index + 1} {index === 0 ? "osoba" : index < 4 ? "osoby" : "osob"}</option>)}</select></label>
+        <p class="form-hint">Větší skupinu nám prosím zavolejte na <a href={`tel:${content.phoneHref}`}>{content.phone}</a>.</p>
+        <details class="reservation-note"><summary><span><span aria-hidden="true">+</span> Přidat poznámku (nepovinné)</span><Icon name="arrowDown" /></summary><label>Poznámka<textarea name="message" rows="3"></textarea></label></details>
         <label class="honeypot" aria-hidden="true">Web<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
         <button class="button button-dark" type="submit">Odeslat rezervaci <Icon name="arrowRight" /></button>
         <p class="form-status" data-form-status role="status" aria-live="polite"></p>

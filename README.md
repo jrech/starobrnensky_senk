@@ -24,13 +24,14 @@ Web poběží na `http://localhost:4321`.
 corepack pnpm studio
 ```
 
-5. Ve Studiu otevřete `Obsah webu → Jídelní lístek` nebo `Obsah webu → Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
+5. Obědové menu: ve Studiu `Obědové menu → +` vytvoří menu na týden. Vyberte pondělí, od kterého platí, a vyplňte dny. Příští týden lze napsat dopředu, web sám ukáže menu pro aktuální týden (o víkendu už menu na příští týden). Prázdný den web označí „Tento den obědy nevaříme“, chybějící týden „Menu ještě připravujeme“. Ceny obědů se nastavují jednou v `Ceny obědů`.
+6. Ve Studiu otevřete `Jídelní lístek`, `Nápojový lístek`, `Rumy` nebo `Speciality`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
 
 Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 
 ### Kdy se změny projeví
 
-- **Obědové menu a stav provozu** se na homepage načítají ze Sanity živě v prohlížeči, takže jsou vidět hned po kliknutí na `Publikovat`.
+- **Obědové menu a stav provozu** se načítají ze Sanity živě v prohlížeči, takže jsou vidět hned po kliknutí na `Publikovat`. Stav „Zavřeno“ nebo hlášení se ukáže v úvodu, nad obědovým menu i na lístku.
 - **Jídelní a nápojový lístek** (`/listky`) je statická stránka. Po publikování ji přegeneruje webhook, změna je na webu zhruba do minuty.
 
 ### Webhook pro přegenerování webu
@@ -39,7 +40,7 @@ Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 2. Sanity: na `sanity.io/manage` → projekt → `API → Webhooks → Create webhook`:
    - URL: deploy hook z kroku 1, HTTP method `POST`
    - Dataset: `production`, trigger on `Create`, `Update`, `Delete`
-   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchMenu", "operatingStatus"]`
+   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchWeek", "lunchPrices", "operatingStatus", "rumMenu", "specialtyMenu"]`
    - Projection nechte prázdnou, `Drafts` a `Versions` vypnuté
 3. Ověření: upravte cenu v lístku, publikujte a v přehledu deploymentů hostingu by se měl spustit nový build.
 
