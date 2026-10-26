@@ -24,9 +24,24 @@ Web poběží na `http://localhost:4321`.
 corepack pnpm studio
 ```
 
-5. Ve Studiu otevřete `Obsah webu → Jídelní lístek` nebo `Obsah webu → Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny. Po kliknutí na `Publikovat` se změny na stránce `/listky` načtou bez nového nasazení webu.
+5. Ve Studiu otevřete `Obsah webu → Jídelní lístek` nebo `Obsah webu → Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
 
-Bez Sanity credentials web bezpečně použije lokální ukázkový obsah. Stránka `/listky` čte publikovaný jídelní a nápojový lístek ze Sanity při každé návštěvě; ostatní stránky se nadále generují při buildu.
+Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
+
+### Kdy se změny projeví
+
+- **Obědové menu a stav provozu** se na homepage načítají ze Sanity živě v prohlížeči, takže jsou vidět hned po kliknutí na `Publikovat`.
+- **Jídelní a nápojový lístek** (`/listky`) je statická stránka. Po publikování ji přegeneruje webhook, změna je na webu zhruba do minuty.
+
+### Webhook pro přegenerování webu
+
+1. Hosting: vytvořte deploy hook (Vercel: `Settings → Git → Deploy Hooks`, větev `main`; Cloudflare Pages: `Settings → Builds → Deploy hooks`) a zkopírujte jeho URL.
+2. Sanity: na `sanity.io/manage` → projekt → `API → Webhooks → Create webhook`:
+   - URL: deploy hook z kroku 1, HTTP method `POST`
+   - Dataset: `production`, trigger on `Create`, `Update`, `Delete`
+   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchMenu", "operatingStatus"]`
+   - Projection nechte prázdnou, `Drafts` a `Versions` vypnuté
+3. Ověření: upravte cenu v lístku, publikujte a v přehledu deploymentů hostingu by se měl spustit nový build.
 
 ## Nasazení na Vercel
 

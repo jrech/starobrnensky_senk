@@ -1,91 +1,16 @@
 ---
-import { Image } from "astro:assets";
 import type { MenuCategory } from "../lib/menu-content";
-import rumBottle from "../../public/assets/rum-bottle.png";
-
+import MenuList from "./MenuList.astro";
 interface Props { categories: MenuCategory[] }
 const { categories } = Astro.props;
 ---
 
-<section class="menu-page-section menu-drinks section drinks-editorial" id="piti" data-theme="brown" aria-labelledby="drink-menu-title">
+<section class="menu-page-section menu-drinks section" id="piti" data-theme="brown" aria-labelledby="drink-menu-title">
   <div class="shell">
     <div class="menu-page-intro">
       <h2 id="drink-menu-title" class="display motion-title"><span class="line"><span>Na žízeň</span></span><span class="line title-indent"><span>i na chuť.</span></span></h2>
       <p>Od čepovaného piva po rum, který si necháte doporučit přímo u baru.</p>
     </div>
-
-    <nav class="drink-index" aria-label="Kategorie nápojového lístku">
-      {categories.map((category, index) => <a href={`#piti-${index}`}><span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{category.title}</a>)}
-    </nav>
-
-    <div class="drink-composition">
-      {categories.map((category, index) => <>
-        <section class:list={["drink-chapter", `drink-chapter-${index}`, { "drink-chapter-long": category.items.length > 12 }]} id={`piti-${index}`} aria-labelledby={`drink-category-${index}`}>
-          <header class="drink-chapter-heading">
-            <span class="drink-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-            <h3 class="motion-title" id={`drink-category-${index}`}><span class="line"><span>{category.title}</span></span></h3>
-          </header>
-          <ul class="drink-items">
-            {category.items.map((item) => <li>
-              <div class="drink-item-line"><strong>{item.name}</strong><span class="drink-leader" aria-hidden="true"></span><b>{item.price}</b></div>
-              {(item.amount || item.allergens) && <p class="drink-item-detail">{item.amount && <span>{item.amount}</span>}{item.allergens && <span>Alergeny: {item.allergens}</span>}</p>}
-            </li>)}
-          </ul>
-        </section>
-        {index === 1 && <figure class="drink-photo"><div class="drink-photo-frame reveal-media"><Image src={rumBottle} alt="Výběr rumů ve Starobrněnském Šenku" widths={[400, 800, 1200]} sizes="(max-width: 760px) calc(100vw - 48px), (max-width: 1488px) 40vw, 560px" format="webp" loading="lazy" /></div></figure>}
-      </>)}
-    </div>
+    <MenuList categories={categories} idPrefix="piti" tone="dark" />
   </div>
 </section>
-
-<style>
-  .drink-index { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-bottom: var(--space-10); padding-block: var(--space-2); border-bottom: 1px solid rgba(251,247,239,.28); }
-  .drink-index a { display: inline-flex; align-items: baseline; gap: var(--space-1); padding-block: 8px; color: var(--cream-50); font-size: 16px; font-weight: 650; text-underline-offset: 6px; }
-  .drink-index a span, .drink-number { color: var(--honey-300); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .drink-index a:focus-visible { color: var(--honey-300); text-decoration: underline; }
-  .drink-composition { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-10) var(--space-8); align-items: start; }
-  .drink-chapter { grid-column: span 6; min-width: 0; scroll-margin-top: 168px; }
-  .drink-chapter-0 { grid-column: span 5; }
-  .drink-chapter-1 { grid-column: span 7; padding-top: var(--space-8); }
-  .drink-chapter-heading { display: flex; align-items: baseline; gap: var(--space-2); margin-bottom: var(--space-4); }
-  .drink-chapter h3 { margin: 0; color: var(--honey-300); font-family: var(--font-display); font-size: clamp(36px, 3.7vw, 60px); font-weight: 400; line-height: 1.14; letter-spacing: -.03em; }
-  .drink-number { flex-shrink: 0; }
-  .drink-items { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
-  .drink-items li { min-width: 0; }
-  .drink-item-line { display: flex; align-items: baseline; gap: var(--space-1); }
-  .drink-item-line strong { min-width: 0; color: var(--cream-50); font-family: var(--font-sans); font-size: 18px; font-weight: 650; line-height: 1.5; }
-  .drink-leader { flex: 1 0 16px; border-bottom: 1px dotted rgba(251,247,239,.38); }
-  .drink-item-line b { flex: 0 0 auto; margin-left: auto; color: var(--honey-300); font-family: var(--font-display); font-size: 24px; font-weight: 400; line-height: 1.2; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .drink-item-detail { display: flex; flex-wrap: wrap; gap: 4px var(--space-2); margin: 4px 0 0; color: rgba(251,247,239,.72); font-size: 14px; line-height: 1.5; }
-  .drink-photo { grid-column: span 5; margin: 0; min-width: 0; }
-  .drink-photo-frame { overflow: hidden; aspect-ratio: 4 / 3; background: var(--forest-950); }
-  .drink-photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .drink-chapter-2 { grid-column: span 7; padding-top: var(--space-8); }
-  .drink-chapter-long { grid-column: 1 / -1; }
-  .drink-chapter-long h3 { font-size: clamp(44px, 5vw, 80px); }
-  .drink-chapter-long .drink-items { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-8); }
-  .drink-chapter-4 { grid-column: span 7; }
-  .drink-chapter-5 { grid-column: span 5; padding-top: var(--space-8); }
-  .drink-chapter-6 { grid-column: span 5; }
-  @media (hover: hover) and (pointer: fine) { .drink-index a:hover { color: var(--honey-300); text-decoration: underline; } }
-  @media (max-width: 1024px) {
-    .drink-composition { column-gap: var(--space-4); row-gap: var(--space-8); }
-    .drink-chapter-0, .drink-chapter-1, .drink-chapter-2, .drink-chapter-4, .drink-chapter-5 { grid-column: span 6; }
-    .drink-chapter-1, .drink-chapter-2, .drink-chapter-5 { padding-top: var(--space-4); }
-    .drink-chapter-long .drink-items { column-gap: var(--space-4); }
-    .drink-chapter h3 { font-size: 40px; }
-    .drink-chapter-long h3 { font-size: 56px; }
-  }
-  @media (max-width: 760px) {
-    .drink-index { flex-wrap: nowrap; overflow-x: auto; margin-bottom: var(--space-6); column-gap: var(--space-3); }
-    .drink-index a { flex-shrink: 0; }
-    .drink-composition { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
-    .drink-chapter, .drink-photo { grid-column: 1; padding-top: 0; }
-    .drink-chapter h3 { font-size: clamp(34px, 9vw, 48px); }
-    .drink-chapter-long .drink-items { grid-template-columns: minmax(0, 1fr); }
-    .drink-chapter-heading { gap: var(--space-1); margin-bottom: var(--space-3); }
-    .drink-item-line { gap: 8px; }
-    .drink-item-line b { font-size: 22px; }
-    .drink-leader { flex-basis: 8px; }
-  }
-</style>

@@ -1,0 +1,47 @@
+---
+import type { MenuCategory } from "../lib/menu-content";
+
+interface Props { categories: MenuCategory[]; idPrefix: string; tone?: "light" | "dark" }
+const { categories, idPrefix, tone = "light" } = Astro.props;
+---
+
+<div class:list={["menu-list", `menu-list-${tone}`]}>
+  {categories.map((category, index) => (
+    <section class="menu-group" id={`${idPrefix}-${index}`} aria-labelledby={`${idPrefix}-title-${index}`}>
+      <h3 id={`${idPrefix}-title-${index}`}>{category.title}</h3>
+      <ul>
+        {category.items.map((item) => (
+          <li>
+            <span class="menu-name">
+              {item.name}
+              {(item.amount || item.allergens) && <span class="menu-meta">{[item.amount, item.allergens && `alergeny ${item.allergens}`].filter(Boolean).join(" · ")}</span>}
+            </span>
+            <b class="menu-price">{item.price}</b>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .menu-list { columns: 3 300px; column-gap: var(--space-8); }
+  .menu-group { break-inside: avoid; margin-bottom: var(--space-8); scroll-margin-top: 72px; }
+  .menu-group h3 { margin: 0 0 var(--space-2); padding-bottom: 8px; border-bottom: 1px solid rgba(9,36,29,.28); color: var(--brick-700); font-family: var(--font-display); font-size: 28px; font-weight: 400; line-height: 1.15; }
+  .menu-group ul { margin: 0; padding: 0; list-style: none; }
+  .menu-group li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2); align-items: baseline; padding: 14px 0; border-bottom: 1px solid rgba(9,36,29,.1); }
+  .menu-group li:last-child { border-bottom: 0; }
+  .menu-name { font-size: 16px; font-weight: 600; line-height: 1.35; }
+  .menu-meta { display: block; margin-top: 4px; color: #5a625e; font-size: 13px; font-weight: 500; line-height: 1.35; }
+  .menu-price { color: var(--brick-700); font-size: 16px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .menu-list-dark .menu-group h3 { color: var(--honey-300); border-bottom-color: rgba(251,247,239,.3); }
+  .menu-list-dark .menu-group li { border-bottom-color: rgba(251,247,239,.12); }
+  .menu-list-dark .menu-name { color: var(--cream-50); }
+  .menu-list-dark .menu-meta { color: rgba(251,247,239,.74); }
+  .menu-list-dark .menu-price { color: var(--honey-300); }
+  @media (max-width: 760px) {
+    .menu-group { margin-bottom: var(--space-6); }
+    .menu-group h3 { font-size: 26px; }
+    .menu-group li { padding: 12px 0; }
+  }
+</style>

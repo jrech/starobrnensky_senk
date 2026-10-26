@@ -7,8 +7,6 @@ import DrinkMenu from "../components/DrinkMenu.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
 
-export const prerender = false;
-
 const content = await getSiteContent();
 const foodMenu = content.foodMenu;
 const drinkMenu = content.drinkMenu;
@@ -24,7 +22,14 @@ const foodImage = "/assets/specialita-koleno.webp";
       <div class="shell hero-content"><h1 class="hero-title"><span class="line"><span>Jídlo</span></span><span class="line title-indent"><span>& pití.</span></span></h1><div class="hero-bottom"><p>Poctivá klasika k pivu, něco malého na stůl i lahve, které stojí za večer.</p></div></div>
     </section>
 
-    <nav class="menu-jump-nav" aria-label="Rychlá navigace v lístku"><div class="shell"><a href="#jidlo">Jídlo</a><a href="#piti">Pití</a><a href="#kontakt">Kontakt a rezervace</a></div></nav>
+    <nav class="menu-jump-nav" aria-label="Kategorie lístku" data-menu-nav>
+      <div class="shell">
+        <a class="menu-jump-section" href="#jidlo">Jídlo</a>
+        {foodMenu.map((category, index) => <a href={`#jidlo-${index}`}>{category.title}</a>)}
+        <a class="menu-jump-section" href="#piti">Pití</a>
+        {drinkMenu.map((category, index) => <a href={`#piti-${index}`}>{category.title}</a>)}
+      </div>
+    </nav>
 
     <FoodMenu categories={foodMenu} />
 
@@ -37,4 +42,25 @@ const foodImage = "/assets/specialita-koleno.webp";
 
   <div class="mobile-actions" aria-label="Rychlé akce"><a href="#jidlo">Jídelní lístek</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
   <script>import "../scripts/site.ts";</script>
+  <script>
+    // Highlight the category currently on screen and keep its chip visible in the scrolling nav.
+    const nav = document.querySelector<HTMLElement>("[data-menu-nav]");
+    const links = new Map(Array.from(nav?.querySelectorAll<HTMLAnchorElement>("a[href^='#jidlo-'], a[href^='#piti-']") ?? []).map((link) => [link.hash.slice(1), link]));
+    let lockedUntil = 0;
+    const markCurrent = (link: HTMLAnchorElement) => {
+      links.forEach((other) => other.removeAttribute("aria-current"));
+      link.setAttribute("aria-current", "true");
+      const strip = link.parentElement!;
+      strip.scrollTo({ left: link.offsetLeft - strip.clientWidth / 2 + link.clientWidth / 2, behavior: "smooth" });
+    };
+    // On desktop several categories sit side by side, so a clicked chip wins over the observer while the page scrolls to it.
+    links.forEach((link) => link.addEventListener("click", () => { lockedUntil = Date.now() + 1200; markCurrent(link); }));
+    const observer = new IntersectionObserver((entries) => {
+      if (Date.now() < lockedUntil) return;
+      const visible = entries.find((entry) => entry.isIntersecting);
+      const link = visible && links.get(visible.target.id);
+      if (link) markCurrent(link);
+    }, { rootMargin: "-160px 0px -60% 0px" });
+    links.forEach((_, id) => { const section = document.getElementById(id); if (section) observer.observe(section); });
+  </script>
 </BaseLayout>
