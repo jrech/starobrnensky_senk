@@ -56,7 +56,7 @@ function getPragueTime(now: Date): LocalTime {
   };
 }
 
-function parseDays(value: string): number[] {
+export function parseDays(value: string): number[] {
   const tokens = value.match(/Po|Út|St|Čt|Pá|So|Ne/g) || [];
   if (tokens.length === 2 && /[-–—]/.test(value)) {
     const result: number[] = [];

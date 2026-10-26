@@ -1,0 +1,427 @@
+{
+  "_id": "foodMenu",
+  "_type": "foodMenu",
+  "categories": [
+    {
+      "_key": "category-1",
+      "_type": "menuCategory",
+      "title": "Něco k pivu",
+      "items": [
+        {
+          "_key": "item-1-1",
+          "_type": "menuItem",
+          "name": "Utopenec s cibulí a feferonkou, chléb",
+          "amount": "140 g",
+          "price": 79,
+          "allergens": "1"
+        },
+        {
+          "_key": "item-1-2",
+          "_type": "menuItem",
+          "name": "Nakládaný hermelín s česnekem a feferonkou, chléb",
+          "amount": "120 g",
+          "price": 109,
+          "allergens": "1, 7"
+        },
+        {
+          "_key": "item-1-3",
+          "_type": "menuItem",
+          "name": "Smažené bramborové lupínky s česnekovou majonézou",
+          "amount": "200 g",
+          "price": 139,
+          "allergens": "7, 10"
+        },
+        {
+          "_key": "item-1-4",
+          "_type": "menuItem",
+          "name": "Zapečené hranolky se strouhaným sýrem Gouda a jalapeños",
+          "amount": "200 g",
+          "price": 139,
+          "allergens": "3, 7"
+        },
+        {
+          "_key": "item-1-5",
+          "_type": "menuItem",
+          "name": "Ďábelská topinka s masovou směsí, zeleninou a strouhaným sýrem Gouda",
+          "amount": "1 ks",
+          "price": 139,
+          "allergens": "1, 3, 7"
+        }
+      ]
+    },
+    {
+      "_key": "category-2",
+      "_type": "menuCategory",
+      "title": "Polévky",
+      "items": [
+        {
+          "_key": "item-2-1",
+          "_type": "menuItem",
+          "name": "Hovězí vývar s játrovými knedlíčky, zeleninou a nudlemi",
+          "amount": "0,33 l",
+          "price": 69,
+          "allergens": "1, 3, 7, 9"
+        },
+        {
+          "_key": "item-2-2",
+          "_type": "menuItem",
+          "name": "Polévka dle denní nabídky",
+          "amount": "0,33 l",
+          "price": 69
+        }
+      ]
+    },
+    {
+      "_key": "category-3",
+      "_type": "menuCategory",
+      "title": "Tortilly",
+      "items": [
+        {
+          "_key": "item-3-1",
+          "_type": "menuItem",
+          "name": "Tortilla s pancettou, nivou, cibulkou a rukolou",
+          "amount": "300 g",
+          "price": 179,
+          "allergens": "1, 7"
+        },
+        {
+          "_key": "item-3-2",
+          "_type": "menuItem",
+          "name": "Tortilla quattro formaggi — eidam, niva, hermelín, parmazán",
+          "amount": "300 g",
+          "price": 179
+        },
+        {
+          "_key": "item-3-3",
+          "_type": "menuItem",
+          "name": "Wrap s trhaným vepřovým masem a ledovým salátem s mrkví",
+          "amount": "400 g",
+          "price": 199,
+          "allergens": "1, 3, 7, 9"
+        },
+        {
+          "_key": "item-3-4",
+          "_type": "menuItem",
+          "name": "Wrap s grilovaným kuřecím masem a ledovým salátem s cherry rajčaty",
+          "amount": "400 g",
+          "price": 199,
+          "allergens": "1, 7, 10"
+        }
+      ]
+    },
+    {
+      "_key": "category-4",
+      "_type": "menuCategory",
+      "title": "Doporučujeme",
+      "items": [
+        {
+          "_key": "item-4-1",
+          "_type": "menuItem",
+          "name": "BBQ vepřová žebírka, salát Coleslaw, rozpečený bylinkový chléb",
+          "amount": "700 g",
+          "price": 289,
+          "allergens": "1, 3, 7, 10"
+        },
+        {
+          "_key": "item-4-2",
+          "_type": "menuItem",
+          "name": "Pomalu pečené vepřové kolínko s kostí, salát Coleslaw, rozpečený bylinkový chléb",
+          "amount": "750 g",
+          "price": 289,
+          "allergens": "1, 3, 7, 10"
+        },
+        {
+          "_key": "item-4-3",
+          "_type": "menuItem",
+          "name": "Hovězí tatarák z roštěné s topinkami",
+          "amount": "150 g",
+          "price": 289,
+          "allergens": "1, 3"
+        },
+        {
+          "_key": "item-4-4",
+          "_type": "menuItem",
+          "name": "Burger s hovězím masem, čedarem, jalapeños, slaninovým chipsem, steakovými hranolky a Buffalo dipem",
+          "amount": "200 g",
+          "price": 279,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-4-5",
+          "_type": "menuItem",
+          "name": "Burger s hovězím masem, čedarem, sázeným vejcem, slaninovým chipsem, steakovými hranolky a Buffalo dipem",
+          "amount": "200 g",
+          "price": 299,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-4-6",
+          "_type": "menuItem",
+          "name": "Burger s hovězím masem a cibulkou Jack Daniel’s, čedarem, majonézou, steakovými hranolky a Buffalo dipem",
+          "amount": "200 g",
+          "price": 299,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-4-7",
+          "_type": "menuItem",
+          "name": "Burger s trhaným vepřovým masem, steakové hranolky a BBQ dip",
+          "amount": "200 g",
+          "price": 279,
+          "allergens": "1, 3"
+        },
+        {
+          "_key": "item-4-8",
+          "_type": "menuItem",
+          "name": "Vepřové medailonky na cherry rajčatech, česneku a rukole",
+          "amount": "200 g",
+          "price": 259,
+          "allergens": "1, 7, 9"
+        },
+        {
+          "_key": "item-4-9",
+          "_type": "menuItem",
+          "name": "Hovězí guláš s cibulí a feferonkou, bramboráčky",
+          "amount": "150 g",
+          "price": 229,
+          "allergens": "1, 3"
+        },
+        {
+          "_key": "item-4-10",
+          "_type": "menuItem",
+          "name": "Kuřecí steak plněný sušenými rajčaty, smetanovo-bazalková omáčka",
+          "amount": "200 g",
+          "price": 239,
+          "allergens": "7"
+        },
+        {
+          "_key": "item-4-11",
+          "_type": "menuItem",
+          "name": "Mísa smažených kuřecích řízečků, okurek, chléb",
+          "amount": "500 g",
+          "price": 399,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-4-12",
+          "_type": "menuItem",
+          "name": "Pečená kuřecí křídla, okurek, chléb",
+          "amount": "1 000 g",
+          "price": 399,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-4-13",
+          "_type": "menuItem",
+          "name": "Smažený sýr Gouda",
+          "amount": "120 g",
+          "price": 149,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-4-14",
+          "_type": "menuItem",
+          "name": "Smažený kuřecí řízek",
+          "amount": "180 g",
+          "price": 179,
+          "allergens": "1, 3, 7"
+        }
+      ]
+    },
+    {
+      "_key": "category-5",
+      "_type": "menuCategory",
+      "title": "Steaky na bylinkách",
+      "items": [
+        {
+          "_key": "item-5-1",
+          "_type": "menuItem",
+          "name": "Z vepřové panenky",
+          "amount": "250 g",
+          "price": 259
+        },
+        {
+          "_key": "item-5-2",
+          "_type": "menuItem",
+          "name": "Z kuřecích prsíček",
+          "amount": "200 g",
+          "price": 189
+        }
+      ]
+    },
+    {
+      "_key": "category-6",
+      "_type": "menuCategory",
+      "title": "Omáčky teplé",
+      "items": [
+        {
+          "_key": "item-6-1",
+          "_type": "menuItem",
+          "name": "Houbová",
+          "amount": "100 g",
+          "price": 59,
+          "allergens": "1, 7, 9"
+        },
+        {
+          "_key": "item-6-2",
+          "_type": "menuItem",
+          "name": "Pepřová",
+          "amount": "100 g",
+          "price": 59,
+          "allergens": "1, 7, 9, 10"
+        }
+      ]
+    },
+    {
+      "_key": "category-7",
+      "_type": "menuCategory",
+      "title": "Omáčky studené",
+      "items": [
+        {
+          "_key": "item-7-1",
+          "_type": "menuItem",
+          "name": "Barbecue",
+          "amount": "100 g",
+          "price": 49
+        },
+        {
+          "_key": "item-7-2",
+          "_type": "menuItem",
+          "name": "Buffalo",
+          "amount": "100 g",
+          "price": 49,
+          "allergens": "3, 7"
+        },
+        {
+          "_key": "item-7-3",
+          "_type": "menuItem",
+          "name": "Sweet chilli",
+          "amount": "100 g",
+          "price": 49,
+          "allergens": "7, 9"
+        },
+        {
+          "_key": "item-7-4",
+          "_type": "menuItem",
+          "name": "Domácí tatarská omáčka",
+          "amount": "100 g",
+          "price": 39,
+          "allergens": "7, 10"
+        },
+        {
+          "_key": "item-7-5",
+          "_type": "menuItem",
+          "name": "Česneková majonéza",
+          "amount": "100 g",
+          "price": 39,
+          "allergens": "7, 10"
+        },
+        {
+          "_key": "item-7-6",
+          "_type": "menuItem",
+          "name": "Kečup",
+          "amount": "100 g",
+          "price": 39
+        }
+      ]
+    },
+    {
+      "_key": "category-8",
+      "_type": "menuCategory",
+      "title": "Saláty",
+      "items": [
+        {
+          "_key": "item-8-1",
+          "_type": "menuItem",
+          "name": "Caesar salát s kuřecím masem, ančovičkovým dresingem, krutony a parmazánem",
+          "amount": "300 g",
+          "price": 239,
+          "allergens": "1, 3, 4, 7, 10"
+        },
+        {
+          "_key": "item-8-2",
+          "_type": "menuItem",
+          "name": "Salát s grilovaným hermelínem, slaninovým chipsem, listovými saláty a cherry rajčaty",
+          "amount": "300 g",
+          "price": 239,
+          "allergens": "7"
+        }
+      ]
+    },
+    {
+      "_key": "category-9",
+      "_type": "menuCategory",
+      "title": "Přílohy",
+      "items": [
+        {
+          "_key": "item-9-1",
+          "_type": "menuItem",
+          "name": "Hranolky",
+          "amount": "200 g",
+          "price": 49
+        },
+        {
+          "_key": "item-9-2",
+          "_type": "menuItem",
+          "name": "Steakové hranolky",
+          "amount": "200 g",
+          "price": 59
+        },
+        {
+          "_key": "item-9-3",
+          "_type": "menuItem",
+          "name": "Americké brambory s česnekem",
+          "amount": "200 g",
+          "price": 59
+        },
+        {
+          "_key": "item-9-4",
+          "_type": "menuItem",
+          "name": "Vařené brambory s máslem a petrželkou",
+          "amount": "200 g",
+          "price": 49,
+          "allergens": "7"
+        },
+        {
+          "_key": "item-9-5",
+          "_type": "menuItem",
+          "name": "Restované fazolky se slaninou a cibulkou",
+          "amount": "200 g",
+          "price": 69
+        },
+        {
+          "_key": "item-9-6",
+          "_type": "menuItem",
+          "name": "Salát Coleslaw",
+          "amount": "150 g",
+          "price": 69,
+          "allergens": "3, 7"
+        },
+        {
+          "_key": "item-9-7",
+          "_type": "menuItem",
+          "name": "Rozpečený bylinkový chléb",
+          "amount": "300 g",
+          "price": 49,
+          "allergens": "1"
+        },
+        {
+          "_key": "item-9-8",
+          "_type": "menuItem",
+          "name": "Rozpečená bylinková bageta",
+          "amount": "1 ks",
+          "price": 49,
+          "allergens": "1, 3, 7"
+        },
+        {
+          "_key": "item-9-9",
+          "_type": "menuItem",
+          "name": "Krajíc chleba",
+          "amount": "1 ks",
+          "price": 9,
+          "allergens": "1, 3, 7"
+        }
+      ]
+    }
+  ]
+}

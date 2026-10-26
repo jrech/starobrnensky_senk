@@ -13,8 +13,8 @@
     "studio:build": "pnpm --dir studio build"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.3",
-    "@astrojs/vercel": "11.0.11",
+    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/vercel": "11.0.15",
     "@fontsource-variable/manrope": "5.3.0",
     "@fontsource/caudex": "5.3.0",
     "@fortawesome/fontawesome-svg-core": "^7.3.1",
@@ -22,7 +22,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@sanity/client": "7.26.0",
     "@sanity/image-url": "2.1.1",
-    "astro": "7.3.5",
+    "astro": "7.4.0",
     "gsap": "3.15.0"
   },
   "devDependencies": {

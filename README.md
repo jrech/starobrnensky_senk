@@ -1,6 +1,6 @@
-# Starobrnenský Šenk
+# Starobrněnský Šenk
 
-Produkční základ nové homepage pro Starobrnenský Šenk. Web je postavený jako rychlý statický Astro projekt, obsah spravuje Sanity CMS, komplexnější pohyb zajišťuje GSAP a hosting je připravený pro Vercel.
+Produkční základ nové homepage pro Starobrněnský Šenk. Web je postavený jako rychlý statický Astro projekt, obsah spravuje Sanity CMS, komplexnější pohyb zajišťuje GSAP a hosting je připravený pro Vercel.
 
 ## Lokální spuštění
 
@@ -24,9 +24,24 @@ Web poběží na `http://localhost:4321`.
 corepack pnpm studio
 ```
 
-5. Vytvořte dokument typu `Obsah webu` a doplňte obědové menu, rumy, speciality a provozní informace.
+5. Ve Studiu otevřete `Obsah webu → Jídelní lístek` nebo `Obsah webu → Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
 
-Bez Sanity credentials web bezpečně použije lokální ukázkový obsah a viditelně jej tak označí. Při dostupném projektu se během buildu automaticky použijí publikovaná data ze Sanity.
+Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
+
+### Kdy se změny projeví
+
+- **Obědové menu a stav provozu** se na homepage načítají ze Sanity živě v prohlížeči, takže jsou vidět hned po kliknutí na `Publikovat`.
+- **Jídelní a nápojový lístek** (`/listky`) je statická stránka. Po publikování ji přegeneruje webhook, změna je na webu zhruba do minuty.
+
+### Webhook pro přegenerování webu
+
+1. Hosting: vytvořte deploy hook (Vercel: `Settings → Git → Deploy Hooks`, větev `main`; Cloudflare Pages: `Settings → Builds → Deploy hooks`) a zkopírujte jeho URL.
+2. Sanity: na `sanity.io/manage` → projekt → `API → Webhooks → Create webhook`:
+   - URL: deploy hook z kroku 1, HTTP method `POST`
+   - Dataset: `production`, trigger on `Create`, `Update`, `Delete`
+   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchMenu", "operatingStatus"]`
+   - Projection nechte prázdnou, `Drafts` a `Versions` vypnuté
+3. Ověření: upravte cenu v lístku, publikujte a v přehledu deploymentů hostingu by se měl spustit nový build.
 
 ## Nasazení na Vercel
 

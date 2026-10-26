@@ -14,12 +14,12 @@
   "redirects": [
     {
       "source": "/jidelni-listek",
-      "destination": "/#speciality",
+      "destination": "/listky#jidlo",
       "permanent": false
     },
     {
       "source": "/napojovy-listek",
-      "destination": "/#rumy",
+      "destination": "/listky#piti",
       "permanent": false
     }
   ]
