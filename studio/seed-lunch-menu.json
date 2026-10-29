@@ -1,8 +1,6 @@
 {
   "_id": "lunchMenu",
   "_type": "lunchMenu",
-  "dishAPrice": 159,
-  "dishBPrice": 169,
   "monday": {
     "soupName": "Bramboračka",
     "soupAllergens": "1",

@@ -24,8 +24,10 @@ Web poběží na `http://localhost:4321`.
 corepack pnpm studio
 ```
 
-5. Obědové menu: ve Studiu otevřete `Obědové menu` a o víkendu ho přepište na nadcházející týden (pondělí až pátek). Data u dnů doplňuje web sám. Prázdný den web označí „Tento den obědy nevaříme“. Menu, které nikdo neupravil od minulého pátku, web v týdnu nezobrazí a napíše „Menu ještě připravujeme“. Ceny jsou nepovinné ve sbalené skupině `Ceny`: prázdné jídlo A = 159 Kč, B = 169 Kč, polévka bez ceny.
-6. Ve Studiu otevřete `Jídelní lístek` nebo `Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny. Rumy a speciality jsou zatím pevně v kódu (`src/lib/site-content.ts`).
+5. Obědové menu: ve Studiu otevřete `Obědové menu` a o víkendu ho přepište na nadcházející týden (pondělí až pátek). Data u dnů doplňuje web sám. Prázdný den web označí „Tento den obědy nevaříme“. Menu, které nikdo neupravil od minulého pátku, web v týdnu nezobrazí a napíše „Menu ještě připravujeme“. Ceny jsou nahoře ve skupině `Ceny meníček`: prázdné jídlo A = 159 Kč, B = 169 Kč, polévka bez ceny.
+6. Ve Studiu otevřete `Jídelní lístek` nebo `Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
+7. `Rumy` (fotka, název, původ, chuťový profil) a `Speciality` (fotka, název, co je v jídle, cena) jsou na hlavní stránce. Pořadí měníte přetažením. Prázdný seznam = web ukáže výchozí obsah z `src/lib/site-content.ts`.
+8. První naplnění Sanity obsahem z webu (obědové menu, rumy a speciality i s fotkami): `corepack pnpm --dir studio run seed`. Vyplněný obsah nikdy nepřepíše, takže jde pustit znovu.
 
 Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 
@@ -40,7 +42,7 @@ Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 2. Sanity: na `sanity.io/manage` → projekt → `API → Webhooks → Create webhook`:
    - URL: deploy hook z kroku 1, HTTP method `POST`
    - Dataset: `production`, trigger on `Create`, `Update`, `Delete`
-   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchMenu", "operatingStatus"]`
+   - Filter: `_type in ["foodMenu", "drinkMenu", "lunchMenu", "operatingStatus", "rumMenu", "specialtyMenu"]`
    - Projection nechte prázdnou, `Drafts` a `Versions` vypnuté
 3. Ověření: upravte cenu v lístku, publikujte a v přehledu deploymentů hostingu by se měl spustit nový build.
 

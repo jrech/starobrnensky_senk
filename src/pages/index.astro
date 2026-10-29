@@ -110,10 +110,9 @@ const phone = { label: content.phone, href: content.phoneHref };
                 {rum.image ? <img src={rum.image} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} /> : <Image src={rumImage} alt={`Rum ${rum.name}`} widths={cardWidths} sizes="(max-width: 760px) 80vw, 420px" format="webp" loading="lazy" style={`object-position:${20 + index * 18}% center`} />}
               </div>
               <div class="rum-meta">
-                {(rum.origin || rum.abv) && <p>{[rum.origin, rum.abv].filter(Boolean).join(" · ")}</p>}
+                {rum.origin && <p>{rum.origin}</p>}
                 <h3>{rum.name}</h3>
                 {rum.note && <p>{rum.note}</p>}
-                {rum.price && <strong class="rum-price">0,04 l · {rum.price}</strong>}
               </div>
             </article>
           ))}

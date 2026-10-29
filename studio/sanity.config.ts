@@ -21,6 +21,9 @@ export default defineConfig({
           singleton("Obědové menu", "lunchMenu"),
           singleton("Jídelní lístek", "foodMenu"),
           singleton("Nápojový lístek", "drinkMenu"),
+          S.divider(),
+          singleton("Rumy", "rumMenu"),
+          singleton("Speciality", "specialtyMenu"),
         ]);
     },
   }), visionTool(), csCZLocale()],
