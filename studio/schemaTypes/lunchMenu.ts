@@ -7,7 +7,7 @@ const lunchDay = (name: string, title: string) => defineField({
   title,
   type: "object",
   description: "Když den necháte prázdný, web napíše „Tento den obědy nevaříme“.",
-  options: { collapsible: true, collapsed: true },
+  options: { collapsible: true, collapsed: false },
   fields: [
     defineField({ name: "soupName", title: "Polévka · název", type: "string" }),
     defineField({ name: "soupAllergens", title: "Polévka · alergeny", type: "string", description: allergenHint }),
@@ -32,7 +32,7 @@ export default defineType({
   title: "Obědové menu",
   type: "document",
   description: "Menu přepište vždy o víkendu na nadcházející týden. Datum a názvy dnů se doplňují automaticky.",
-  fieldsets: [{ name: "prices", title: "Ceny", options: { collapsible: true, collapsed: true, columns: 3 } }],
+  fieldsets: [{ name: "prices", title: "Ceny meníček", options: { columns: 3 } }],
   fields: [
     price("soupPrice", "Polévka (Kč)", "Prázdné = cena se nezobrazí."),
     price("dishAPrice", "Jídlo A (Kč)", "Prázdné = 159 Kč."),

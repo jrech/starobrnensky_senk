@@ -160,7 +160,6 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .hero .status-banner { max-width: 640px; margin: var(--space-4) 0 0 clamp(0px, 10vw, 168px); color: var(--cream-50); border-color: var(--honey-300); background: rgba(9, 36, 29, .62); backdrop-filter: blur(6px); font-size: 17px; }
 .hero .status-banner.is-closed { color: var(--honey-300); }
 .menu-page-intro .allergen-legend { margin-top: var(--space-2); }
-.rum-price { display: block; margin-top: 8px; color: var(--brick-700); font-size: 16px; font-weight: 700; }
 .gallery-lead { max-width: 46ch; margin: var(--space-4) 0 0 auto; font-size: 20px; line-height: 1.5; }
 .form-hint { margin: -8px 0 0; color: rgba(251,247,239,.72); font-size: 15px; }
 .form-hint a { text-decoration: underline; text-underline-offset: 3px; }
