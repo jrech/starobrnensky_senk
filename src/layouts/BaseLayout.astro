@@ -33,6 +33,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
+    <script is:inline>
+      // Hide the reveal targets before first paint so they don't flash before site.ts animates them in; show them anyway if it never runs.
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const motionRoot = document.documentElement;
+        motionRoot.classList.add("motion-ready");
+        setTimeout(() => {
+          if (motionRoot.classList.contains("motion-started")) return;
+          motionRoot.dataset.motionFallback = "true";
+          motionRoot.classList.remove("motion-ready");
+        }, 3000);
+      }
+    </script>
     <slot name="head" />
   </head>
   <body>

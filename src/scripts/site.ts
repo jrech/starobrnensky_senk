@@ -213,7 +213,7 @@ const updateRumProgress = () => {
   if (!rumViewport || !rumProgress) return;
   const maxScroll = rumViewport.scrollWidth - rumViewport.clientWidth;
   const ratio = maxScroll > 0 ? rumViewport.scrollLeft / maxScroll : 0;
-  rumProgress.style.width = `${Math.min(1, Math.max(0, ratio)) * 100}%`;
+  rumProgress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
 };
 rumViewport?.addEventListener("scroll", updateRumProgress, { passive: true });
 window.addEventListener("resize", updateRumProgress);
@@ -283,16 +283,16 @@ reservationForm?.addEventListener("submit", async (event) => {
   }
 });
 
-if (!reduceMotion) {
-  root.classList.add("motion-ready");
+// BaseLayout adds .motion-ready before first paint; if this script was too slow, its fallback already showed everything.
+if (!reduceMotion && !root.dataset.motionFallback) {
+  root.classList.add("motion-ready", "motion-started");
 
   const heroTimeline = gsap.timeline({ defaults: { ease: "power4.out" } });
   heroTimeline
     .to(".hero .reveal-media", { clipPath: "inset(0% 0% 0% 0%)", duration: 1.45 })
     .to(".hero .reveal-media img", { scale: 1.035, duration: 1.65 }, 0)
     .to(".hero .line > span", { y: 0, rotate: 0, duration: 1.15, stagger: .14 }, .28)
-    .from(".hero-bottom, .hero-eyebrow, .hero-status", { autoAlpha: 0, y: 16, duration: .8, stagger: .1 }, .72)
-    .fromTo(".site-header", { autoAlpha: 0 }, { autoAlpha: 1, duration: .85, ease: "power3.out" });
+    .from(".hero-bottom, .hero-eyebrow, .hero-status", { autoAlpha: 0, y: 16, duration: .8, stagger: .1 }, .72);
 
   gsap.to(".hero-media img", {
     yPercent: 8,
@@ -320,32 +320,19 @@ if (!reduceMotion) {
     if (image) gsap.to(image, { scale: 1, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: media, start: "top 88%", once: true } });
   });
 
-  const gallery = document.querySelector<HTMLElement>(".gallery");
-  const galleryItems = gallery?.querySelectorAll<HTMLElement>(".reveal-media") || [];
-  if (gallery && galleryItems.length) {
-    galleryItems.forEach((media) => gsap.set(media, { clipPath: "inset(100% 0 0 0)", y: 72 }));
-    galleryItems.forEach((media, index) => {
-      const reveal = gsap.timeline({
-        scrollTrigger: { trigger: media, start: "top 82%", once: true },
-        defaults: { ease: "power4.out" },
-      });
-      reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
-      const image = media.querySelector("img");
-      if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
-    });
-  }
-
-  const specialtyImages = document.querySelectorAll<HTMLElement>(".specialty-image.reveal-media");
-  specialtyImages.forEach((media, index) => {
-    const image = media.querySelector("img");
+  // Gallery and specialty cards rise in one by one as each reaches the viewport.
+  const revealCards = (items: NodeListOf<HTMLElement>) => items.forEach((media, index) => {
     gsap.set(media, { clipPath: "inset(100% 0 0 0)", y: 72 });
     const reveal = gsap.timeline({
       scrollTrigger: { trigger: media, start: "top 82%", once: true },
       defaults: { ease: "power4.out" },
     });
     reveal.to(media, { clipPath: "inset(0% 0% 0% 0%)", y: 0, duration: .85, delay: index * .05 });
+    const image = media.querySelector("img");
     if (image) reveal.to(image, { scale: 1, duration: 1, ease: "power3.out" }, "<");
   });
+  revealCards(document.querySelectorAll<HTMLElement>(".gallery .reveal-media"));
+  revealCards(document.querySelectorAll<HTMLElement>(".specialty-image.reveal-media"));
 }
 
 window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
