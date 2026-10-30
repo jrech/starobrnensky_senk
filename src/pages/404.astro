@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Footer from "../components/Footer.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { getSiteContent } from "../lib/site-content";
+import { Image } from "astro:assets";
+import heroImage from "../assets/hero-senk.webp";
+
+const content = await getSiteContent();
+---
+
+<BaseLayout title="Stránka nenalezena | Starobrněnský Šenk" description="Tahle stránka u nás neexistuje. Zkuste obědové menu nebo jídelní lístek.">
+  <meta slot="head" name="robots" content="noindex" />
+  <SiteHeader content={content} menuPage reservationHref="/#rezervace" />
+
+  <main id="main">
+    <section class="hero not-found-hero" data-theme="dark">
+      <div class="hero-media reveal-media" aria-hidden="true"><Image src={heroImage} alt="" widths={[640, 960, 1280, 1600]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" /></div><div class="hero-shade" aria-hidden="true"></div>
+      <div class="shell hero-content">
+        <p class="eyebrow hero-eyebrow">Chyba 404</p>
+        <h1 class="hero-title"><span class="line"><span>Tady nic</span></span><span class="line title-indent"><span>nenatočíme.</span></span></h1>
+        <div class="hero-bottom">
+          <p>Tahle stránka asi odešla na jedno a už se nevrátila. Nevadí, menu i pivo jsou pořád na svém místě.</p>
+          <div class="not-found-actions">
+            <a class="button button-light" href="/#obedove-menu">Obědové menu</a>
+            <a class="button button-ghost" href="/listky">Jídelní lístek</a>
+            <a class="text-link text-link-light" href="/">Zpátky na úvod</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer content={content} menuPage />
+
+  <script>import "../scripts/site.ts";</script>
+</BaseLayout>

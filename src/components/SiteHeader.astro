@@ -5,9 +5,11 @@ import type { SiteContent } from "../lib/site-content";
 interface Props {
   content: SiteContent;
   menuPage?: boolean;
+  /** Pages without their own reservation form send the CTA to the homepage one. */
+  reservationHref?: string;
 }
 
-const { content, menuPage = false } = Astro.props;
+const { content, menuPage = false, reservationHref = "#rezervace" } = Astro.props;
 const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
 ---
 
@@ -21,7 +23,7 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
       <a class={menuPage ? "nav-priority" : undefined} href="/listky">Jídelní lístek</a>
       <a href={sectionHref("kontakt")}>Kontakt</a>
     </nav>
-    <a class="button button-small button-light header-cta" href="#rezervace">Rezervovat</a>
+    <a class="button button-small button-light header-cta" href={reservationHref}>Rezervovat</a>
     <button class="menu-toggle" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span>
     </button>

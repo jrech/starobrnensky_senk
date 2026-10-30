@@ -110,6 +110,9 @@ h1, h2, h3, p, figure { margin-top: 0; }
 .menu-page-hero { min-height: min(460px, 56svh); }
 .menu-page-hero .hero-title { font-size: clamp(64px, 7.5vw, 128px); }
 .menu-page-hero .hero-content { padding-bottom: clamp(56px, 6vw, 88px); }
+.not-found-hero { min-height: max(640px, 100svh); }
+.not-found-hero .hero-bottom > p { max-width: 44ch; }
+.not-found-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-top: var(--space-4); }
 .menu-jump-nav { position: sticky; top: calc(var(--header-h) + 8px); z-index: 20; color: var(--cream-50); background: var(--forest-950); transition: top .2s var(--ease-out); }
 .site-header.is-scrolled ~ main .menu-jump-nav { top: 80px; }
 .menu-jump-nav > div { min-height: 60px; display: flex; align-items: center; gap: var(--space-3); overflow-x: auto; scrollbar-width: none; }
