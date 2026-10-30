@@ -57,7 +57,7 @@ const beerIndex = drinkMenu.findIndex((category) => /piv/i.test(category.title))
       links.forEach((other) => other.removeAttribute("aria-current"));
       link.setAttribute("aria-current", "true");
       const strip = link.parentElement!;
-      strip.scrollTo({ left: link.offsetLeft - strip.clientWidth / 2 + link.clientWidth / 2, behavior: "smooth" });
+      strip.scrollTo({ left: link.offsetLeft - strip.clientWidth / 2 + link.clientWidth / 2, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     };
     // On desktop several categories sit side by side, so a clicked chip wins over the observer while the page scrolls to it.
     links.forEach((link) => link.addEventListener("click", () => { lockedUntil = Date.now() + 1200; markCurrent(link); }));
