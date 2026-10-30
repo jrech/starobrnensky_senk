@@ -11,7 +11,8 @@ studio/dist/
 
 # Local agent/editor state and unoptimized source references
 .agents/
-.claude/
+.claude/*
+!.claude/skills/
 .codex/
 .cursor/
 .gemini/
