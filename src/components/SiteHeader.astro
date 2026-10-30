@@ -19,8 +19,6 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
     <nav class="desktop-nav" aria-label="Hlavní navigace">
       <a class={!menuPage ? "nav-priority" : undefined} href={sectionHref("obedove-menu")}>Obědové menu</a>
       <a class={menuPage ? "nav-priority" : undefined} href="/listky">Jídelní lístek</a>
-      <a href={sectionHref("rumy")}>Rumy</a>
-      <a href={sectionHref("o-nas")}>O nás</a>
       <a href={sectionHref("kontakt")}>Kontakt</a>
     </nav>
     <a class="button button-small button-light header-cta" href="#rezervace">Rezervovat</a>
@@ -31,9 +29,6 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
       <nav aria-label="Mobilní navigace">
         <a href={menuPage ? "/#dnesni-menu" : "#dnesni-menu"}>Obědové menu</a>
         <a href="/listky">Jídelní a nápojový lístek</a>
-        <a href={sectionHref("speciality")}>Speciality</a>
-        <a href={sectionHref("o-nas")}>O nás</a>
-        <a href={sectionHref("rumy")}>Rumy</a>
         <a href={sectionHref("kontakt")}>Kontakt a rezervace</a>
       </nav>
       <div class="mobile-hours-block">
