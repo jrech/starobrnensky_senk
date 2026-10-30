@@ -120,12 +120,7 @@ function activateTab(index: number, focus = false) {
 // The page is static, so "today", weekends and the lunch cut-off are worked out again in the browser.
 function renderLunchMenu() {
   if (!lunchRoot) return;
-  const view = getLunchView(lunchData);
-  lunchRoot.innerHTML = renderLunch(view, lunchPhone);
-  const eyebrow = document.querySelector<HTMLElement>("[data-lunch-eyebrow]");
-  const updated = document.querySelector<HTMLElement>("[data-lunch-updated]");
-  if (eyebrow) eyebrow.textContent = view.eyebrow;
-  if (updated) updated.textContent = view.weekLabel;
+  lunchRoot.innerHTML = renderLunch(getLunchView(lunchData), lunchPhone);
 }
 
 lunchRoot?.addEventListener("click", (event) => {

@@ -4,10 +4,9 @@ import Footer from "../components/Footer.astro";
 import ContactReservation from "../components/ContactReservation.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
-import { getOpeningStatus, getStatusBanner, parseDays } from "../lib/opening-status";
+import { getOpeningStatus, parseDays } from "../lib/opening-status";
 import { getLunchView, renderLunch } from "../lib/lunch";
 import AllergenLegend from "../components/AllergenLegend.astro";
-import StatusBanner from "../components/StatusBanner.astro";
 import { Image } from "astro:assets";
 import heroImage from "../assets/hero-interior-enhanced.png";
 import galleryHeroImage from "../assets/hero-senk.webp";
@@ -76,21 +75,17 @@ const phone = { label: content.phone, href: content.phoneHref };
       <div class="shell">
         <div class="section-intro split-intro">
           <div>
-            <p class="eyebrow" data-lunch-eyebrow>{lunchView.eyebrow}</p>
             <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line title-indent"><span>k obědu?</span></span></h2>
           </div>
           <div class="intro-copy">
-            <p>Každý pracovní den vaříme poctivé obědy. Vyberte si den a stavte se — obědové menu podáváme do 14:00.</p>
-            <p class="updated" data-lunch-updated>{lunchView.weekLabel}</p>
+            <p>Každý pracovní den od 11:00 do 14:00 vaříme poctivé obědy. Vyberte si den a stavte se.</p>
           </div>
         </div>
 
         <div class="lunch-body" id="dnesni-menu">
-          <StatusBanner override={content.operatingStatus} initial={getStatusBanner(content.operatingStatus)} />
           <div data-lunch data-lunch-data={JSON.stringify(content.lunch)} data-phone={JSON.stringify(phone)} set:html={renderLunch(lunchView, phone)} />
         </div>
         <div class="lunch-footer">
-          <p>Obědové menu podáváme v pracovní dny od 11:00 do 14:00.</p>
           <AllergenLegend />
         </div>
       </div>
