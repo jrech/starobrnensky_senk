@@ -17,8 +17,6 @@ export type LunchData = { menu?: LunchMenu };
 export type LunchDish = { type: string; name: string; allergens?: string; price?: string };
 export type LunchDayView = { key: WeekdayKey; label: string; shortLabel: string; dateLabel: string; dishes: LunchDish[]; isToday: boolean };
 export type LunchView = {
-  eyebrow: string;
-  weekLabel: string;
   message?: string;
   /** Point to the regular menu, used when there is no lunch to serve right now. */
   linkMenu: boolean;
@@ -39,7 +37,6 @@ export const weekdays = [
   { key: "friday", label: "Pátek", shortLabel: "Pá" },
 ] as const;
 
-const months = ["ledna", "února", "března", "dubna", "května", "června", "července", "srpna", "září", "října", "listopadu", "prosince"];
 const LUNCH_ENDS = 14 * 60;
 
 // Dates are plain YYYY-MM-DD strings; noon UTC keeps the weekday stable in any timezone.
@@ -65,13 +62,6 @@ export function pragueNow(now = new Date()) {
   const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value || "";
   const date = `${value("year")}-${value("month")}-${value("day")}`;
   return { date, day: toDate(date).getUTCDay(), minutes: Number(value("hour")) * 60 + Number(value("minute")) };
-}
-
-export function formatWeek(weekStart: string) {
-  const first = toDate(weekStart);
-  const last = toDate(addDays(weekStart, 4));
-  const firstMonth = first.getUTCMonth() === last.getUTCMonth() ? "" : ` ${months[first.getUTCMonth()]}`;
-  return `${first.getUTCDate()}.${firstMonth} – ${last.getUTCDate()}. ${months[last.getUTCMonth()]} ${last.getUTCFullYear()}`;
 }
 
 const clean = (value?: string) => value?.trim() || "";
@@ -110,15 +100,9 @@ export function getLunchView(data: LunchData, now = new Date()): LunchView {
     };
   });
   const hasMenu = days.some((day) => day.dishes.length);
-  const updated = week?.updatedAt && hasMenu ? ` · upraveno ${shortDate(pragueNow(new Date(week.updatedAt)).date)}` : "";
-  const base = {
-    eyebrow: weekend ? "Příští týden" : "Tento týden",
-    weekLabel: `Obědové menu · ${formatWeek(weekStart)}${updated}`,
-  };
 
   if (!hasMenu) {
     return {
-      ...base,
       message: weekend
         ? "O víkendu obědy nevaříme. Menu na příští týden ještě připravujeme."
         : "Menu na tento týden ještě připravujeme. Zavolejte nám, rádi řekneme, co se dnes vaří.",
@@ -142,7 +126,7 @@ export function getLunchView(data: LunchData, now = new Date()): LunchView {
     message = "Dnešní obědy už jsme vydali. Další zítra od 11:00.";
     linkMenu = true;
   }
-  return { ...base, message, linkMenu, showPhone: false, days, activeIndex: Math.max(todayIndex, 0) };
+  return { message, linkMenu, showPhone: false, days, activeIndex: Math.max(todayIndex, 0) };
 }
 
 const escape = (value: string) => value.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
