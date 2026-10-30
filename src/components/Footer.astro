@@ -16,7 +16,7 @@ const { content, menuPage = false } = Astro.props;
     <div class="footer-links">
       <div><p>Najdete nás</p><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">{content.address}</a></div>
       <div><p>Ozvěte se</p><a class="icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></div>
-      <div><p>Rychle k věci</p><a href={menuPage ? "/#obedove-menu" : "#obedove-menu"}>Obědové menu</a><a href={menuPage ? "#jidlo" : "/listky#jidlo"}>Jídelní lístek</a><a href={menuPage ? "#piti" : "/listky#piti"}>Nápojový lístek</a>{!menuPage && <a href="#rezervace">Rezervace</a>}</div>
+      <div><p>Rychle k věci</p><a href={menuPage ? "/#obedove-menu" : "#obedove-menu"}>Obědové menu</a><a href="/listky#jidlo">Jídelní lístek</a><a href="/listky#piti">Nápojový lístek</a>{!menuPage && <a href="#rezervace">Rezervace</a>}</div>
       <div class="socials"><p>Sledujte nás</p><div><a class="social-icon" href={content.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Icon name="facebook" /></a>{content.instagramUrl && <a class="social-icon" href={content.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Icon name="instagram" /></a>}</div></div>
     </div>
   </div>
