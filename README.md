@@ -28,6 +28,7 @@ corepack pnpm studio
 6. Ve Studiu otevřete `Jídelní lístek` nebo `Nápojový lístek`. V každé skupině lze přidávat, upravovat, mazat a přetahovat položky; upravit lze název, gramáž či objem, cenu a alergeny.
 7. `Rumy` (fotka, název, původ, chuťový profil) a `Speciality` (fotka, název, co je v jídle, cena) jsou na hlavní stránce. Pořadí měníte přetažením. Prázdný seznam = web ukáže výchozí obsah z `src/lib/site-content.ts`.
 8. První naplnění Sanity obsahem z webu (obědové menu, rumy a speciality i s fotkami): `corepack pnpm --dir studio run seed`. Vyplněný obsah nikdy nepřepíše, takže jde pustit znovu.
+9. Obědové menu na týden hromadně: přepište `studio/lunch-week.json` a pusťte `corepack pnpm --dir studio run lunch`. Přepíše jen dny, ceny nechá.
 
 Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 
