@@ -10,7 +10,7 @@ const root = document.documentElement;
 const header = document.querySelector<HTMLElement>("[data-header]");
 const menuButton = document.querySelector<HTMLButtonElement>(".menu-toggle");
 const mobileMenu = document.querySelector<HTMLElement>(".mobile-menu");
-const mobileMenuItems = mobileMenu?.querySelectorAll<HTMLElement>("nav a, .mobile-contact-link, .mobile-contact-label") || [];
+const mobileMenuItems = mobileMenu?.querySelectorAll<HTMLElement>(".mobile-nav a, .mobile-info > div, .mobile-cta") || [];
 const heroStatus = document.querySelector<HTMLElement>("[data-hero-status]");
 const contentRoot = document.querySelector<HTMLElement>("[data-sanity-project]");
 

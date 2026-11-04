@@ -28,25 +28,27 @@ const sectionHref = (id: string) => menuPage ? `/#${id}` : `#${id}`;
       <span></span><span></span>
     </button>
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-      <nav aria-label="Mobilní navigace">
+      <nav class="mobile-nav" aria-label="Mobilní navigace">
         <a href={menuPage ? "/#dnesni-menu" : "#dnesni-menu"}>Obědové menu</a>
-        <a href="/listky">Jídelní a nápojový lístek</a>
-        <a href={sectionHref("kontakt")}>Kontakt a rezervace</a>
+        <a href="/listky">Jídlo a pití</a>
       </nav>
-      <div class="mobile-hours-block">
-        <p class="mobile-label">Otevírací doba</p>
-        <dl class="mobile-hours">{content.hours.map((row) => <div><dt>{row.days}</dt><dd>{row.hours}</dd></div>)}</dl>
-      </div>
-      <div class="mobile-contact" aria-label="Kontaktní údaje">
-        <p class="mobile-label">Kontakt</p>
-        <a class="mobile-contact-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a>
-        <a class="mobile-contact-link" href={content.mapUrl} target="_blank" rel="noopener noreferrer"><Icon name="location" />Navigovat k nám</a>
-        <a class="mobile-contact-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a>
-        <div class="mobile-socials" aria-label="Sociální sítě">
-          <a class="mobile-contact-link" href={content.facebookUrl} target="_blank" rel="noopener noreferrer"><Icon name="facebook" />Facebook</a>
-          {content.instagramUrl && <a class="mobile-contact-link" href={content.instagramUrl} target="_blank" rel="noopener noreferrer"><Icon name="instagram" />Instagram</a>}
+      <div class="mobile-info">
+        <div>
+          <p class="mobile-label">Otevírací doba</p>
+          <dl class="mobile-hours">{content.hours.map((row) => <div><dt>{row.days}</dt><dd>{row.hours}</dd></div>)}</dl>
+        </div>
+        <div>
+          <p class="mobile-label">Kontakt</p>
+          <ul class="mobile-contact" aria-label="Kontaktní údaje">
+            <li><a href={`tel:${content.phoneHref}`}>{content.phone}</a></li>
+            <li><a href={`mailto:${content.email}`}>{content.email}</a></li>
+            <li><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">Navigovat k nám<Icon name="arrowRight" /></a></li>
+            <li><a href={content.facebookUrl} target="_blank" rel="noopener noreferrer">Facebook<Icon name="arrowRight" /></a></li>
+            {content.instagramUrl && <li><a href={content.instagramUrl} target="_blank" rel="noopener noreferrer">Instagram<Icon name="arrowRight" /></a></li>}
+          </ul>
         </div>
       </div>
+      <a class="mobile-cta" href={`tel:${content.phoneHref}`}><Icon name="phone" />Rezervovat stůl</a>
     </div>
   </div>
 </header>
