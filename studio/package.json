@@ -6,7 +6,8 @@
     "dev": "sanity dev",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "seed": "sanity exec scripts/seed.ts --with-user-token"
+    "seed": "sanity exec scripts/seed.ts --with-user-token",
+    "lunch": "sanity exec scripts/lunch.ts --with-user-token"
   },
   "dependencies": {
     "@sanity/locale-cs-cz": "^1.1.36",

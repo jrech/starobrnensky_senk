@@ -1,0 +1,42 @@
+{
+  "monday": {
+    "soupName": "Zelňačka",
+    "soupAllergens": "1",
+    "dishAName": "Pečená vepřová plec na česneku, bramborová kaše",
+    "dishAAllergens": "1",
+    "dishBName": "Kotleta na grilu v hořčicové omáčce, americké brambory",
+    "dishBAllergens": "1, 3, 7, 10"
+  },
+  "tuesday": {
+    "soupName": "Hovězí vývar s játrovou rýží",
+    "soupAllergens": "1, 3, 9",
+    "dishAName": "Boloňské špagety se strouhaným sýrem",
+    "dishAAllergens": "1, 3, 7",
+    "dishBName": "Kuřecí prsíčka se šunkou a cheddarem, hranolky, bylinkový dresing",
+    "dishBAllergens": "1, 7"
+  },
+  "wednesday": {
+    "soupName": "Kulajda",
+    "soupAllergens": "1, 3, 7",
+    "dishAName": "Vepřové výpečky, dušené zelí, houskový knedlík",
+    "dishAAllergens": "1, 3",
+    "dishBName": "Smažený květák, vařené brambory, tatarka",
+    "dishBAllergens": "1, 3, 7, 10"
+  },
+  "thursday": {
+    "soupName": "Fazolová",
+    "soupAllergens": "1",
+    "dishAName": "Mix grill, šťouchané brambory, česnekový dip",
+    "dishAAllergens": "1, 7",
+    "dishBName": "Přírodní hovězí pečeně, dušená rýže",
+    "dishBAllergens": "1"
+  },
+  "friday": {
+    "soupName": "Francouzská",
+    "soupAllergens": "1, 3, 9",
+    "dishAName": "Grilovaný hermelín se slaninou a brusinkami, opékané brambory",
+    "dishAAllergens": "1, 3, 7",
+    "dishBName": "Smažený vepřový řízek, bramborový salát",
+    "dishBAllergens": "1, 3, 7, 10"
+  }
+}
