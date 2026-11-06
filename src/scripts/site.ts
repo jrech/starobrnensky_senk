@@ -29,7 +29,6 @@ function updateStatusBanners() {
   statusBanners.forEach((element) => {
     element.hidden = !banner;
     element.textContent = banner?.text || "";
-    element.classList.toggle("is-closed", banner?.tone === "closed");
     element.classList.toggle("is-notice", banner?.tone === "notice");
   });
 }
@@ -43,7 +42,6 @@ if (heroStatus) {
     updateHeroStatus = () => {
       const notice = getHeroNotice(override);
       heroStatus.hidden = !notice;
-      heroStatus.classList.toggle("is-closed", notice?.tone === "closed");
       heroStatus.classList.toggle("is-notice", notice?.tone === "notice");
       if (message) message.textContent = notice?.title || "";
       if (detail) {
@@ -143,7 +141,7 @@ async function hydratePublishedContent() {
 
   const query = `{
     ${lunchRoot ? `"lunch": ${lunchQuery},` : ""}
-    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText}
+    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,noticeText}
   }`;
 
   try {

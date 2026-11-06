@@ -121,7 +121,6 @@ figure { margin: 0; }
 .hero-status-copy { display: grid; flex: 1 1 0; gap: 4px; }
 .hero-status-message { font-size: 16px; font-weight: 600; line-height: 1.375; }
 .hero-status-notice { color: #d4ded5; font-size: 14px; line-height: 1.57; }
-.hero-status.is-closed .hero-status-message { color: var(--honey-200); }
 
 .menu-page-hero { min-height: min(460px, 56svh); }
 .menu-page-hero .hero-title { font-size: clamp(64px, 7.5vw, 108px); }
@@ -148,7 +147,6 @@ figure { margin: 0; }
 .status-banner { margin: 0 0 var(--space-4); padding: 16px 20px; border-left: 3px solid var(--gold-700); border-radius: var(--radius); color: var(--forest-950); background: rgba(138, 96, 46, .1); font-size: 16px; font-weight: 600; line-height: 1.5; }
 .status-banner.is-notice { border-color: var(--honey-300); background: rgba(226, 184, 100, .2); }
 .hero .status-banner { max-width: 640px; margin: var(--space-4) 0 0; color: var(--cream-50); border: 1px solid rgba(235,196,122,.25); background: rgba(9, 36, 29, .95); backdrop-filter: blur(6px); }
-.hero .status-banner.is-closed { color: var(--honey-200); }
 .menu-page-intro .allergen-legend { margin-top: var(--space-2); }
 
 .lunch { background: var(--cream-50); }

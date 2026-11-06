@@ -116,7 +116,7 @@ export async function getSiteContent(): Promise<SiteContent> {
   try {
     const data = await client.fetch<{ lunch?: LunchMenu; operatingStatus?: OperatingStatusOverride; foodMenu?: SanityMenu; drinkMenu?: SanityMenu; rums?: SanityRum[]; specialties?: SanitySpecialty[] }>(`{
       "lunch": ${lunchQuery},
-      "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText},
+      "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,noticeText},
       "foodMenu": *[_type == "foodMenu" && _id == "foodMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}},
       "drinkMenu": *[_type == "drinkMenu" && _id == "drinkMenu"][0]{categories[]{title,items[]{name,amount,price,allergens}}},
       "rums": *[_type == "rumMenu" && _id == "rumMenu"][0].rums[]{name,origin,taste,"image":image.asset->url},

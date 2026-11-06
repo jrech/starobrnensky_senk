@@ -64,7 +64,7 @@ const phone = { label: content.phone, href: content.phoneHref };
           <p>Dobré pivo, poctivé jídlo a známé tváře. Váš šenk v brněnském Novém Lískovci.</p>
           <a class="button button-primary button-large" href="#dnesni-menu">Dnešní menu</a>
         </div>
-        <!-- Shown only when Sanity has an announcement; re-checked in the browser (site.ts) because a closure ends on a date. -->
+        <!-- Shown only when Sanity has an announcement; refreshed in the browser (site.ts) from the published status. -->
         <div class:list={["hero-status", heroNotice && `is-${heroNotice.tone}`]} data-hero-status data-status-override={JSON.stringify(content.operatingStatus ?? {})} role="status" aria-live="polite" hidden={!heroNotice}>
           <Icon name="info" />
           <span class="hero-status-copy">
