@@ -4,7 +4,7 @@ import Footer from "../components/Footer.astro";
 import ContactReservation from "../components/ContactReservation.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
-import { getOpeningStatus, parseDays } from "../lib/opening-status";
+import { getHeroNotice, parseDays } from "../lib/opening-status";
 import { getLunchView, renderLunch } from "../lib/lunch";
 import AllergenLegend from "../components/AllergenLegend.astro";
 import Icon from "../components/Icon.astro";
@@ -40,7 +40,7 @@ const restaurantSchema = {
     return [{ "@type": "OpeningHoursSpecification", dayOfWeek: parseDays(row.days).map((day) => schemaDays[day]), opens: times[1], closes: times[2] === "00:00" ? "23:59" : times[2] }];
   }),
 };
-const heroStatus = getOpeningStatus(content.hours, content.operatingStatus);
+const heroNotice = getHeroNotice(content.operatingStatus);
 const lunchView = getLunchView(content.lunch);
 const phone = { label: content.phone, href: content.phoneHref };
 ---
@@ -64,11 +64,12 @@ const phone = { label: content.phone, href: content.phoneHref };
           <p>Dobré pivo, poctivé jídlo a známé tváře. Váš šenk v brněnském Novém Lískovci.</p>
           <a class="button button-primary button-large" href="#dnesni-menu">Dnešní menu</a>
         </div>
-        <div class:list={["hero-status", `is-${heroStatus.state}`]} data-hero-status data-hours={JSON.stringify(content.hours)} data-status-override={JSON.stringify(content.operatingStatus)} role="status" aria-live="polite">
+        <!-- Shown only when Sanity has an announcement; re-checked in the browser (site.ts) because a closure ends on a date. -->
+        <div class:list={["hero-status", heroNotice && `is-${heroNotice.tone}`]} data-hero-status data-status-override={JSON.stringify(content.operatingStatus ?? {})} role="status" aria-live="polite" hidden={!heroNotice}>
           <Icon name="info" />
           <span class="hero-status-copy">
-            <span class="hero-status-message" data-hero-status-message>{heroStatus.message}</span>
-            <span class="hero-status-notice" data-hero-status-notice hidden={!heroStatus.notice}>{heroStatus.notice}</span>
+            <span class="hero-status-message" data-hero-status-message>{heroNotice?.title}</span>
+            <span class="hero-status-notice" data-hero-status-notice hidden={!heroNotice?.text}>{heroNotice?.text}</span>
           </span>
         </div>
       </div>

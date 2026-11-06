@@ -116,6 +116,7 @@ figure { margin: 0; }
 .hero-home .hero-bottom { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
 .hero-home .hero-bottom > p { margin-inline: auto; }
 .hero-status { width: min(456px, 100%); display: flex; align-items: center; gap: 14px; margin-top: 72px; padding: 20px 24px; border: 1px solid rgba(235,196,122,.25); border-radius: var(--radius); color: var(--cream-50); background: rgba(9,36,29,.95); backdrop-filter: blur(6px); text-align: left; }
+.hero-status[hidden] { display: none; }
 .hero-status > .icon { width: 20px; height: 20px; color: var(--honey-200); }
 .hero-status-copy { display: grid; flex: 1 1 0; gap: 4px; }
 .hero-status-message { font-size: 16px; font-weight: 600; line-height: 1.375; }

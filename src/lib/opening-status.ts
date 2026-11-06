@@ -117,6 +117,17 @@ export function getStatusBanner(override: OperatingStatusOverride | undefined, n
   return notice ? { tone: "notice", text: notice } : null;
 }
 
+/**
+ * The hero card: only an announcement (closure or notice from Sanity), never the normal opening hours.
+ * The first sentence becomes the bold title and the rest the line under it; "12. 10." style dates are not split.
+ */
+export function getHeroNotice(override: OperatingStatusOverride | undefined, now = new Date()): { tone: "closed" | "notice"; title: string; text?: string } | null {
+  const banner = getStatusBanner(override, now);
+  if (!banner) return null;
+  const match = banner.text.match(/^(.+?[.!?])\s+(?=\p{Lu})(.+)$/su);
+  return match ? { tone: banner.tone, title: match[1], text: match[2] } : { tone: banner.tone, title: banner.text };
+}
+
 /** Opening and closing minute for a date (YYYY-MM-DD); closing after midnight counts past 24:00. */
 export function getOpeningWindow(hours: OpeningHours[], date: string): { opens: number; closes: number } | null {
   const day = new Date(`${date}T12:00:00Z`).getUTCDay();

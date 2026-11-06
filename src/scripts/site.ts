@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { getOpeningStatus, getOpeningWindow, getStatusBanner, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
+import { getHeroNotice, getOpeningWindow, getStatusBanner, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
 import { getLunchView, lunchQuery, pragueNow, renderLunch, type LunchData, type LunchMenu } from "../lib/lunch";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -37,19 +37,18 @@ updateStatusBanners();
 
 if (heroStatus) {
   try {
-    const hours = JSON.parse(heroStatus.dataset.hours || "[]") as OpeningHours[];
     let override = JSON.parse(heroStatus.dataset.statusOverride || "{}") as OperatingStatusOverride;
     const message = heroStatus.querySelector<HTMLElement>("[data-hero-status-message]");
+    const detail = heroStatus.querySelector<HTMLElement>("[data-hero-status-notice]");
     updateHeroStatus = () => {
-      const status = getOpeningStatus(hours, override);
-      heroStatus.classList.toggle("is-open", status.state === "open");
-      heroStatus.classList.toggle("is-closed", status.state === "closed");
-      heroStatus.setAttribute("aria-label", status.notice ? `${status.message}. ${status.notice}` : status.message);
-      if (message) message.textContent = status.message;
-      const notice = heroStatus.querySelector<HTMLElement>("[data-hero-status-notice]");
-      if (notice) {
-        notice.textContent = status.notice || "";
-        notice.hidden = !status.notice;
+      const notice = getHeroNotice(override);
+      heroStatus.hidden = !notice;
+      heroStatus.classList.toggle("is-closed", notice?.tone === "closed");
+      heroStatus.classList.toggle("is-notice", notice?.tone === "notice");
+      if (message) message.textContent = notice?.title || "";
+      if (detail) {
+        detail.textContent = notice?.text || "";
+        detail.hidden = !notice?.text;
       }
     };
     setHeroStatusOverride = (nextOverride) => {
@@ -63,7 +62,7 @@ if (heroStatus) {
     };
     scheduleHeroStatusUpdate();
   } catch (error) {
-    console.warn("Hero operating status could not be updated.", error);
+    console.warn("Hero announcement could not be updated.", error);
   }
 }
 
