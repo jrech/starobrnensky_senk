@@ -4,9 +4,10 @@ import Footer from "../components/Footer.astro";
 import ContactReservation from "../components/ContactReservation.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import { getSiteContent } from "../lib/site-content";
-import { getOpeningStatus, parseDays } from "../lib/opening-status";
+import { getHeroNotice, parseDays } from "../lib/opening-status";
 import { getLunchView, renderLunch } from "../lib/lunch";
 import AllergenLegend from "../components/AllergenLegend.astro";
+import Icon from "../components/Icon.astro";
 import { Image } from "astro:assets";
 import heroImage from "../assets/hero-interior-enhanced.png";
 import galleryHeroImage from "../assets/hero-senk.webp";
@@ -39,7 +40,7 @@ const restaurantSchema = {
     return [{ "@type": "OpeningHoursSpecification", dayOfWeek: parseDays(row.days).map((day) => schemaDays[day]), opens: times[1], closes: times[2] === "00:00" ? "23:59" : times[2] }];
   }),
 };
-const heroStatus = getOpeningStatus(content.hours, content.operatingStatus);
+const heroNotice = getHeroNotice(content.operatingStatus);
 const lunchView = getLunchView(content.lunch);
 const phone = { label: content.phone, href: content.phoneHref };
 ---
@@ -49,103 +50,53 @@ const phone = { label: content.phone, href: content.phoneHref };
   <SiteHeader content={content} />
 
   <main id="main" class="homepage-flow" data-sanity-project={import.meta.env.PUBLIC_SANITY_PROJECT_ID} data-sanity-dataset={import.meta.env.PUBLIC_SANITY_DATASET || "production"}>
-    <section class="hero" id="top" data-theme="dark">
+    <section class="hero hero-home" id="top" data-theme="dark">
       <div class="hero-media reveal-media" aria-hidden="true">
         <Image src={heroImage} alt="" widths={[640, 960, 1280, 1600, 1920]} sizes="100vw" format="webp" loading="eager" fetchpriority="high" />
       </div>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-content shell">
-        <p class="eyebrow hero-eyebrow">Brno · Nový Lískovec</p>
         <h1 class="hero-title motion-title">
-          <span class="line"><span>Po práci</span></span>
-          <span class="line"><span>na jedno.</span></span>
-          <span class="line title-indent"><span>A něco k tomu.</span></span>
+          <span class="line"><span>Po práci na jedno.</span></span>
+          <span class="line title-accent"><span>A něco k tomu.</span></span>
         </h1>
-      </div>
-      <div class:list={["hero-status", `is-${heroStatus.state}`]} data-hero-status data-hours={JSON.stringify(content.hours)} data-status-override={JSON.stringify(content.operatingStatus)} role="status" aria-live="polite">
-        <span class="status-dot" aria-hidden="true"></span>
-        <span class="hero-status-copy">
-          <span data-hero-status-message>{heroStatus.message}</span>
-          <span class="hero-status-notice" data-hero-status-notice hidden={!heroStatus.notice}>{heroStatus.notice}</span>
-        </span>
+        <div class="hero-bottom">
+          <p>Dobré pivo, poctivé jídlo a známé tváře. Váš šenk v brněnském Novém Lískovci.</p>
+          <a class="button button-primary button-large" href="#dnesni-menu">Dnešní menu</a>
+        </div>
+        <!-- Shown only when Sanity has an announcement; refreshed in the browser (site.ts) from the published status. -->
+        <div class:list={["hero-status", heroNotice && `is-${heroNotice.tone}`]} data-hero-status data-status-override={JSON.stringify(content.operatingStatus ?? {})} role="status" aria-live="polite" hidden={!heroNotice}>
+          <Icon name="info" />
+          <span class="hero-status-copy">
+            <span class="hero-status-message" data-hero-status-message>{heroNotice?.title}</span>
+            <span class="hero-status-notice" data-hero-status-notice hidden={!heroNotice?.text}>{heroNotice?.text}</span>
+          </span>
+        </div>
       </div>
     </section>
 
     <section class="lunch section" id="obedove-menu" data-theme="light" aria-labelledby="lunch-title">
       <div class="shell">
-        <div class="section-intro split-intro">
-          <div>
-            <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line title-indent"><span>k obědu?</span></span></h2>
-          </div>
-          <div class="intro-copy">
-            <p>Každý pracovní den od 11:00 do 14:00 vaříme poctivé obědy. Vyberte si den a stavte se.</p>
-          </div>
+        <div class="section-intro">
+          <h2 id="lunch-title" class="display motion-title"><span class="line"><span>Co je dnes</span></span><span class="line title-accent"><span>k obědu?</span></span></h2>
         </div>
 
         <div class="lunch-body" id="dnesni-menu">
           <div data-lunch data-lunch-data={JSON.stringify(content.lunch)} data-phone={JSON.stringify(phone)} set:html={renderLunch(lunchView, phone)} />
         </div>
         <div class="lunch-footer">
+          <p>Každý pracovní den od 11:00 do 14:00 vaříme poctivé obědy.</p>
           <AllergenLegend />
         </div>
       </div>
     </section>
 
-    <section class="rum-section section" id="rumy" data-theme="dark" aria-labelledby="rum-title">
-      <div class="shell rum-heading">
-        <p class="eyebrow">Rumy z celého světa</p>
-        <h2 id="rum-title" class="display motion-title"><span class="line"><span>Ochutnejte rumy</span></span><span class="line title-indent"><span>z celého světa.</span></span></h2>
-        <p class="rum-lead">Od lehkých karibských rumů po výrazné stařené lahve. Ptejte se obsluhy, rádi poradíme.</p>
-      </div>
-      <div class="rum-viewport" data-rum-viewport tabindex="0" role="region" aria-label="Výběr rumů. Karty lze posouvat vodorovně pomocí trackpadu, posuvníku nebo šipek na klávesnici.">
-        <div class="rum-track" data-rum-track>
-          {content.rums.map((rum, index) => (
-            <article class="rum-card">
-              <div class="rum-card-image">
-                {rum.image ? <img src={rum.image} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} /> : <Image src={rumImage} alt={`Rum ${rum.name}`} widths={cardWidths} sizes="(max-width: 760px) 80vw, 420px" format="webp" loading="lazy" style={`object-position:${20 + index * 18}% center`} />}
-              </div>
-              <div class="rum-meta">
-                {rum.origin && <p>{rum.origin}</p>}
-                <h3>{rum.name}</h3>
-                {rum.note && <p>{rum.note}</p>}
-              </div>
-            </article>
-          ))}
-          <article class="rum-card rum-card-last">
-            <div>
-              <p class="eyebrow">Na baru je toho víc</p>
-              <h3>Najdeme rum podle vaší chuti.</h3>
-              <p>Sladší, sušší, kořenitý nebo jen něco dobrého po večeři.</p>
-              <a class="button button-light" href="#kontakt">Stavte se ochutnat</a>
-            </div>
-          </article>
+    <section class="specialties section" id="speciality" data-theme="brown" aria-labelledby="specialties-title">
+      <div class="shell specialties-layout">
+        <div class="section-intro">
+          <h2 id="specialties-title" class="display display-inline motion-title"><span class="line"><span>Šenkovní</span></span> <span class="line title-accent"><span>speciality.</span></span></h2>
         </div>
-      </div>
-      <div class="rum-progress shell" aria-hidden="true">
-        <span>Posuňte dál</span><div><i data-rum-progress></i></div><span>{String(content.rums.length).padStart(2, "0")}</span>
-      </div>
-    </section>
-
-    <section class="gallery section" id="o-nas" data-theme="cream" aria-labelledby="gallery-title">
-      <div class="shell gallery-header">
-        <p class="eyebrow">O nás</p>
-        <h2 id="gallery-title" class="display motion-title"><span class="line"><span>Známé místo.</span></span><span class="line title-indent"><span>Dobré chvíle.</span></span></h2>
-        <p class="gallery-lead">Od sousedů pro sousedy. Šenk patří do rytmu Nového Lískovce: po práci na jedno, dobré jídlo a známé tváře.</p>
-      </div>
-      <div class="gallery-grid shell">
-        <figure class="gallery-item gallery-wide reveal-media"><Image src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" widths={[640, 960, 1280]} sizes="(max-width: 760px) 100vw, 66vw" format="webp" loading="lazy" /></figure>
-        <figure class="gallery-item gallery-tall reveal-media"><Image src={galleryHeroImage} alt="Čerstvě načepované pivo na stole" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
-        <figure class="gallery-item reveal-media"><Image src={foodImage} alt="Pečené vepřové koleno s přílohami" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
-        <figure class="gallery-item reveal-media"><Image src={rumImage} alt="Výběr rumů ve skle na baru" widths={cardWidths} sizes="(max-width: 760px) 100vw, 33vw" format="webp" loading="lazy" /></figure>
-      </div>
-    </section>
-
-    <section class="specialties section" id="speciality" data-theme="light" aria-labelledby="specialties-title">
-      <div class="shell">
-        <div class="section-intro split-intro">
-          <div><p class="eyebrow">Když máte větší hlad</p><h2 id="specialties-title" class="display motion-title"><span class="line"><span>Šenkovní</span></span><span class="line title-indent"><span>speciality.</span></span></h2></div>
-          <p class="intro-copy">Pár jistot, kvůli kterým stojí za to zůstat déle než na jedno.</p>
-        </div>
+        <a class="button button-outline specialties-link" href="/listky">Celý jídelní a nápojový lístek</a>
         <div class="specialty-grid">
           {content.specialties.map((item, index) => (
             <article class="specialty-card">
@@ -154,7 +105,58 @@ const phone = { label: content.phone, href: content.phoneHref };
             </article>
           ))}
         </div>
-        <a class="text-link future-link" href="/listky">Celý jídelní a nápojový lístek</a>
+      </div>
+    </section>
+
+    <section class="gallery section" id="o-nas" data-theme="cream" aria-labelledby="gallery-title">
+      <div class="shell gallery-header">
+        <h2 id="gallery-title" class="display motion-title"><span class="line"><span>Známé místo.</span></span><span class="line title-accent"><span>Dobré chvíle.</span></span></h2>
+      </div>
+      <div class="gallery-grid shell">
+        <div class="gallery-col">
+          <figure class="gallery-item gallery-wide reveal-media"><Image src={gardenImage} alt="Hosté při podvečerním posezení na zahrádce" widths={[640, 960, 1280]} sizes="(max-width: 760px) 100vw, 60vw" format="webp" loading="lazy" /></figure>
+          <figure class="gallery-item gallery-small gallery-meal reveal-media"><Image src={foodImage} alt="Pečené vepřové koleno s přílohami" widths={cardWidths} sizes="(max-width: 760px) 50vw, 400px" format="webp" loading="lazy" /></figure>
+        </div>
+        <div class="gallery-col gallery-col-offset">
+          <figure class="gallery-item gallery-tall reveal-media"><Image src={galleryHeroImage} alt="Čerstvě načepované pivo na stole" widths={cardWidths} sizes="(max-width: 760px) 50vw, 480px" format="webp" loading="lazy" /></figure>
+          <figure class="gallery-item gallery-small gallery-bar reveal-media"><Image src={rumImage} alt="Výběr rumů ve skle na baru" widths={cardWidths} sizes="(max-width: 760px) 100vw, 400px" format="webp" loading="lazy" /></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="rum-section section" id="rumy" data-theme="light" aria-labelledby="rum-title">
+      <div class="shell rum-heading">
+        <h2 id="rum-title" class="display motion-title"><span class="line"><span>Ochutnejte rumy</span></span><span class="line title-accent"><span>z celého světa.</span></span></h2>
+      </div>
+      <div class="rum-viewport" data-rum-viewport tabindex="0" role="region" aria-label="Výběr rumů. Karty lze posouvat vodorovně pomocí trackpadu, posuvníku nebo šipek na klávesnici.">
+        <div class="rum-track" data-rum-track>
+          {content.rums.map((rum, index) => (
+            <article class="rum-card">
+              <div class="rum-card-image">
+                {rum.image ? <img src={rum.image} alt={`Rum ${rum.name}`} width="1536" height="1024" loading="lazy" style={`object-position:${20 + index * 18}% center`} /> : <Image src={rumImage} alt={`Rum ${rum.name}`} widths={cardWidths} sizes="(max-width: 760px) 80vw, 760px" format="webp" loading="lazy" style={`object-position:${20 + index * 18}% center`} />}
+              </div>
+              <div class="rum-meta">
+                {rum.origin && <p class="rum-origin">{rum.origin}</p>}
+                <h3>{rum.name}</h3>
+                {rum.note && <p class="rum-note">{rum.note}</p>}
+              </div>
+            </article>
+          ))}
+          <article class="rum-card rum-card-last">
+            <div>
+              <p class="eyebrow">Na baru je toho víc</p>
+              <h3>Najdeme rum podle vaší chuti.</h3>
+              <p>Sladší, sušší, kořenitý nebo jen něco dobrého po večeři.</p>
+              <a class="button button-outline" href="#kontakt">Stavte se ochutnat</a>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="rum-progress shell">
+        <span aria-hidden="true">Posuňte dál</span>
+        <div aria-hidden="true"><i data-rum-progress></i></div>
+        <span class="rum-count" aria-hidden="true"><span data-rum-current>01</span> / {String(content.rums.length + 1).padStart(2, "0")}</span>
+        <button class="rum-next" type="button" data-rum-next aria-label="Další rum"><Icon name="arrowRight" /></button>
       </div>
     </section>
 
@@ -162,8 +164,6 @@ const phone = { label: content.phone, href: content.phoneHref };
   </main>
 
   <Footer content={content} />
-
-  <div class="mobile-actions" aria-label="Rychlé akce"><a href="#dnesni-menu">Dnešní menu</a><a href="/listky">Lístek</a><a href={`tel:${content.phoneHref}`}>Zavolat</a></div>
 
   <script>import "../scripts/site.ts";</script>
 </BaseLayout>

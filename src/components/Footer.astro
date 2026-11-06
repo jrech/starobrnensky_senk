@@ -8,17 +8,27 @@ interface Props {
 }
 
 const { content, menuPage = false } = Astro.props;
+const [street, ...cityParts] = content.address.split(", ");
 ---
 
 <footer class="footer" data-theme="dark">
   <div class="shell footer-top">
-    <p class="footer-signature motion-title"><span class="line"><span>Na jedno.</span></span><span class="line"><span><em>A klidně déle.</em></span></span></p>
-    <div class="footer-links">
-      <div><p>Najdete nás</p><a href={content.mapUrl} target="_blank" rel="noopener noreferrer">{content.address}</a></div>
-      <div><p>Ozvěte se</p><a class="icon-link" href={`tel:${content.phoneHref}`}><Icon name="phone" />{content.phone}</a><a class="icon-link" href={`mailto:${content.email}`}><Icon name="email" />{content.email}</a></div>
-      <div><p>Rychle k věci</p><a href={menuPage ? "/#obedove-menu" : "#obedove-menu"}>Obědové menu</a><a href="/listky#jidlo">Jídelní lístek</a><a href="/listky#piti">Nápojový lístek</a>{!menuPage && <a href="#rezervace">Rezervace</a>}</div>
-      <div class="socials"><p>Sledujte nás</p><div><a class="social-icon" href={content.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Icon name="facebook" /></a>{content.instagramUrl && <a class="social-icon" href={content.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Icon name="instagram" /></a>}</div></div>
+    <p class="footer-signature motion-title"><span class="line"><span>Na jedno.</span></span><span class="line title-accent"><span>A klidně déle.</span></span></p>
+    <div class="footer-contact">
+      <a class="footer-address" href={content.mapUrl} target="_blank" rel="noopener noreferrer">{street}{cityParts.length > 0 && <><br />{cityParts.join(", ")}</>}</a>
+      <a href={`tel:${content.phoneHref}`}>{content.phone}</a>
+      <a href={`mailto:${content.email}`}>{content.email}</a>
+    </div>
+    <nav class="footer-nav" aria-label="Odkazy v patičce">
+      <a href={menuPage ? "/#obedove-menu" : "#obedove-menu"}>Obědové menu</a>
+      <a href="/listky#jidlo">Jídelní lístek</a>
+      <a href="/listky#piti">Nápojový lístek</a>
+      <a href={menuPage ? "/#rezervace" : "#rezervace"}>Rezervace</a>
+    </nav>
+    <div class="footer-socials">
+      <a class="social-icon" href={content.facebookUrl} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><Icon name="facebook" /></a>
+      {content.instagramUrl && <a class="social-icon" href={content.instagramUrl} target="_blank" rel="noopener noreferrer" aria-label="Instagram"><Icon name="instagram" /></a>}
     </div>
   </div>
-  <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrněnský Šenk</span><span>IČ: 62080245</span><a class="footer-credit" href="https://www.jonasrech.com" target="_blank" rel="noopener noreferrer">Vytvořeno Jonas Rech</a></div>
+  <div class="shell footer-bottom"><span>© {new Date().getFullYear()} Starobrněnský šenk</span><span>IČ: 62080245</span><a class="footer-credit" href="https://www.jonasrech.com" target="_blank" rel="noopener noreferrer">Vytvořeno Jonas Rech</a></div>
 </footer>

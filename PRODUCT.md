@@ -31,7 +31,7 @@ Lidé web používají často v krátkých mobilních návštěvách před oběd
 
 ## Brand Commitments
 
-Název: Starobrněnský Šenk. Hlas je sousedský, přímočarý a pohostinný; ne fine dining. Zachovat Caudex pro display text a Manrope pro provozní informace, současný tmavě zelený/krémový systém a 8px spacing grid.
+Název: Starobrněnský Šenk. Hlas je sousedský, přímočarý a pohostinný; ne fine dining. Zachovat Caudex pro display text (s kurzívou pro zlatý „druhý řádek“ nadpisů) a Rethink Sans pro provozní informace, současný tmavě zelený/krémový systém, zlatý akcent #8a602e, rohy 3 px a 8px spacing grid.
 
 ## Evidence on Hand
 

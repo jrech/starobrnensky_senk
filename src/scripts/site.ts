@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { getOpeningStatus, getOpeningWindow, getStatusBanner, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
+import { getHeroNotice, getOpeningWindow, getStatusBanner, type OpeningHours, type OperatingStatusOverride } from "../lib/opening-status";
 import { getLunchView, lunchQuery, pragueNow, renderLunch, type LunchData, type LunchMenu } from "../lib/lunch";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -29,7 +29,6 @@ function updateStatusBanners() {
   statusBanners.forEach((element) => {
     element.hidden = !banner;
     element.textContent = banner?.text || "";
-    element.classList.toggle("is-closed", banner?.tone === "closed");
     element.classList.toggle("is-notice", banner?.tone === "notice");
   });
 }
@@ -37,19 +36,17 @@ updateStatusBanners();
 
 if (heroStatus) {
   try {
-    const hours = JSON.parse(heroStatus.dataset.hours || "[]") as OpeningHours[];
     let override = JSON.parse(heroStatus.dataset.statusOverride || "{}") as OperatingStatusOverride;
     const message = heroStatus.querySelector<HTMLElement>("[data-hero-status-message]");
+    const detail = heroStatus.querySelector<HTMLElement>("[data-hero-status-notice]");
     updateHeroStatus = () => {
-      const status = getOpeningStatus(hours, override);
-      heroStatus.classList.toggle("is-open", status.state === "open");
-      heroStatus.classList.toggle("is-closed", status.state === "closed");
-      heroStatus.setAttribute("aria-label", status.notice ? `${status.message}. ${status.notice}` : status.message);
-      if (message) message.textContent = status.message;
-      const notice = heroStatus.querySelector<HTMLElement>("[data-hero-status-notice]");
-      if (notice) {
-        notice.textContent = status.notice || "";
-        notice.hidden = !status.notice;
+      const notice = getHeroNotice(override);
+      heroStatus.hidden = !notice;
+      heroStatus.classList.toggle("is-notice", notice?.tone === "notice");
+      if (message) message.textContent = notice?.title || "";
+      if (detail) {
+        detail.textContent = notice?.text || "";
+        detail.hidden = !notice?.text;
       }
     };
     setHeroStatusOverride = (nextOverride) => {
@@ -63,7 +60,7 @@ if (heroStatus) {
     };
     scheduleHeroStatusUpdate();
   } catch (error) {
-    console.warn("Hero operating status could not be updated.", error);
+    console.warn("Hero announcement could not be updated.", error);
   }
 }
 
@@ -144,7 +141,7 @@ async function hydratePublishedContent() {
 
   const query = `{
     ${lunchRoot ? `"lunch": ${lunchQuery},` : ""}
-    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,closedReason,closedUntil,noticeText}
+    "operatingStatus": *[_type == "operatingStatus" && _id == "operatingStatus"][0]{mode,noticeText}
   }`;
 
   try {
@@ -209,12 +206,31 @@ rumViewport?.addEventListener("pointercancel", finishRumDrag);
 rumViewport?.addEventListener("lostpointercapture", finishRumDrag);
 
 const rumProgress = document.querySelector<HTMLElement>("[data-rum-progress]");
+const rumCurrent = document.querySelector<HTMLElement>("[data-rum-current]");
+const rumCards = Array.from(rumViewport?.querySelectorAll<HTMLElement>(".rum-card") || []);
+// Index of the card nearest the left edge of the track, so the counter and the arrow agree with what is on screen.
+const currentRumIndex = () => {
+  if (!rumViewport || !rumCards.length) return 0;
+  const start = rumCards[0].offsetLeft;
+  const left = rumViewport.scrollLeft;
+  if (left >= rumViewport.scrollWidth - rumViewport.clientWidth - 4) return rumCards.length - 1;
+  return rumCards.reduce((best, card, index) => Math.abs(card.offsetLeft - start - left) < Math.abs(rumCards[best].offsetLeft - start - left) ? index : best, 0);
+};
 const updateRumProgress = () => {
   if (!rumViewport || !rumProgress) return;
   const maxScroll = rumViewport.scrollWidth - rumViewport.clientWidth;
   const ratio = maxScroll > 0 ? rumViewport.scrollLeft / maxScroll : 0;
-  rumProgress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+  // The bar never sits empty: at the start it already shows the first card's share of the rail.
+  const minimum = rumCards.length ? 1 / rumCards.length : 0;
+  rumProgress.style.transform = `scaleX(${Math.min(1, Math.max(minimum, ratio))})`;
+  if (rumCurrent) rumCurrent.textContent = String(currentRumIndex() + 1).padStart(2, "0");
 };
+document.querySelector<HTMLButtonElement>("[data-rum-next]")?.addEventListener("click", () => {
+  if (!rumViewport || !rumCards.length) return;
+  const next = currentRumIndex() + 1;
+  const target = next >= rumCards.length ? 0 : rumCards[next].offsetLeft - rumCards[0].offsetLeft;
+  rumViewport.scrollTo({ left: target, behavior: reduceMotion ? "auto" : "smooth" });
+});
 rumViewport?.addEventListener("scroll", updateRumProgress, { passive: true });
 window.addEventListener("resize", updateRumProgress);
 window.addEventListener("load", updateRumProgress, { once: true });

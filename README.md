@@ -33,7 +33,7 @@ Bez Sanity credentials web bezpečně použije lokální ukázkový obsah.
 
 ### Kdy se změny projeví
 
-- **Obědové menu a stav provozu** se načítají ze Sanity živě v prohlížeči, takže jsou vidět hned po kliknutí na `Publikovat`. Stav „Zavřeno“ nebo hlášení se ukáže v úvodu, nad obědovým menu i na lístku.
+- **Obědové menu a stav provozu** se načítají ze Sanity živě v prohlížeči, takže jsou vidět hned po kliknutí na `Publikovat`. Hlášení („Stav provozu“ → „Hlášení + text“) se ukáže jako karta v úvodu a na lístku; při „Žádné“ tam žádná karta není.
 - **Jídelní a nápojový lístek** (`/listky`) je statická stránka. Po publikování ji přegeneruje webhook, změna je na webu zhruba do minuty.
 
 ### Webhook pro přegenerování webu

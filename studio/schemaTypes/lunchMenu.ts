@@ -1,21 +1,23 @@
 import { defineField, defineType } from "sanity";
 
-const allergenHint = "Čísla alergenů oddělená čárkou, například 1, 3, 7.";
+const course = (prefix: string) => [
+  defineField({ name: `${prefix}Name`, title: "Název", type: "string", fieldset: prefix }),
+  defineField({ name: `${prefix}Allergens`, title: "Alergeny", type: "string", placeholder: "např. 1, 3, 7", fieldset: prefix }),
+];
 
+// Each course is one row: name and allergens side by side, under the course heading.
 const lunchDay = (name: string, title: string) => defineField({
   name,
   title,
   type: "object",
   description: "Když den necháte prázdný, web napíše „Tento den obědy nevaříme“.",
   options: { collapsible: true, collapsed: false },
-  fields: [
-    defineField({ name: "soupName", title: "Polévka · název", type: "string" }),
-    defineField({ name: "soupAllergens", title: "Polévka · alergeny", type: "string", description: allergenHint }),
-    defineField({ name: "dishAName", title: "Jídlo A · název", type: "string" }),
-    defineField({ name: "dishAAllergens", title: "Jídlo A · alergeny", type: "string", description: allergenHint }),
-    defineField({ name: "dishBName", title: "Jídlo B · název", type: "string" }),
-    defineField({ name: "dishBAllergens", title: "Jídlo B · alergeny", type: "string", description: allergenHint }),
+  fieldsets: [
+    { name: "soup", title: "Polévka", options: { columns: 2 } },
+    { name: "dishA", title: "Jídlo A", options: { columns: 2 } },
+    { name: "dishB", title: "Jídlo B", options: { columns: 2 } },
   ],
+  fields: [...course("soup"), ...course("dishA"), ...course("dishB")],
 });
 
 const price = (name: string, title: string, description: string) => defineField({
@@ -32,7 +34,7 @@ export default defineType({
   title: "Obědové menu",
   type: "document",
   description: "Menu přepište vždy o víkendu na nadcházející týden. Datum a názvy dnů se doplňují automaticky.",
-  fieldsets: [{ name: "prices", title: "Ceny meníček", options: { columns: 3 } }],
+  fieldsets: [{ name: "prices", title: "Ceny meníček" }],
   fields: [
     price("soupPrice", "Polévka (Kč)", "Prázdné = cena se nezobrazí."),
     price("dishAPrice", "Jídlo A (Kč)", "Prázdné = 159 Kč."),

@@ -1,5 +1,7 @@
 # Design direction: Starobrněnský Šenk
 
+> **Aktualizace 2026-11:** web byl předělán podle návrhu `senk_desktop.html` / `senk_mobil.html`. Body písmo je nově **Rethink Sans** (místo Manrope), nadpisy sekcí mají kurzívní zlatý druhý řádek (Caudex Italic, `--gold-700: #8a602e`, na tmavém `--honey-200`), tlačítka a pole mají rohy 3 px, ikony jsou obrysové (Lucide). Aktuální tokeny jsou v `src/styles/global.css`; níže je původní specifikace.
+
 **Verze:** 2.0  
 **Stav:** creative direction a UX/motion specifikace pro homepage  
 **Produktový source of truth:** [PRD.md](./PRD.md)  

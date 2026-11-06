@@ -9,7 +9,9 @@ const allergens = ["Obiloviny obsahující lepek", "Korýši", "Vejce", "Ryby", 
 
 <style>
   .allergen-legend { font-size: 16px; }
-  .allergen-legend summary { width: fit-content; color: var(--brick-700); font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+  .allergen-legend summary { width: fit-content; color: var(--gold-700); font-size: 15px; font-weight: 600; cursor: pointer; list-style: none; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 4px; transition: text-decoration-color .2s; }
+  .allergen-legend summary::-webkit-details-marker { display: none; }
+  .allergen-legend summary:hover { text-decoration-color: currentColor; }
   .allergen-legend ol { columns: 2; column-gap: var(--space-3); margin: var(--space-2) 0 0; padding-left: 1.6em; color: var(--ink); font-size: 15px; line-height: 1.5; }
   @media (max-width: 480px) { .allergen-legend ol { columns: 1; } }
 </style>
