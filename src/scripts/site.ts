@@ -209,12 +209,31 @@ rumViewport?.addEventListener("pointercancel", finishRumDrag);
 rumViewport?.addEventListener("lostpointercapture", finishRumDrag);
 
 const rumProgress = document.querySelector<HTMLElement>("[data-rum-progress]");
+const rumCurrent = document.querySelector<HTMLElement>("[data-rum-current]");
+const rumCards = Array.from(rumViewport?.querySelectorAll<HTMLElement>(".rum-card") || []);
+// Index of the card nearest the left edge of the track, so the counter and the arrow agree with what is on screen.
+const currentRumIndex = () => {
+  if (!rumViewport || !rumCards.length) return 0;
+  const start = rumCards[0].offsetLeft;
+  const left = rumViewport.scrollLeft;
+  if (left >= rumViewport.scrollWidth - rumViewport.clientWidth - 4) return rumCards.length - 1;
+  return rumCards.reduce((best, card, index) => Math.abs(card.offsetLeft - start - left) < Math.abs(rumCards[best].offsetLeft - start - left) ? index : best, 0);
+};
 const updateRumProgress = () => {
   if (!rumViewport || !rumProgress) return;
   const maxScroll = rumViewport.scrollWidth - rumViewport.clientWidth;
   const ratio = maxScroll > 0 ? rumViewport.scrollLeft / maxScroll : 0;
-  rumProgress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+  // The bar never sits empty: at the start it already shows the first card's share of the rail.
+  const minimum = rumCards.length ? 1 / rumCards.length : 0;
+  rumProgress.style.transform = `scaleX(${Math.min(1, Math.max(minimum, ratio))})`;
+  if (rumCurrent) rumCurrent.textContent = String(currentRumIndex() + 1).padStart(2, "0");
 };
+document.querySelector<HTMLButtonElement>("[data-rum-next]")?.addEventListener("click", () => {
+  if (!rumViewport || !rumCards.length) return;
+  const next = currentRumIndex() + 1;
+  const target = next >= rumCards.length ? 0 : rumCards[next].offsetLeft - rumCards[0].offsetLeft;
+  rumViewport.scrollTo({ left: target, behavior: reduceMotion ? "auto" : "smooth" });
+});
 rumViewport?.addEventListener("scroll", updateRumProgress, { passive: true });
 window.addEventListener("resize", updateRumProgress);
 window.addEventListener("load", updateRumProgress, { once: true });
