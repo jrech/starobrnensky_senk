@@ -173,8 +173,6 @@ figure { margin: 0; }
 .lunch-message { margin: 0 0 var(--space-4); padding: 16px 20px; border-radius: var(--radius); color: var(--forest-950); background: var(--cream-100); font-size: 16px; line-height: 1.5; }
 .lunch-message a { margin-left: 4px; color: var(--gold-700); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .dish-empty { margin: var(--space-3) 0; font-family: var(--font-display); font-size: clamp(22px, 2.2vw, 30px); }
-.form-hint { margin: -4px 0 0; color: var(--on-dark); font-size: 14px; line-height: 1.57; }
-.form-hint a { transition: color .2s; }
 
 .specialties { color: var(--cream-50); background: var(--brown-900); overflow: hidden; }
 .specialties-layout { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "intro link" "grid grid"; align-items: end; column-gap: var(--space-8); row-gap: 72px; }
@@ -434,7 +432,7 @@ figure { margin: 0; }
   .rum-next:hover .icon { transform: translateX(4px); }
   .gallery-item:hover img { transform: scale(1.025); }
   .specialty-card:hover img { transform: scale(1.03); }
-  .contact address a:hover, .form-hint a:hover { color: var(--honey-200); }
+  .contact address a:hover { color: var(--honey-200); }
   .footer-contact a:hover, .footer-nav a:hover { color: var(--honey-200); transform: translateX(6px); }
   .social-icon:hover { color: var(--forest-950); background: var(--honey-200); transform: translateY(-4px) scale(1.04); }
   .footer-credit:hover { color: var(--honey-200); transform: translateX(4px); }
